@@ -7,10 +7,11 @@ import java.util.*;
 
 /**
  * <h2> Banquets Class </h2>
+ * @author jimyang
  * This class provides functionality to interact with the banquets table in the database.
  * It also initializes the banquets table.
  *
- * Implements basic operations {@code addBanquet}, {@code getAllBanquets}, {@code getBanquet}, {@code updateBanquet}, {@code deleteBanquet}
+ * Implements basic operations, {@code getAllBanquets}, {@code getBanquet}, {@code updateBanquet}, {@code deleteBanquet}
 */
 public class BanquetsManager {
     private final Connection con;

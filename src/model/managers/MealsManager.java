@@ -7,10 +7,11 @@ import java.util.*;
 
 /**
  * <h2> Meals Class </h2>
- * This class provides functionality to interact with the meals table in the database.
+ * @author jimyang
+ * </p> This class provides functionality to interact with the meals table in the database.
  * It also initializes the meals table.
  *
- * Implements basic operations {@code addMeal}, {@code getAllMeals}, {@code getMeal}, {@code updateMeal}, {@code deleteMeal}
+ * Implements basic operations {@code addMeal}, {@code getAllMeals}, {@code getMeal}, {@code updateMeal}, {@code deleteMeal}</p>
  */
 public class MealsManager {
     private final Connection con;

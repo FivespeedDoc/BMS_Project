@@ -1,6 +1,10 @@
 package model.entities;
 import java.sql.Date;
 
+/**
+ * @author jimyang
+ */
+
 public class Banquet {
     private int BIN; // should we use long here?
     private String Name;

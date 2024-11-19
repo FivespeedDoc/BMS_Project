@@ -1,5 +1,9 @@
 package model.entities;
 
+/**
+ * @author jimyang
+ */
+
 public class Meal {
     private int BIN;
     private int ID;
