@@ -31,7 +31,7 @@ public class Attendee_AccountsManager {
     private void initializeAttendees() throws ModelException { // Initilizes the table for attendees
         String stmt = """
             CREATE TABLE IF NOT EXISTS ATTENDEE_ACCOUNTS (
-                ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+                ID VARCHAR(255) PRIMARY KEY,
                 Password VARCHAR(255) NOT NULL,
                 Salt VARCHAR(255) NOT NULL,
                 Name VARCHAR(255) NOT NULL,
@@ -63,7 +63,7 @@ public class Attendee_AccountsManager {
             ResultSet resultSet = pstmt.executeQuery();
 
             while (resultSet.next()) {
-                attendees.add(new Attendee_Accounts(resultSet.getInt(1),
+                attendees.add(new Attendee_Accounts(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
@@ -91,7 +91,7 @@ public class Attendee_AccountsManager {
         try (PreparedStatement pstmt = con.prepareStatement(selectSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
-                return new Attendee_Accounts(resultSet.getInt(1),
+                return new Attendee_Accounts(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
@@ -130,7 +130,7 @@ public class Attendee_AccountsManager {
         try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
-                attendees.add(new Attendee_Accounts(resultSet.getInt(1),
+                attendees.add(new Attendee_Accounts(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
