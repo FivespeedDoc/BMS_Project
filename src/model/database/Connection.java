@@ -9,16 +9,13 @@ import java.sql.*;
  * @author jimyang, FrankYang0610
  */
 public class Connection {
-    private final String URL = ""; // need to be filled later
-    private final String USER = ""; // need to be filled later
-    private final String PASSWORD = ""; // need to be filled later
 
     private final java.sql.Connection con;
 
     /**
      * Create a new database connection.
      */
-    public Connection() throws ModelException {
+    public Connection(String URL, String USER, String PASSWORD) throws ModelException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); // Corresponding Database Driver
             con = DriverManager.getConnection(URL, USER, PASSWORD);

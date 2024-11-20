@@ -10,4 +10,16 @@ public class Administrator {
         this.Password = password;
         this.Salt = salt;
     }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public String getSalt() {
+        return Salt;
+    }
 }

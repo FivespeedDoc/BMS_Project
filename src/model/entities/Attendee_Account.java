@@ -33,4 +33,31 @@ public class Attendee_Account {
         this.Organization = Organization;
     }
 
+    public String getID() {
+        return ID;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public String getSalt() {
+        return Salt;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public String getType() {
+        return Type;
+    }
+
+    public int getMobileNumber() {
+        return MobileNumber;
+    }
+
+    public String getOrganization() {
+        return Organization;
+    }
 }

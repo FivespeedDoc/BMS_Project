@@ -1,5 +1,6 @@
 package model.managers;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -44,7 +45,8 @@ public class PasswordManager {
      * @return boolean (if the password matches)
      * @throws Exception
      */
-    public static boolean verifyPassword(String password, String storedHash, String storedSalt) throws Exception { //Exception handling might need modification
+    public static boolean verifyPassword(String password, String storedHash, String storedSalt)
+            throws NoSuchAlgorithmException {
         byte[] salt = Base64.getDecoder().decode(storedSalt);
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(salt);
