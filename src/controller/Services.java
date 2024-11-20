@@ -2,7 +2,7 @@ package controller;
 import model.*;
 import model.database.Connection;
 import model.entities.Administrator;
-import model.entities.Attendee_Account;
+import model.entities.AttendeeAccount;
 import model.managers.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -18,7 +18,7 @@ public class Services {
     private final String USER = ""; // need to be filled later
     private final String PASSWORD = ""; // need to be filled later
     AdministratorsManager administratorsManager;
-    Attendee_AccountsManager attendeeAccountsManager;
+    AttendeeAccountsManager attendeeAccountsManager;
     BanquetsManager banquetsManager;
     MealsManager mealsManager;
     RegistrationManager registrationManager;
@@ -26,14 +26,14 @@ public class Services {
     public Services() throws ModelException {
         this.connection = new Connection(URL, USER, PASSWORD);
         this.administratorsManager = new AdministratorsManager(connection);
-        this.attendeeAccountsManager = new Attendee_AccountsManager(connection);
+        this.attendeeAccountsManager = new AttendeeAccountsManager(connection);
         this.banquetsManager = new BanquetsManager(connection);
         this.mealsManager = new MealsManager(connection);
         this.registrationManager = new RegistrationManager(connection);
     }
     public boolean userLogin(int username, String password)
             throws NoSuchAlgorithmException, IllegalArgumentException, ModelException {
-                Attendee_Account attendee = attendeeAccountsManager.getAttendee(username);
+                AttendeeAccount attendee = attendeeAccountsManager.getAttendee(username);
 
                 if (attendee == null) {
                     throw new IllegalArgumentException("User not found");

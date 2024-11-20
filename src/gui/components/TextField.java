@@ -3,6 +3,11 @@ package gui.components;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * <h3>The {@code TextField} Class</h3>
+ * All text fields should use this class.
+ * @author FrankYang0610
+ */
 public class TextField extends JTextField {
     public TextField() {
         super();
