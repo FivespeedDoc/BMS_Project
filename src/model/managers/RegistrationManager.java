@@ -1,14 +1,14 @@
 package model.managers;
-import model.ModelException;
-import model.entities.Registrations;
 
+import model.ModelException;
+import model.database.Connection;
+import model.entities.Registration;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 /**
@@ -38,7 +38,7 @@ public class RegistrationManager {
                 Seat VARCHAR(255) NOT NULL,
            )
         """;
-        try(PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try(PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         }
         catch(SQLException e) {
@@ -54,14 +54,14 @@ public class RegistrationManager {
      * @throws ModelException if any errors encountered.
      * */
 
-     public List<Registrations> getAllRegistrations() throws ModelException {
+     public List<Registration> getAllRegistrations() throws ModelException {
          String selectAllSQL = "SELECT * FROM REGISTRATIONS";
 
-         List<Registrations> registrations = new ArrayList<>();
-         try(PreparedStatement pstmt = con.prepareStatement(selectAllSQL)){
+         List<Registration> registrations = new ArrayList<>();
+         try(PreparedStatement pstmt = con.getConnection().prepareStatement(selectAllSQL)){
              ResultSet resultSet = pstmt.executeQuery();
              while(resultSet.next()) {
-                 registrations.add(new Registrations(resultSet.getInt(1),
+                 registrations.add(new Registration(resultSet.getInt(1),
                                 resultSet.getString(2),
                                 resultSet.getString(3),
                                 resultSet.getInt(4),
@@ -85,13 +85,13 @@ public class RegistrationManager {
      * @return the {@code Registration} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-     public Registrations getRegistration(int ID) throws ModelException {
+     public Registration getRegistration(int ID) throws ModelException {
          String selectSQL = "SELECT * FROM REGISTRATIONS WHERE ID = " + ID;
 
-         try(PreparedStatement pstmt = con.prepareStatement(selectSQL)){
+         try(PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)){
                 ResultSet resultSet = pstmt.executeQuery();
                 if(resultSet.next()) {
-                    return new Registrations(resultSet.getInt(1),
+                    return new Registration(resultSet.getInt(1),
                             resultSet.getString(2),
                             resultSet.getString(3),
                             resultSet.getInt(4),
@@ -127,15 +127,15 @@ public class RegistrationManager {
      * @throws ModelException if any errors encountered.
      */
 
-     public List<Registrations> getRegistrations(String attribute, String value) throws ModelException {
+     public List<Registration> getRegistrations(String attribute, String value) throws ModelException {
          String stmt = "SELECT * FROM REGISTRATIONS WHERE " + attribute + " = " + value;
 
-         List<Registrations> registrations = new ArrayList<>();
+         List<Registration> registrations = new ArrayList<>();
 
-         try(PreparedStatement pstmt = con.prepareStatement(stmt)){
+         try(PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)){
              ResultSet resultSet = pstmt.executeQuery();
              while(resultSet.next()) {
-                 registrations.add(new Registrations(resultSet.getInt(1),
+                 registrations.add(new Registration(resultSet.getInt(1),
                          resultSet.getString(2),
                          resultSet.getString(3),
                          resultSet.getInt(4),
@@ -166,7 +166,7 @@ public class RegistrationManager {
     public void updateRegistration(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE REGISTRATIONS SET " + attribute + " = " + newValue + " WHERE ID = " + ID; // should this be adopted?
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Registration with ID " + ID + " not found.");
             }
@@ -184,7 +184,7 @@ public class RegistrationManager {
     public void deleteRegistration(int ID) throws ModelException {
         String stmt = "DELETE FROM REGISTRATIONS WHERE ID = " + ID;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {

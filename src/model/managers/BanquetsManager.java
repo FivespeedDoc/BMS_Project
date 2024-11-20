@@ -1,9 +1,15 @@
 package model.managers;
+
 import model.ModelException;
+import model.database.Connection;
 import model.entities.Banquet;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * <h2> Banquets Class </h2>
@@ -35,7 +41,7 @@ public class BanquetsManager {
             )
         """;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Cannot initialize the database table.");
@@ -53,7 +59,7 @@ public class BanquetsManager {
 
         List<Banquet> banquets = new ArrayList<>();
 
-        try (PreparedStatement pstmt = con.prepareStatement(selectAllSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectAllSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
 
             while (resultSet.next()) {
@@ -83,7 +89,7 @@ public class BanquetsManager {
     public Banquet getBanquet(int BIN) throws ModelException {
         String selectSQL = "SELECT * FROM BANQUETS WHERE BIN = " + BIN;
 
-        try (PreparedStatement pstmt = con.prepareStatement(selectSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
                 return new Banquet(
@@ -124,7 +130,7 @@ public class BanquetsManager {
 
         List<Banquet> banquets = new ArrayList<>();
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 banquets.add(new Banquet(
@@ -157,7 +163,7 @@ public class BanquetsManager {
     public void updateBanquet(int BIN, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE BANQUETS SET " + attribute + " = " + newValue + " WHERE BIN = " + BIN; // should this be adopted?
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Banquet with BIN " + BIN + " not found.");
             }
@@ -175,7 +181,7 @@ public class BanquetsManager {
     public void deleteBanquet(int BIN) throws ModelException {
         String stmt = "DELETE FROM BANQUETS WHERE BIN = " + BIN;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {

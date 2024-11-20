@@ -30,7 +30,7 @@ public class Connection {
     /**
      * Get the connection object.
      */
-    java.sql.Connection getConnection() {
+    public java.sql.Connection getConnection() {
         return con;
     }
 }

@@ -4,7 +4,7 @@ package model.entities;
  * @author jimyang
  */
 
-public class Attendee_Accounts {
+public class Attendee_Account {
     private String ID;
     private String Password;
     private String Salt;
@@ -13,7 +13,7 @@ public class Attendee_Accounts {
     private int MobileNumber;
     private String Organization;
 
-    public Attendee_Accounts(String ID, String Password, String Salt, String Name, String Type, int MobileNumber, String Organization) {
+    public Attendee_Account(String ID, String Password, String Salt, String Name, String Type, int MobileNumber, String Organization) {
         this.ID = ID;
         this.Password = Password;
         this.Salt = Salt;
@@ -23,7 +23,7 @@ public class Attendee_Accounts {
         this.Organization = Organization;
     }
 
-    public Attendee_Accounts(String ID, HashedPassword hashedPassword, String Name, String Type, int MobileNumber, String Organization) {
+    public Attendee_Account(String ID, HashedPassword hashedPassword, String Name, String Type, int MobileNumber, String Organization) {
         this.ID = ID;
         this.Password = hashedPassword.hashedPassword;
         this.Salt = hashedPassword.salt;

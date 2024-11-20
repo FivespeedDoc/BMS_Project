@@ -1,9 +1,15 @@
 package model.managers;
+
 import model.ModelException;
+import model.database.Connection;
 import model.entities.Meal;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * <h2> Meals Class </h2>
@@ -35,7 +41,7 @@ public class MealsManager {
             )
                 """;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Cannot initialize the database table.");
@@ -53,7 +59,7 @@ public class MealsManager {
 
         List<Meal> meals = new ArrayList<>();
 
-        try (PreparedStatement pstmt = con.prepareStatement(selectAllSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectAllSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
 
             while (resultSet.next()) {
@@ -82,7 +88,7 @@ public class MealsManager {
     public Meal getMeal(int BIN, int ID) throws ModelException {
         String selectSQL = "SELECT * FROM MEALS WHERE BIN = " + BIN + " AND ID = " + ID;
 
-        try (PreparedStatement pstmt = con.prepareStatement(selectSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
                 return new Meal(
@@ -121,7 +127,7 @@ public class MealsManager {
 
         List<Meal> meals = new ArrayList<>();
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 meals.add(new Meal(
@@ -153,7 +159,7 @@ public class MealsManager {
     public void updateMeal(int BIN, int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE MEALS SET " + attribute + " = " + newValue + " WHERE BIN = " + BIN+ "AND ID = " + ID; // should this be adopted?
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
             }
@@ -172,7 +178,7 @@ public class MealsManager {
     public void deleteMeal(int BIN, int ID) throws ModelException {
         String stmt = "DELETE FROM MEALS WHERE BIN = " + BIN + " AND ID = " + ID;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {

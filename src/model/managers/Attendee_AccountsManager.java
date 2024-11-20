@@ -1,10 +1,9 @@
 package model.managers;
 
 import model.ModelException;
-import model.entities.Attendee_Accounts;
-import model.entities.HashedPassword;
+import model.database.Connection;
+import model.entities.Attendee_Account;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,7 +40,7 @@ public class Attendee_AccountsManager {
             )
         """;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Cannot initialize the database table.");
@@ -54,16 +53,16 @@ public class Attendee_AccountsManager {
      * @return A {@code List} containing all {@code Attendee_Accounts} objects from the database.
      * @throws ModelException if any errors encountered.
      */
-    public List<Attendee_Accounts> getAllAttendees() throws ModelException {
+    public List<Attendee_Account> getAllAttendees() throws ModelException {
         String selectAllSQL = "SELECT * FROM ATTENDEE_ACCOUNTS";
 
-        List<Attendee_Accounts> attendees = new ArrayList<>();
+        List<Attendee_Account> attendees = new ArrayList<>();
 
-        try (PreparedStatement pstmt = con.prepareStatement(selectAllSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectAllSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
 
             while (resultSet.next()) {
-                attendees.add(new Attendee_Accounts(resultSet.getString(1),
+                attendees.add(new Attendee_Account(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
@@ -85,13 +84,13 @@ public class Attendee_AccountsManager {
      * @return the {@code Attendee_Accounts} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-    public Attendee_Accounts getAttendee(int ID) throws ModelException {
+    public Attendee_Account getAttendee(int ID) throws ModelException {
         String selectSQL = "SELECT * FROM ATTENDEES WHERE ID = " + ID;
 
-        try (PreparedStatement pstmt = con.prepareStatement(selectSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
             ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
-                return new Attendee_Accounts(resultSet.getString(1),
+                return new Attendee_Account(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
@@ -122,15 +121,15 @@ public class Attendee_AccountsManager {
      * @return a {@code List} containing {@code Attendee_Accounts} objects that match the criteria.
      * @throws ModelException if any errors encountered.
      */
-    public List<Attendee_Accounts> getAttendee(String attribute, String value) throws ModelException {
+    public List<Attendee_Account> getAttendee(String attribute, String value) throws ModelException {
         String stmt = "SELECT * FROM ATTENDEES WHERE " + attribute + " = " + value;
 
-        List<Attendee_Accounts> attendees = new ArrayList<>();
+        List<Attendee_Account> attendees = new ArrayList<>();
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
-                attendees.add(new Attendee_Accounts(resultSet.getString(1),
+                attendees.add(new Attendee_Account(resultSet.getString(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
@@ -158,7 +157,7 @@ public class Attendee_AccountsManager {
     public void updateAttendee(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE ATTENDEES SET " + attribute + " = " + newValue + " WHERE ID = " + ID; // should this be adopted?
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Attendee with ID " + ID + " not found.");
             }
@@ -176,7 +175,7 @@ public class Attendee_AccountsManager {
     public void deleteAttendee(int ID) throws ModelException {
         String stmt = "DELETE FROM ATTENDEES WHERE ID = " + ID;
 
-        try (PreparedStatement pstmt = con.prepareStatement(stmt)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {
