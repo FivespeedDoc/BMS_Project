@@ -1,16 +1,23 @@
 package model.entities;
 
 /**
+ * <h3>The {@code AttendeeAccount} Class</h3>
  * @author jimyang
  */
 
 public class AttendeeAccount {
     private String ID;
+
     private String Password;
+
     private String Salt;
+
     private String Name;
+
     private String Type;
+
     private int MobileNumber;
+
     private String Organization;
 
     public AttendeeAccount(String ID, String Password, String Salt, String Name, String Type, int MobileNumber, String Organization) {

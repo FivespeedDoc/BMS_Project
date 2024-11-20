@@ -1,8 +1,14 @@
 package model.entities;
 
+/**
+ * <h3>The {@code Administrator} Class</h3>
+ * @author jimyang
+ */
 public class Administrator {
     private int ID;
+
     private String Password;
+
     private String Salt;
 
     public Administrator(int id, String password, String salt) {
