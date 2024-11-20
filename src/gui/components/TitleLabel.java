@@ -11,7 +11,7 @@ import java.awt.*;
 public class TitleLabel extends JLabel {
     public TitleLabel(String title) {
         super(title, SwingConstants.CENTER);
-        setFont(new Font("Arial", Font.BOLD, 16));
+        setFont(new Font("Arial", Font.BOLD, 18));
         setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 }

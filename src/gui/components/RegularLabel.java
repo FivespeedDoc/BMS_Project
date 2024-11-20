@@ -11,7 +11,7 @@ import java.awt.*;
 public class RegularLabel extends JLabel {
     public RegularLabel(String title) {
         super(title, SwingConstants.CENTER);
-        setFont(new Font("Arial", Font.PLAIN, 12));
+        setFont(new Font("Arial", Font.PLAIN, 14));
         setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 }
