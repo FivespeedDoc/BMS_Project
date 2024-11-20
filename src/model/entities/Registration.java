@@ -28,4 +28,32 @@ public class Registration {
         this.Drink = Drink;
         this.Seat = Seat;
     }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getAttendeeID() {
+        return AttendeeID;
+    }
+
+    public String getGuestName() {
+        return GuestName;
+    }
+
+    public int getBIN() {
+        return BIN;
+    }
+
+    public String getMealID() {
+        return MealID;
+    }
+
+    public String getDrink() {
+        return Drink;
+    }
+
+    public String getSeat() {
+        return Seat;
+    }
 }

@@ -26,4 +26,28 @@ public class Meal {
         this.SpecialCuisine = SpecialCuisine;
 
     }
+
+    public int getBIN() {
+        return BIN;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public String getType() {
+        return Type;
+    }
+
+    public double getPrice() {
+        return Price;
+    }
+
+    public String getSpecialCuisine() {
+        return SpecialCuisine;
+    }
 }
