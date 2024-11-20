@@ -6,6 +6,7 @@ import java.sql.*;
 /**
  * <h3>The {@code Database} Class</h3>
  * This class is the core part of the BMS. It is an abstraction of the entire DBMS. Any event that requires a database request must go through this class. This class also hides low-level operations like database connections for the higher-level structure.
+ * @author jimyang, FrankYang0610
  */
 public class Connection {
     private final String URL = ""; // need to be filled later
