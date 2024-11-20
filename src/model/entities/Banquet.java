@@ -32,4 +32,36 @@ public class Banquet {
         this.Available = Available;
         this.Quota = Quota;
     }
+
+    public int getBIN() {
+        return BIN;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public Date getDateTime() {
+        return DateTime;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public String getContactStaffName() {
+        return ContactStaffName;
+    }
+
+    public boolean isAvailable() {
+        return Available;
+    }
+
+    public int getQuota() {
+        return Quota;
+    }
 }
