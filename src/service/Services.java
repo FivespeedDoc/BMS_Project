@@ -17,14 +17,9 @@ import java.security.NoSuchAlgorithmException;
 public class Services {
     public boolean userLogin(AttendeeAccountsManager attendeeAccountsManager, int username, String password) throws CannotGetServiceException {
         try {
-            AttendeeAccount attendee = attendeeAccountsManager.getAttendee(username);
-
-            if (attendee == null) {
-                throw new IllegalArgumentException("User not found");
-            }
-
+            AttendeeAccount attendee = attendeeAccountsManager.getAttendee(username); // will throw ModelException
             return PasswordManager.verifyPassword(password, attendee.getPassword(), attendee.getSalt());
-        } catch (Exception e) {
+        } catch (ModelException e) {
             throw new CannotGetServiceException("Cannot get service: " + e.getMessage());
         }
     }
@@ -32,13 +27,8 @@ public class Services {
     public boolean adminLogin(AdministratorsManager administratorsManager, int username, String password)  throws CannotGetServiceException {
         try {
             Administrator administrator = administratorsManager.getAdministrator(username);
-
-            if (administrator == null) {
-                throw new IllegalArgumentException("User not found");
-            }
-
             return PasswordManager.verifyPassword(password, administrator.getPassword(), administrator.getSalt());
-        } catch (Exception e) {
+        } catch (ModelException e) {
             throw new CannotGetServiceException("Cannot get service: " + e.getMessage());
         }
     }
