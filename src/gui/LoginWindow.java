@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * <h3>The Login Window</h3>
- * @author FrankYang0610
+ * @author FrankYang0610 and Yixiao
  */
 public class LoginWindow extends JFrame {
     private final TextField ID; // account ID for admin and users
@@ -77,10 +77,20 @@ public class LoginWindow extends JFrame {
         String adminIDstr = ID.getText();
         String passwordstr = Arrays.toString(password.getPassword());
 
-        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) { // this should be rewritten!
+        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) {
             errorAlert();
             return;
-        }
+        }//Login information of Frank Yang
+
+        if (!(adminIDstr.equals("YixiaoREN") && passwordstr.equals("[1,3,5,7,9]"))) {
+            errorAlert();
+            return;
+        }//Login information of Yixiao REN
+
+        if (!(adminIDstr.equals("JinkunYang") && passwordstr.equals("[6,5,4,3,2,1]"))) {
+            errorAlert();
+            return;
+        }//Login information of Jinkun YANG
 
         new AdminWindow(adminIDstr);
         dispose();
