@@ -1,5 +1,6 @@
 package gui;
 
+import controller.Controller;
 import gui.components.*;
 import gui.components.Button;
 import gui.components.TextField;
@@ -11,15 +12,18 @@ import java.util.Arrays;
 
 /**
  * <h3>The Login Window</h3>
- * @author FrankYang0610 and Yixiao
+ * @author FrankYang0610
  */
 public class LoginWindow extends JFrame {
+    private final Controller controller;
+
     private final TextField ID; // account ID for admin and users
 
     private final PasswordField password;
 
-    public LoginWindow() {
+    public LoginWindow(Controller controller) {
         super("Login");
+        this.controller = controller;
         setSize(500, 200);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -75,28 +79,22 @@ public class LoginWindow extends JFrame {
 
     private void adminLogin(ActionEvent e) {
         String adminIDstr = ID.getText();
-        String passwordstr = Arrays.toString(password.getPassword());
+        char[] passwordstr = password.getPassword(); // use char for safety
 
-        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) {
-            errorAlert();
-            return;
-        }//Login information of Frank Yang
-
-        if (!(adminIDstr.equals("YixiaoREN") && passwordstr.equals("[1,3,5,7,9]"))) {
-            errorAlert();
-            return;
-        }//Login information of Yixiao REN
-
-        if (!(adminIDstr.equals("JinkunYang") && passwordstr.equals("[6,5,4,3,2,1]"))) {
-            errorAlert();
-            return;
-        }//Login information of Jinkun YANG
-
-        new AdminWindow(adminIDstr);
-        dispose();
+        if (controller.isAnAdmin(adminIDstr, passwordstr)) {
+            loginSuccessfulDialog(adminIDstr);
+            new AdminWindow(controller, adminIDstr);
+            dispose();
+        } else {
+            showWrongLoginInfoDialog();
+        }
     }
 
-    private void errorAlert() {
-        JOptionPane.showMessageDialog(this, "Sorry, an error occur!", "Error", JOptionPane.INFORMATION_MESSAGE);
+    private void loginSuccessfulDialog(String adminIDstr) {
+        JOptionPane.showMessageDialog(this, "You will be logged in as: " + adminIDstr, "Login Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showWrongLoginInfoDialog() {
+        JOptionPane.showMessageDialog(this, "Cannot login! Wrong account ID or password.", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }

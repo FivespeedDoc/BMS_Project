@@ -1,9 +1,10 @@
 package gui;
 
+import controller.Controller;
 import gui.components.Table;
 import gui.components.TitleLabel;
 import model.entities.Banquet;
-import model.managers.BanquetsManager;
+import service.managers.BanquetsManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,19 +13,26 @@ import java.awt.event.WindowEvent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static javax.swing.JOptionPane.*;
 
+/**
+ * <h3>The Admin Window</h3>
+ * <h4>Admins can manage all banquets here.</h4>
+ * @author FrankYang0610
+ */
 public class AdminWindow extends JFrame {
+    private final Controller controller;
+
     private final String ID;
 
     private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Name of the Contact Staff", "Available?", "Quota"};
     private List<Banquet> banquets;
 
-    public AdminWindow(String ID) {
+    public AdminWindow(Controller controller, String ID) {
         super("Administrator: " + ID);
+        this.controller = controller;
         this.ID = ID;
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -85,7 +93,7 @@ public class AdminWindow extends JFrame {
 
                 if (confirm == JOptionPane.YES_OPTION) {
                     dispose();
-                    new LoginWindow();
+                    new LoginWindow(controller);
                 }
             }
         });

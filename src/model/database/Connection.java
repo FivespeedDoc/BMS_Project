@@ -11,19 +11,17 @@ import java.sql.*;
 public class Connection {
     private final java.sql.Connection con;
 
-    private final String URL = "jdbc:mysql://localhost:3306/";
-
-    private final String USER = "root";
-
-    private final String PASSWORD = "";
+    private final String URL = "jdbc:sqlite:identifier.sqlite";
+    // private final String USER = "root"; // no need in SQLite
+    // private final String PASSWORD = ""; // no need in SQLite
 
     /**
      * Create a new database connection.
      */
     public Connection() throws ModelException {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Corresponding Database Driver
-            con = DriverManager.getConnection(URL, USER, PASSWORD);
+            Class.forName("org.sqlite.JDBC"); // Corresponding Database Driver
+            con = DriverManager.getConnection(URL);
         } catch (ClassNotFoundException | SQLException e) {
             throw new ModelException("Cannot connect to the database: " + e.getMessage());
         }

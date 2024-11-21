@@ -1,4 +1,5 @@
 import controller.Controller;
+import controller.WrongApplicationStateException;
 import gui.LoginWindow;
 
 import javax.swing.*;
@@ -13,9 +14,10 @@ import javax.swing.*;
  */
 public class Application {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LoginWindow loginWindow = new LoginWindow();
-            loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        });
+        try {
+            Controller controller = new Controller();
+        } catch (WrongApplicationStateException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
