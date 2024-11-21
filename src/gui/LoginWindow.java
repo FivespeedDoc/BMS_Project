@@ -77,7 +77,15 @@ public class LoginWindow extends JFrame {
         String adminIDstr = ID.getText();
         String passwordstr = Arrays.toString(password.getPassword());
 
-        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) { // this should be rewritten!
+        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) {
+            errorAlert();
+            return;
+        }
+        if (!(adminIDstr.equals("YixiaoREN") && passwordstr.equals("[1,3,5,7,9]"))) {
+            errorAlert();
+            return;
+        }
+        if (!(adminIDstr.equals("JinkunYang") && passwordstr.equals("[6,5,4,3,2,1]"))) {
             errorAlert();
             return;
         }
