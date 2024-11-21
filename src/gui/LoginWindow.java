@@ -17,9 +17,9 @@ import java.util.Arrays;
 public class LoginWindow extends JFrame {
     private final Controller controller;
 
-    private final TextField ID; // account ID for admin and users
+    private final TextField IDField; // account ID for admin and users
 
-    private final PasswordField password;
+    private final PasswordField passwordField;
 
     public LoginWindow(Controller controller) {
         super("Login");
@@ -48,10 +48,10 @@ public class LoginWindow extends JFrame {
         //panel.add(Box.createVerticalStrut(10));
 
         /* Input boxes */
-        ID = new TextField();
-        password = new PasswordField();
-        panel.add(new UsernamePanel(ID));
-        panel.add(new PasswordPanel(password));
+        IDField = new TextField();
+        passwordField = new PasswordField();
+        panel.add(new IDPanel(IDField));
+        panel.add(new PasswordPanel(passwordField));
 
         // panel.add(Box.createVerticalStrut(10));
 
@@ -75,27 +75,32 @@ public class LoginWindow extends JFrame {
     }
 
     private void userLogin(ActionEvent e) { // this need to be rewritten
-        String userIDstr = ID.getText();
-        String passwordstr = Arrays.toString(password.getPassword());
+        String userID = IDField.getText();
+        String password = Arrays.toString(this.passwordField.getPassword());
 
-        JOptionPane.showMessageDialog(this, "Account ID: " + userIDstr + "\nPassword: " + passwordstr, "Login Info", JOptionPane.INFORMATION_MESSAGE);
+        // JOptionPane.showMessageDialog(this, "Account ID: " + userIDstr + "\nPassword: " + passwordstr, "Login Info", JOptionPane.INFORMATION_MESSAGE); // for test only
+        showWrongLoginInfoDialog();
     }
 
     private void adminLogin(ActionEvent e) {
-        String adminIDstr = ID.getText();
-        char[] passwordstr = password.getPassword(); // use char for safety
+        String adminID = IDField.getText();
+        char[] password = passwordField.getPassword(); // use char for safety
 
-        if (controller.isAdmin(adminIDstr, passwordstr)) {
-            loginSuccessfulDialog(adminIDstr);
-            new AdminWindow(controller, adminIDstr);
+        if (controller.isAdmin(adminID, password)) {
+            adminLoginSuccessfulDialog(adminID);
+            new AdminWindow(controller, adminID);
             dispose();
         } else {
             showWrongLoginInfoDialog();
         }
     }
 
-    private void loginSuccessfulDialog(String adminIDstr) {
-        JOptionPane.showMessageDialog(this, "You will be logged in as: " + adminIDstr, "Login Successful", JOptionPane.INFORMATION_MESSAGE);
+    private void userLoginSuccessfulDialog(String userID) {
+        JOptionPane.showMessageDialog(this, "You will be logged in as: " + userID, "User Login Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void adminLoginSuccessfulDialog(String adminID) {
+        JOptionPane.showMessageDialog(this, "You will be logged in as: " + adminID, "Admin Login Successful", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void showWrongLoginInfoDialog() {
