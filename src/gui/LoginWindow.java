@@ -33,9 +33,13 @@ public class LoginWindow extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        /* The title */
+        /* The title and the project name */
         TitleLabel title = new TitleLabel("Welcome to the Banquet Management System (BMS)");
         panel.add(title, BorderLayout.CENTER);
+        RegularLabel projectName = new RegularLabel("Project Spix Macaw");
+            projectName.setFont(new Font("Arial", Font.BOLD, 14));
+        panel.add(projectName, BorderLayout.CENTER);
+
 
         /* Authors */
         // RegularLabel authors = new RegularLabel("Authors:");
@@ -70,7 +74,7 @@ public class LoginWindow extends JFrame {
         setVisible(true);
     }
 
-    private void userLogin(ActionEvent e) {
+    private void userLogin(ActionEvent e) { // this need to be rewritten
         String userIDstr = ID.getText();
         String passwordstr = Arrays.toString(password.getPassword());
 
