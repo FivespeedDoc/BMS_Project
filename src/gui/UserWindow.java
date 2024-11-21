@@ -16,6 +16,6 @@ import java.util.Arrays;
  *
  */
 public class UserWindow  extends JFrame{
-    
+
 
 }
