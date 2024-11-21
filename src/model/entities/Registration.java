@@ -5,21 +5,21 @@ package model.entities;
  * @author jimyang
  */
 public class Registration {
-    private final int ID;
+    private final long ID;
 
     private final String AttendeeID;
 
     private final String GuestName;
 
-    private final int BIN;
+    private final long BIN;
 
-    private final String MealID;
+    private final long MealID;
 
     private final String Drink;
 
     private final String Seat;
 
-    public Registration(int ID, String AttendeeID, String GuestName, int BIN, String mealID, String Drink, String Seat) {
+    public Registration(long ID, String AttendeeID, String GuestName, long BIN, long mealID, String Drink, String Seat) {
         this.ID = ID;
         this.AttendeeID = AttendeeID;
         this.GuestName = GuestName;
@@ -29,7 +29,7 @@ public class Registration {
         this.Seat = Seat;
     }
 
-    public int getID() {
+    public long getID() {
         return ID;
     }
 
@@ -41,11 +41,11 @@ public class Registration {
         return GuestName;
     }
 
-    public int getBIN() {
+    public long getBIN() {
         return BIN;
     }
 
-    public String getMealID() {
+    public long getMealID() {
         return MealID;
     }
 

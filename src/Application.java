@@ -1,8 +1,5 @@
 import controller.Controller;
-import controller.WrongApplicationStateException;
-import gui.LoginWindow;
-
-import javax.swing.*;
+import globalexceptions.BMS_Exception;
 
 /**
  * <h2>The {@code Application} Class</h2>
@@ -15,8 +12,9 @@ import javax.swing.*;
 public class Application {
     public static void main(String[] args) {
         try {
+            System.setProperty("apple.awt.application.name", "Banquet Management System"); // is this available in Windows?
             Controller controller = new Controller();
-        } catch (WrongApplicationStateException e) {
+        } catch (BMS_Exception e) {
             throw new RuntimeException(e);
         }
     }

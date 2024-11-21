@@ -1,5 +1,6 @@
 package gui;
 
+import controller.Controller;
 import gui.components.*;
 import gui.components.Button;
 import gui.components.TextField;
@@ -14,12 +15,15 @@ import java.util.Arrays;
  * @author FrankYang0610
  */
 public class LoginWindow extends JFrame {
-    private final TextField ID; // account ID for admin and users
+    private final Controller controller;
 
-    private final PasswordField password;
+    private final TextField IDField; // account ID for admin and users
 
-    public LoginWindow() {
+    private final PasswordField passwordField;
+
+    public LoginWindow(Controller controller) {
         super("Login");
+        this.controller = controller;
         setSize(500, 200);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -44,10 +48,10 @@ public class LoginWindow extends JFrame {
         //panel.add(Box.createVerticalStrut(10));
 
         /* Input boxes */
-        ID = new TextField();
-        password = new PasswordField();
-        panel.add(new UsernamePanel(ID));
-        panel.add(new PasswordPanel(password));
+        IDField = new TextField();
+        passwordField = new PasswordField();
+        panel.add(new IDPanel(IDField));
+        panel.add(new PasswordPanel(passwordField));
 
         // panel.add(Box.createVerticalStrut(10));
 
@@ -58,7 +62,7 @@ public class LoginWindow extends JFrame {
             loginWindowButtons.add(exit);
         Button adminLogin = new Button("Admin Login", this::adminLogin);
             loginWindowButtons.add(adminLogin);
-        BoldButton login = new BoldButton("Login", this::userLogin);
+        Button login = new Button("Login", this::userLogin);
             loginWindowButtons.add(login);
         getRootPane().setDefaultButton(login);
         SwingUtilities.invokeLater(login::requestFocusInWindow);
@@ -71,26 +75,35 @@ public class LoginWindow extends JFrame {
     }
 
     private void userLogin(ActionEvent e) { // this need to be rewritten
-        String userIDstr = ID.getText();
-        String passwordstr = Arrays.toString(password.getPassword());
+        String userID = IDField.getText();
+        String password = Arrays.toString(this.passwordField.getPassword());
 
-        JOptionPane.showMessageDialog(this, "Account ID: " + userIDstr + "\nPassword: " + passwordstr, "Login Info", JOptionPane.INFORMATION_MESSAGE);
+        // JOptionPane.showMessageDialog(this, "Account ID: " + userIDstr + "\nPassword: " + passwordstr, "Login Info", JOptionPane.INFORMATION_MESSAGE); // for test only
+        showWrongLoginInfoDialog();
     }
 
     private void adminLogin(ActionEvent e) {
-        String adminIDstr = ID.getText();
-        String passwordstr = Arrays.toString(password.getPassword());
+        String adminID = IDField.getText();
+        char[] password = passwordField.getPassword(); // use char for safety
 
-        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) { // this should be rewritten!
-            errorAlert();
-            return;
+        if (controller.isAdmin(adminID, password)) {
+            adminLoginSuccessfulDialog(adminID);
+            new AdminWindow(controller, adminID);
+            dispose();
+        } else {
+            showWrongLoginInfoDialog();
         }
-
-        new AdminWindow(adminIDstr);
-        dispose();
     }
 
-    private void errorAlert() {
-        JOptionPane.showMessageDialog(this, "Sorry, an error occur!", "Error", JOptionPane.INFORMATION_MESSAGE);
+    private void userLoginSuccessfulDialog(String userID) {
+        JOptionPane.showMessageDialog(this, "You will be logged in as: " + userID, "User Login Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void adminLoginSuccessfulDialog(String adminID) {
+        JOptionPane.showMessageDialog(this, "You will be logged in as: " + adminID, "Admin Login Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showWrongLoginInfoDialog() {
+        JOptionPane.showMessageDialog(this, "Cannot login! Wrong account ID or password.", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -5,8 +5,8 @@ package model.entities;
  * @author jimyang
  */
 public class Meal {
-    private final int BIN;
-    private final int ID;
+    private final long BIN;
+    private final long ID;
 
     private final String Name;
 
@@ -16,7 +16,7 @@ public class Meal {
 
     private final String SpecialCuisine;
 
-    public Meal(int BIN, int ID, String Name, String Type, double Price, String SpecialCuisine) {
+    public Meal(long BIN, long ID, String Name, String Type, double Price, String SpecialCuisine) {
         this.BIN = BIN;
         this.ID = ID;
         this.Name = Name;
@@ -26,11 +26,11 @@ public class Meal {
 
     }
 
-    public int getBIN() {
+    public long getBIN() {
         return BIN;
     }
 
-    public int getID() {
+    public long getID() {
         return ID;
     }
 

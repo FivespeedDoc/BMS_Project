@@ -1,22 +1,24 @@
 package controller;
 
+import globalexceptions.BMS_Exception;
 import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
-import service.Service;
+import model.entities.Banquet;
 import service.managers.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <h2>The {@code Controller} Class</h2>
  * @author FrankYang0610
+ * @author jimyang
  */
 public class Controller {
     private final Connection connection;
-
-    private final Service service;
 
     private final AdministratorsManager administratorsManager;
 
@@ -28,13 +30,11 @@ public class Controller {
 
     private final RegistrationManager registrationManager;
 
-    public Controller() throws WrongApplicationStateException {
+    public Controller() throws BMS_Exception {
         try {
             /* The Model */
             // The database connection
             this.connection = new Connection();
-            // The Service
-            this.service = new Service();
             // The entities
             this.administratorsManager = new AdministratorsManager(connection);
             this.attendeeAccountsManager = new AttendeeAccountsManager(connection);
@@ -48,11 +48,27 @@ public class Controller {
                 loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             });
         } catch (ModelException e) {
-            throw new WrongApplicationStateException("The application cannot be initialized: " + e.getMessage());
+            throw new BMS_Exception("The application cannot be initialized: " + e.getMessage());
         }
     }
 
-    public boolean isAnAdmin(String ID, char[] password) { // no throw
+    public List<Banquet> getAllBanquets() {
+        try {
+            return banquetsManager.getAllBanquets();
+        } catch (ModelException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public boolean isUser(String ID, char[] password) {
+        try {
+            return Arrays.equals(password, attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray()); // this is safe enough, because attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray() is a temporary variable.
+        } catch (ModelException e) { // user not found.
+            return false;
+        }
+    }
+
+    public boolean isAdmin(String ID, char[] password) { // no throw
         try {
             return Arrays.equals(password, administratorsManager.getAdministrator(ID).getPassword().toCharArray()); // this is safe enough, because administratorsManager.getAdministrator(ID).getPassword() is a temporary variable.
         } catch (ModelException e) { // administrator not found.

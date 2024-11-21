@@ -68,7 +68,7 @@ public class AttendeeAccountsManager {
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getString(5),
-                        resultSet.getInt(6),
+                        resultSet.getLong(6),
                         resultSet.getString(7)));
             }
 
@@ -85,11 +85,11 @@ public class AttendeeAccountsManager {
      * @return the {@code Attendee_Accounts} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-    public AttendeeAccount getAttendee(int ID) throws ModelException {
+    public AttendeeAccount getAttendee(String ID) throws ModelException {
         String selectSQL = "SELECT * FROM ATTENDEE_ACCOUNTS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
-            pstmt.setInt(1, ID);
+            pstmt.setString(1, ID);
 
             ResultSet resultSet = pstmt.executeQuery();
 
@@ -99,7 +99,7 @@ public class AttendeeAccountsManager {
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getString(5),
-                        resultSet.getInt(6),
+                        resultSet.getLong(6),
                         resultSet.getString(7));
             } else {
                 throw new ModelException("Attendee_Account with ID " + ID + " not found.");
@@ -142,7 +142,7 @@ public class AttendeeAccountsManager {
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getString(5),
-                        resultSet.getInt(6),
+                        resultSet.getLong(6),
                         resultSet.getString(7)));
             }
             return attendees;
@@ -162,13 +162,13 @@ public class AttendeeAccountsManager {
      * @param newValue     the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
      */
-    public void updateAttendee(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
+    public void updateAttendee(String ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE ATTENDEE_ACCOUNTS SET ? = ? WHERE ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attribute);
             pstmt.setString(2, newValue);
-            pstmt.setInt(3, ID);
+            pstmt.setString(3, ID);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Attendee with ID " + ID + " not found.");
@@ -184,11 +184,11 @@ public class AttendeeAccountsManager {
      * @param ID the unique identifier of the Attendee to delete.
      * @throws ModelException if any errors encountered.
      */
-    public void deleteAttendee(int ID) throws ModelException {
+    public void deleteAttendee(String ID) throws ModelException {
         String stmt = "DELETE FROM ATTENDEE_ACCOUNTS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setInt(1, ID);
+            pstmt.setString(1, ID);
 
             int affectedRows = pstmt.executeUpdate();
 
