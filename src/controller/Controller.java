@@ -1,8 +1,13 @@
 package controller;
 
+import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
-import model.managers.*;
+import service.Service;
+import service.managers.*;
+
+import javax.swing.*;
+import java.util.Arrays;
 
 /**
  * <h2>The {@code Controller} Class</h2>
@@ -11,26 +16,47 @@ import model.managers.*;
 public class Controller {
     private final Connection connection;
 
-    public AdministratorsManager administratorsManager;
+    private final Service service;
 
-    public AttendeeAccountsManager attendeeAccountsManager;
+    private final AdministratorsManager administratorsManager;
 
-    public BanquetsManager banquetsManager;
+    private final AttendeeAccountsManager attendeeAccountsManager;
 
-    public MealsManager mealsManager;
+    private final BanquetsManager banquetsManager;
 
-    public RegistrationManager registrationManager;
+    private final MealsManager mealsManager;
+
+    private final RegistrationManager registrationManager;
 
     public Controller() throws WrongApplicationStateException {
         try {
+            /* The Model */
+            // The database connection
             this.connection = new Connection();
+            // The Service
+            this.service = new Service();
+            // The entities
             this.administratorsManager = new AdministratorsManager(connection);
             this.attendeeAccountsManager = new AttendeeAccountsManager(connection);
             this.banquetsManager = new BanquetsManager(connection);
             this.mealsManager = new MealsManager(connection);
             this.registrationManager = new RegistrationManager(connection);
+
+            /* The View */
+            SwingUtilities.invokeLater(() -> {
+                LoginWindow loginWindow = new LoginWindow(this);
+                loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            });
         } catch (ModelException e) {
             throw new WrongApplicationStateException("The application cannot be initialized: " + e.getMessage());
+        }
+    }
+
+    public boolean isAnAdmin(String ID, char[] password) { // no throw
+        try {
+            return Arrays.equals(password, administratorsManager.getAdministrator(ID).getPassword().toCharArray()); // this is safe enough, because administratorsManager.getAdministrator(ID).getPassword() is a temporary variable.
+        } catch (ModelException e) { // administrator not found.
+            return false;
         }
     }
 }

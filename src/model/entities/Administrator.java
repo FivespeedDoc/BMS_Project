@@ -5,19 +5,19 @@ package model.entities;
  * @author jimyang
  */
 public class Administrator {
-    private final int ID;
+    private final String ID;
 
     private final String Password;
 
-    private final String Salt;
+    // private final String Salt;
 
-    public Administrator(int id, String password, String salt) {
+    public Administrator(String id, String password/*, String salt*/) {
         this.ID = id;
         this.Password = password;
-        this.Salt = salt;
+        // this.Salt = salt;
     }
 
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
@@ -25,7 +25,7 @@ public class Administrator {
         return Password;
     }
 
-    public String getSalt() {
+    /* public String getSalt() {
         return Salt;
-    }
+    } */
 }
