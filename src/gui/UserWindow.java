@@ -1,14 +1,12 @@
 package gui;
-
-
 import javax.swing.*;
 import java.awt.*;
 
 public class UserWindow extends JFrame {
 
     public UserWindow() {
-        setTitle("User Login Window");
-        setSize(500, 500);
+        setTitle("User Window");
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
@@ -16,94 +14,57 @@ public class UserWindow extends JFrame {
     }
 
     private void initUI() {
+
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(10, 2, 1, 15));
-
-        JLabel firstNameLabel = new JLabel("  First Name:");
-        JTextField firstNameField = new JTextField();
-
-        JLabel lastNameLabel = new JLabel("  Last Name:");
-        JTextField lastNameField = new JTextField();
-
-        JLabel addressLabel = new JLabel("  Address:");
-        JTextField addressField = new JTextField();
-
-        JLabel attendeeTypeLabel = new JLabel("  Attendee Type:");
-        JComboBox<String> attendeeTypeCombo = new JComboBox<>(new String[]{"Staff", "Student", "Alumni", "Guest"});
-
-        JLabel emailLabel = new JLabel("  E-mail Address:");
-        JTextField emailField = new JTextField();
-
-        JLabel passwordLabel = new JLabel("  Password:");
-        JPasswordField passwordField = new JPasswordField();
-
-        JLabel mobileLabel = new JLabel("  Mobile Number:");
-        JTextField mobileField = new JTextField();
-
-        JLabel organizationLabel = new JLabel("  Affiliated Organization:");
-        JComboBox<String> organizationCombo = new JComboBox<>(new String[]{"PolyU", "SPEED", "HKCC", "Others"});
+        panel.setLayout(new GridLayout(5, 1, 10, 10));
 
 
-        JButton submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> {
-
-            String firstName = firstNameField.getText();//
-            String lastName = lastNameField.getText();
-            String address = addressField.getText();
-            String attendeeType = (String) attendeeTypeCombo.getSelectedItem();
-            String email = emailField.getText();
-            String password = new String(passwordField.getPassword());
-            String mobile = mobileField.getText();
-            String organization = (String) organizationCombo.getSelectedItem();
-
-            if (firstName.isEmpty() || lastName.isEmpty() || address.isEmpty() || email.isEmpty() ||
-                    password.isEmpty() || mobile.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (!email.contains("@")) {
-                JOptionPane.showMessageDialog(this, "Invalid email address.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (!mobile.matches("\\d{8}")) {
-                JOptionPane.showMessageDialog(this, "Mobile number must be 8 digits.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        JButton banquetRegistrationButton = new JButton("Banquet Registration");
+        JButton banquetWithdrawButton = new JButton("Banquet Withdraw");
+        JButton banquetChangeButton = new JButton("Banquet Change");
+        JButton editUserInfoButton = new JButton("Edit User Information");
+        JButton exitButton = new JButton("Exit");
 
 
-            JOptionPane.showMessageDialog(this, "Login information submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        banquetRegistrationButton.addActionListener(e -> showBanquetRegistrationWindow());
+        banquetWithdrawButton.addActionListener(e -> showBanquetWithdrawWindow());
+        banquetChangeButton.addActionListener(e -> showBanquetChangeWindow());
+        editUserInfoButton.addActionListener(e -> showEditUserInfoWindow());
+        exitButton.addActionListener(e -> System.exit(0));
 
 
-        });
+        panel.add(banquetRegistrationButton);
+        panel.add(banquetWithdrawButton);
+        panel.add(banquetChangeButton);
+        panel.add(editUserInfoButton);
+        panel.add(exitButton);
 
-        panel.add(firstNameLabel);
-        panel.add(firstNameField);
-
-        panel.add(lastNameLabel);
-        panel.add(lastNameField);
-
-        panel.add(addressLabel);
-        panel.add(addressField);
-
-        panel.add(attendeeTypeLabel);
-        panel.add(attendeeTypeCombo);
-
-        panel.add(emailLabel);
-        panel.add(emailField);
-
-        panel.add(passwordLabel);
-        panel.add(passwordField);
-
-        panel.add(mobileLabel);
-        panel.add(mobileField);
-
-        panel.add(organizationLabel);
-        panel.add(organizationCombo);
-
-        panel.add(new JLabel());
-        panel.add(submitButton);
 
         add(panel);
+    }
+
+
+    private void showBanquetRegistrationWindow() {
+        JOptionPane.showMessageDialog(this, "Banquet Registration Window", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+
+    private void showBanquetWithdrawWindow() {
+        JOptionPane.showMessageDialog(this, "Banquet Withdraw Window", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+
+    private void showBanquetChangeWindow() {
+        JOptionPane.showMessageDialog(this, "Banquet Change Window", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+
+    private void showEditUserInfoWindow() {
+        JOptionPane.showMessageDialog(this, "Edit User Information Window", "Info", JOptionPane.INFORMATION_MESSAGE);
+
     }
 
     public static void main(String[] args) {
