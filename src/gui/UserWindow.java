@@ -21,19 +21,19 @@ public class UserWindow extends JFrame {
     private void initUI() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        // 添加 Registration 面板
+
         JPanel registrationPanel = createRegistrationPanel();
         tabbedPane.add("Registration", registrationPanel);
 
-        // 添加 Banquet Registration 面板
+
         JPanel banquetRegistrationPanel = createBanquetRegistrationPanel();
         tabbedPane.add("Banquet Registration", banquetRegistrationPanel);
 
-        // 添加 Withdraw a Banquet 面板
+
         JPanel withdrawBanquetPanel = createWithdrawBanquetPanel();
         tabbedPane.add("Withdraw a Banquet", withdrawBanquetPanel);
 
-        // 添加 Check My Registration 面板
+
         JPanel checkRegistrationPanel = createCheckRegistrationPanel();
         tabbedPane.add("Check My Registration", checkRegistrationPanel);
 
