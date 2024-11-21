@@ -85,7 +85,7 @@ public class LoginWindow extends JFrame {
         String adminIDstr = ID.getText();
         char[] passwordstr = password.getPassword(); // use char for safety
 
-        if (controller.isAnAdmin(adminIDstr, passwordstr)) {
+        if (controller.isAdmin(adminIDstr, passwordstr)) {
             loginSuccessfulDialog(adminIDstr);
             new AdminWindow(controller, adminIDstr);
             dispose();

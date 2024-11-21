@@ -3,7 +3,6 @@ package controller;
 import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
-import service.Service;
 import service.managers.*;
 
 import javax.swing.*;
@@ -12,11 +11,10 @@ import java.util.Arrays;
 /**
  * <h2>The {@code Controller} Class</h2>
  * @author FrankYang0610
+ * @author jimyang
  */
 public class Controller {
     private final Connection connection;
-
-    private final Service service;
 
     private final AdministratorsManager administratorsManager;
 
@@ -33,8 +31,6 @@ public class Controller {
             /* The Model */
             // The database connection
             this.connection = new Connection();
-            // The Service
-            this.service = new Service();
             // The entities
             this.administratorsManager = new AdministratorsManager(connection);
             this.attendeeAccountsManager = new AttendeeAccountsManager(connection);
@@ -52,7 +48,15 @@ public class Controller {
         }
     }
 
-    public boolean isAnAdmin(String ID, char[] password) { // no throw
+    public boolean isUser(String ID, char[] password) {
+        try {
+            return Arrays.equals(password, attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray()); // this is safe enough, because attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray() is a temporary variable.
+        } catch (ModelException e) { // user not found.
+            return false;
+        }
+    }
+
+    public boolean isAdmin(String ID, char[] password) { // no throw
         try {
             return Arrays.equals(password, administratorsManager.getAdministrator(ID).getPassword().toCharArray()); // this is safe enough, because administratorsManager.getAdministrator(ID).getPassword() is a temporary variable.
         } catch (ModelException e) { // administrator not found.

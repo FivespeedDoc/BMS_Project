@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * @author jimyang
  */
 public class Banquet {
-    private final long BIN; // should we use long here?
+    private final long BIN; // it is safer to use long here.
 
     private final String Name;
 
