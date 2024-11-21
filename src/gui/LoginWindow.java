@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * <h3>The Login Window</h3>
- * @author FrankYang0610
+ * @author FrankYang0610 and Yixiao
  */
 public class LoginWindow extends JFrame {
     private final TextField ID; // account ID for admin and users
