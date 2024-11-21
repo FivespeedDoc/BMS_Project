@@ -11,7 +11,10 @@ import java.awt.*;
 public class PasswordPanel extends XPanel {
     public PasswordPanel(PasswordField passwordField) {
         super();
-        add(new RegularLabel("Password:"));
-        add(passwordField);
+        RegularLabel passwordLabel = new RegularLabel("Password:");
+        passwordLabel.setPreferredSize(new Dimension(100, 25));
+        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        this.add(passwordLabel);
+        this.add(passwordField);
     }
 }
