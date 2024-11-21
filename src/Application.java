@@ -1,3 +1,4 @@
+import controller.Controller;
 import gui.LoginWindow;
 
 import javax.swing.*;

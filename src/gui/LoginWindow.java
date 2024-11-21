@@ -14,9 +14,9 @@ import java.util.Arrays;
  * @author FrankYang0610
  */
 public class LoginWindow extends JFrame {
-    private TextField username;
+    private final TextField accountID;
 
-    private PasswordField password;
+    private final PasswordField password;
 
     public LoginWindow() {
         super("Login");
@@ -40,9 +40,9 @@ public class LoginWindow extends JFrame {
         //panel.add(Box.createVerticalStrut(10));
 
         /* Input boxes */
-        username = new TextField();
+        accountID = new TextField();
         password = new PasswordField();
-        panel.add(new UsernamePanel(username));
+        panel.add(new UsernamePanel(accountID));
         panel.add(new PasswordPanel(password));
 
         // panel.add(Box.createVerticalStrut(10));
@@ -50,8 +50,8 @@ public class LoginWindow extends JFrame {
         /* Buttons */
         XPanel loginWindowButtons = new XPanel();
         Button exit = new Button("Exit", _ -> System.exit(0)); loginWindowButtons.add(exit);
-        Button adminLogin = new Button("Admin Login", this::errorAlert); loginWindowButtons.add(adminLogin);
-        BoldButton login = new BoldButton("Login", this::login); loginWindowButtons.add(login);
+        Button adminLogin = new Button("Admin Login", this::adminLogin); loginWindowButtons.add(adminLogin);
+        BoldButton login = new BoldButton("Login", this::userLogin); loginWindowButtons.add(login);
         getRootPane().setDefaultButton(login);
         SwingUtilities.invokeLater(login::requestFocusInWindow);
         panel.add(loginWindowButtons);
@@ -62,11 +62,18 @@ public class LoginWindow extends JFrame {
         setVisible(true);
     }
 
-    private void login(ActionEvent e) {
-        String user = username.getText();
+    private void userLogin(ActionEvent e) {
+        String user = accountID.getText();
         String pass = Arrays.toString(password.getPassword());
 
-        JOptionPane.showMessageDialog(this, "Username: " + user + "\nPassword: " + pass, "Login Info", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Account ID: " + user + "\nPassword: " + pass, "Login Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void adminLogin(ActionEvent e) {
+        String adminID = accountID.getText();
+        String pass = Arrays.toString(password.getPassword());
+        new AdminWindow(adminID);
+        dispose();
     }
 
     private void errorAlert(ActionEvent e) {
