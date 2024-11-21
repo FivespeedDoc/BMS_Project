@@ -186,7 +186,7 @@ public class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public void deleteAttendee(int ID) throws ModelException {
-        String stmt = "DELETE FROM ATTENDEE_ACCOUNTS WHERE ID ?";
+        String stmt = "DELETE FROM ATTENDEE_ACCOUNTS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setInt(1, ID);
