@@ -9,13 +9,18 @@ import java.sql.*;
  * @author jimyang, FrankYang0610
  */
 public class Connection {
-
     private final java.sql.Connection con;
+
+    private final String URL = "jdbc:mysql://localhost:3306/";
+
+    private final String USER = "root";
+
+    private final String PASSWORD = "";
 
     /**
      * Create a new database connection.
      */
-    public Connection(String URL, String USER, String PASSWORD) throws ModelException {
+    public Connection() throws ModelException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); // Corresponding Database Driver
             con = DriverManager.getConnection(URL, USER, PASSWORD);

@@ -13,11 +13,12 @@ import java.util.NoSuchElementException;
 
 /**
  * <h2> Banquets Class </h2>
- * @author jimyang
  * This class provides functionality to interact with the banquets table in the database.
  * It also initializes the banquets table.
  *
  * Implements basic operations, {@code getAllBanquets}, {@code getBanquet}, {@code updateBanquet}, {@code deleteBanquet}
+ * @author jimyang
+ * @author FrankYang0610
 */
 public class BanquetsManager {
     private final Connection con;
@@ -28,9 +29,9 @@ public class BanquetsManager {
     }
 
     private void initializeBanquets() throws ModelException {
-        String stmt = """
+        /* String stmt = """
             CREATE TABLE IF NOT EXISTS BANQUETS (
-                BIN INTEGER PRIMARY KEY AUTO_INCREMENT,
+                BIN INTEGER AUTO_INCREMENT PRIMARY KEY,
                 Name VARCHAR(255) NOT NULL,
                 DateTime DATETIME NOT NULL,
                 Address VARCHAR(255) NOT NULL,
@@ -38,14 +39,13 @@ public class BanquetsManager {
                 ContactStaffName VARCHAR(255) NOT NULL,
                 Available BOOLEAN NOT NULL,
                 Quota INTEGER NOT NULL
-            )
-        """;
+            )""";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Cannot initialize the database table.");
-        }
+        } */
     }
 
     /** Retrieves all banquet records from the database.
@@ -87,10 +87,13 @@ public class BanquetsManager {
      * @throws ModelException if any errors encountered.
      */
     public Banquet getBanquet(int BIN) throws ModelException {
-        String selectSQL = "SELECT * FROM BANQUETS WHERE BIN = " + BIN;
+        String selectSQL = "SELECT * FROM BANQUETS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
+            pstmt.setInt(1, BIN);
+
             ResultSet resultSet = pstmt.executeQuery();
+
             if (resultSet.next()) {
                 return new Banquet(
                         resultSet.getInt(1),
@@ -126,12 +129,16 @@ public class BanquetsManager {
      * @throws ModelException if any errors encountered.
      */
     public List<Banquet> getBanquet(String attribute, String value) throws ModelException {
-        String stmt = "SELECT * FROM BANQUETS WHERE " + attribute + " = " + value;
+        String stmt = "SELECT * FROM BANQUETS WHERE ? = ?";
 
         List<Banquet> banquets = new ArrayList<>();
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, value);
+
             ResultSet resultSet = pstmt.executeQuery();
+
             while (resultSet.next()) {
                 banquets.add(new Banquet(
                         resultSet.getInt(1),
@@ -161,9 +168,14 @@ public class BanquetsManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateBanquet(int BIN, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE BANQUETS SET " + attribute + " = " + newValue + " WHERE BIN = " + BIN; // should this be adopted?
+        String stmt = "UPDATE BANQUETS SET ? = ? WHERE BIN = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, newValue);
+            pstmt.setInt(3, BIN);
+            pstmt.executeUpdate();
+
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Banquet with BIN " + BIN + " not found.");
             }
@@ -179,12 +191,12 @@ public class BanquetsManager {
      * @throws ModelException if any errors encountered.
      */
     public void deleteBanquet(int BIN) throws ModelException {
-        String stmt = "DELETE FROM BANQUETS WHERE BIN = " + BIN;
+        String stmt = "DELETE FROM BANQUETS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            int affectedRows = pstmt.executeUpdate();
+            pstmt.setInt(1, BIN);
 
-            if (affectedRows == 0) {
+            if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new ModelException("Banquet with BIN " + BIN + " not found.");
             }
         } catch (SQLException e) {

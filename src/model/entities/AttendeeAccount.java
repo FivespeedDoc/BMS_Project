@@ -4,39 +4,38 @@ package model.entities;
  * <h3>The {@code AttendeeAccount} Class</h3>
  * @author jimyang
  */
-
 public class AttendeeAccount {
-    private String ID;
+    private final String ID;
 
-    private String Password;
+    private final String Password;
 
-    private String Salt;
+    private final String Salt;
 
-    private String Name;
+    private final String Name;
 
-    private String Type;
+    private final String Type;
 
-    private int MobileNumber;
+    private final int MobileNo;
 
-    private String Organization;
+    private final String Organization;
 
-    public AttendeeAccount(String ID, String Password, String Salt, String Name, String Type, int MobileNumber, String Organization) {
+    public AttendeeAccount(String ID, String Password, String Salt, String Name, String Type, int MobileNo, String Organization) {
         this.ID = ID;
         this.Password = Password;
         this.Salt = Salt;
         this.Name = Name;
         this.Type = Type;
-        this.MobileNumber = MobileNumber;
+        this.MobileNo = MobileNo;
         this.Organization = Organization;
     }
 
-    public AttendeeAccount(String ID, HashedPassword hashedPassword, String Name, String Type, int MobileNumber, String Organization) {
+    public AttendeeAccount(String ID, HashedPassword hashedPassword, String Name, String Type, int MobileNo, String Organization) {
         this.ID = ID;
         this.Password = hashedPassword.hashedPassword;
         this.Salt = hashedPassword.salt;
         this.Name = Name;
         this.Type = Type;
-        this.MobileNumber = MobileNumber;
+        this.MobileNo = MobileNo;
         this.Organization = Organization;
     }
 
@@ -60,8 +59,8 @@ public class AttendeeAccount {
         return Type;
     }
 
-    public int getMobileNumber() {
-        return MobileNumber;
+    public int getMobileNo() {
+        return MobileNo;
     }
 
     public String getOrganization() {

@@ -13,11 +13,13 @@ import java.util.NoSuchElementException;
 
 /**
  * <h2> Meals Class </h2>
- * @author jimyang
  * </p> This class provides functionality to interact with the meals table in the database.
  * It also initializes the meals table.
  *
  * Implements basic operations {@code addMeal}, {@code getAllMeals}, {@code getMeal}, {@code updateMeal}, {@code deleteMeal}</p>
+ *
+ * @author jimyang
+ * @author FrankYang0610
  */
 public class MealsManager {
     private final Connection con;
@@ -28,8 +30,7 @@ public class MealsManager {
     }
 
     private void initializeMeals() throws ModelException {
-
-        String stmt = """
+        /* String stmt = """
             CREATE TABLE IF NOT EXISTS MEALS (
                 BIN INTEGER NOT NULL,
                 ID INTEGER NOT NULL,
@@ -38,14 +39,13 @@ public class MealsManager {
                 Price DOUBLE NOT NULL,
                 SpecialCuisine VARCHAR(255) NOT NULL,
                 CONSTRAINT MEALS_PK PRIMARY KEY (BIN, ID)
-            )
-                """;
+            )""";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Cannot initialize the database table.");
-        }
+        } */
     }
 
     /** Retrieves all meal records from the database.
@@ -86,9 +86,12 @@ public class MealsManager {
      * @throws ModelException if any errors encountered.
      */
     public Meal getMeal(int BIN, int ID) throws ModelException {
-        String selectSQL = "SELECT * FROM MEALS WHERE BIN = " + BIN + " AND ID = " + ID;
+        String selectSQL = "SELECT * FROM MEALS WHERE BIN = ? AND ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
+            pstmt.setInt(1, BIN);
+            pstmt.setInt(2, ID);
+
             ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
                 return new Meal(
@@ -123,11 +126,14 @@ public class MealsManager {
      * @throws ModelException if any errors encountered.
      */
     public List<Meal> getMeal(String attribute, String value) throws ModelException {
-        String stmt = "SELECT * FROM MEALS WHERE " + attribute + " = " + value;
+        String stmt = "SELECT * FROM MEALS WHERE ? = ?";
 
         List<Meal> meals = new ArrayList<>();
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, value);
+
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 meals.add(new Meal(
@@ -157,9 +163,14 @@ public class MealsManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateMeal(int BIN, int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE MEALS SET " + attribute + " = " + newValue + " WHERE BIN = " + BIN+ "AND ID = " + ID; // should this be adopted?
+        String stmt = "UPDATE MEALS SET ? = ? WHERE BIN = ? AND ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, newValue);
+            pstmt.setInt(3, BIN);
+            pstmt.setInt(4, ID);
+
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
             }
@@ -176,9 +187,12 @@ public class MealsManager {
      * @throws ModelException if any errors encountered.
      */
     public void deleteMeal(int BIN, int ID) throws ModelException {
-        String stmt = "DELETE FROM MEALS WHERE BIN = " + BIN + " AND ID = " + ID;
+        String stmt = "DELETE FROM MEALS WHERE BIN = ? AND ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setInt(1, BIN);
+            pstmt.setInt(2, ID);
+
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {

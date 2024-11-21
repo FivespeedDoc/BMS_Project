@@ -12,11 +12,9 @@ import javax.swing.*;
  */
 public class Application {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                LoginWindow loginWindow = new LoginWindow();
-                loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            }
+        SwingUtilities.invokeLater(() -> {
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         });
     }
 }

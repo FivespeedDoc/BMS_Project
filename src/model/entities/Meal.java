@@ -5,17 +5,16 @@ package model.entities;
  * @author jimyang
  */
 public class Meal {
-    private int BIN;
+    private final int BIN;
+    private final int ID;
 
-    private int ID;
+    private final String Name;
 
-    private String Name;
+    private final String Type;
 
-    private String Type;
+    private final double Price;
 
-    private double Price;
-
-    private String SpecialCuisine;
+    private final String SpecialCuisine;
 
     public Meal(int BIN, int ID, String Name, String Type, double Price, String SpecialCuisine) {
         this.BIN = BIN;

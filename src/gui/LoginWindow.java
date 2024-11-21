@@ -15,6 +15,7 @@ import java.util.Arrays;
  */
 public class LoginWindow extends JFrame {
     private TextField username;
+
     private PasswordField password;
 
     public LoginWindow() {

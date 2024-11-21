@@ -5,19 +5,19 @@ package model.entities;
  * @author jimyang
  */
 public class Registration {
-    private int ID;
+    private final int ID;
 
-    private String AttendeeID;
+    private final String AttendeeID;
 
-    private String GuestName;
+    private final String GuestName;
 
-    private int BIN;
+    private final int BIN;
 
-    private String MealID;
+    private final String MealID;
 
-    private String Drink;
+    private final String Drink;
 
-    private String Seat;
+    private final String Seat;
 
     public Registration(int ID, String AttendeeID, String GuestName, int BIN, String mealID, String Drink, String Seat) {
         this.ID = ID;

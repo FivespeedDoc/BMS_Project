@@ -5,11 +5,11 @@ package model.entities;
  * @author jimyang
  */
 public class Administrator {
-    private int ID;
+    private final int ID;
 
-    private String Password;
+    private final String Password;
 
-    private String Salt;
+    private final String Salt;
 
     public Administrator(int id, String password, String salt) {
         this.ID = id;

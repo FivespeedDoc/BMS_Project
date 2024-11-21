@@ -13,11 +13,13 @@ import java.util.NoSuchElementException;
 
 /**
  * <h2> Attemdee_Accounts Class </h2>
- * @author jimyang
  * This class provides functionality to interact with the attendees table in the database.
  * It also initializes the attendees table.
  *
  * Implements basic operations {@code getAllAttendees}, {@code getAttendee}, {@code updateAttendee}, {@code deleteAttendee}
+ *
+ * @author jimyang
+ * @author FrankYang0610
 */
 public class AttendeeAccountsManager {
     private final Connection con;
@@ -28,7 +30,7 @@ public class AttendeeAccountsManager {
     }
 
     private void initializeAttendees() throws ModelException { // Initilizes the table for attendees
-        String stmt = """
+        /* String stmt = """
             CREATE TABLE IF NOT EXISTS ATTENDEE_ACCOUNTS (
                 ID VARCHAR(255) PRIMARY KEY,
                 Password VARCHAR(255) NOT NULL,
@@ -44,7 +46,7 @@ public class AttendeeAccountsManager {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new ModelException("Cannot initialize the database table.");
-        }
+        } */
     }
 
     /** Retrieves all attendee records from the database.
@@ -85,10 +87,13 @@ public class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public AttendeeAccount getAttendee(int ID) throws ModelException {
-        String selectSQL = "SELECT * FROM ATTENDEES WHERE ID = " + ID;
+        String selectSQL = "SELECT * FROM ATTENDEE_ACCOUNTS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
+            pstmt.setInt(1, ID);
+
             ResultSet resultSet = pstmt.executeQuery();
+
             if (resultSet.next()) {
                 return new AttendeeAccount(resultSet.getString(1),
                         resultSet.getString(2),
@@ -122,12 +127,16 @@ public class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public List<AttendeeAccount> getAttendee(String attribute, String value) throws ModelException {
-        String stmt = "SELECT * FROM ATTENDEES WHERE " + attribute + " = " + value;
+        String stmt = "SELECT * FROM ATTENDEE_ACCOUNTS WHERE ? = ?";
 
         List<AttendeeAccount> attendees = new ArrayList<>();
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, value);
+
             ResultSet resultSet = pstmt.executeQuery();
+
             while (resultSet.next()) {
                 attendees.add(new AttendeeAccount(resultSet.getString(1),
                         resultSet.getString(2),
@@ -155,9 +164,13 @@ public class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateAttendee(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE ATTENDEES SET " + attribute + " = " + newValue + " WHERE ID = " + ID; // should this be adopted?
+        String stmt = "UPDATE ATTENDEE_ACCOUNTS SET ? = ? WHERE ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, newValue);
+            pstmt.setInt(3, ID);
+
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Attendee with ID " + ID + " not found.");
             }
@@ -173,9 +186,11 @@ public class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public void deleteAttendee(int ID) throws ModelException {
-        String stmt = "DELETE FROM ATTENDEES WHERE ID = " + ID;
+        String stmt = "DELETE FROM ATTENDEE_ACCOUNTS WHERE ID ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setInt(1, ID);
+
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {

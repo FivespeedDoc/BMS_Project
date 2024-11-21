@@ -13,11 +13,12 @@ import java.util.NoSuchElementException;
 
 /**
  * <h2> Registration Class </h2>
- * @author jimyang
  * This class provides functionality to interact with the registrations table in the database.
  * It also initializes the registrations table.
  *
  * Implements basic operations {@code getAllRegistrations}, {@code getRegistration}, {@code updateRegistration}, {@code deleteRegistration}
+ * @author jimyang
+ * @author FrankYang0610
  */
 
 public class RegistrationManager {
@@ -27,8 +28,8 @@ public class RegistrationManager {
     }
 
     private void initializeRegistrations() throws ModelException {
-        String stmt = """
-            CREATE TABLE IF NOT EXISTS REGISTRATIONS (
+        /* String stmt = """
+           CREATE TABLE IF NOT EXISTS REGISTRATIONS (
                 ID INTEGER NOT NULL PRIMARY KEY,
                 AttendeeID VARCHAR(255) NOT NULL,
                 GuestName VARCHAR(255) NOT NULL,
@@ -36,15 +37,13 @@ public class RegistrationManager {
                 MealID VARCHAR(255) NOT NULL,
                 Drink VARCHAR(255) NOT NULL,
                 Seat VARCHAR(255) NOT NULL,
-           )
-        """;
+           )""";
         try(PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.executeUpdate();
         }
         catch(SQLException e) {
             throw new ModelException("Cannot initialize database table");
-        }
-
+        } */
     }
 
      /** Retrieves all the Registration records from the database.
@@ -53,14 +52,15 @@ public class RegistrationManager {
      * @return A {@code List} containing all {@code Registrations} objects from the database.
      * @throws ModelException if any errors encountered.
      * */
-
      public List<Registration> getAllRegistrations() throws ModelException {
          String selectAllSQL = "SELECT * FROM REGISTRATIONS";
 
          List<Registration> registrations = new ArrayList<>();
-         try(PreparedStatement pstmt = con.getConnection().prepareStatement(selectAllSQL)){
+
+         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectAllSQL)){
              ResultSet resultSet = pstmt.executeQuery();
-             while(resultSet.next()) {
+
+             while (resultSet.next()) {
                  registrations.add(new Registration(resultSet.getInt(1),
                                 resultSet.getString(2),
                                 resultSet.getString(3),
@@ -86,23 +86,25 @@ public class RegistrationManager {
      * @throws ModelException if any errors encountered.
      */
      public Registration getRegistration(int ID) throws ModelException {
-         String selectSQL = "SELECT * FROM REGISTRATIONS WHERE ID = " + ID;
+         String selectSQL = "SELECT * FROM REGISTRATIONS WHERE ID = ?";
 
-         try(PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)){
-                ResultSet resultSet = pstmt.executeQuery();
-                if(resultSet.next()) {
-                    return new Registration(resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),
-                            resultSet.getInt(4),
-                            resultSet.getString(5),
-                            resultSet.getString(6),
-                            resultSet.getString(7)
-                    );
-                }
-                else {
-                    throw new ModelException("Registration with ID" + ID + "Registration not found");
-                }
+         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
+             pstmt.setInt(1, ID);
+
+            ResultSet resultSet = pstmt.executeQuery();
+            if(resultSet.next()) {
+                return new Registration(resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getInt(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7)
+                );
+            }
+            else {
+                throw new ModelException("Registration with ID" + ID + "Registration not found");
+            }
          }
 
          catch (SQLException e) {
@@ -128,11 +130,14 @@ public class RegistrationManager {
      */
 
      public List<Registration> getRegistrations(String attribute, String value) throws ModelException {
-         String stmt = "SELECT * FROM REGISTRATIONS WHERE " + attribute + " = " + value;
+         String stmt = "SELECT * FROM REGISTRATIONS WHERE ? = ?";
 
          List<Registration> registrations = new ArrayList<>();
 
-         try(PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)){
+         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+             pstmt.setString(1, attribute);
+             pstmt.setString(2, value);
+
              ResultSet resultSet = pstmt.executeQuery();
              while(resultSet.next()) {
                  registrations.add(new Registration(resultSet.getInt(1),
@@ -164,9 +169,13 @@ public class RegistrationManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateRegistration(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE REGISTRATIONS SET " + attribute + " = " + newValue + " WHERE ID = " + ID; // should this be adopted?
+        String stmt = "UPDATE REGISTRATIONS SET ? = ? WHERE ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attribute);
+            pstmt.setString(2, newValue);
+            pstmt.setInt(3, ID);
+
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Registration with ID " + ID + " not found.");
             }
@@ -182,9 +191,11 @@ public class RegistrationManager {
      * @throws ModelException if any errors encountered.
      */
     public void deleteRegistration(int ID) throws ModelException {
-        String stmt = "DELETE FROM REGISTRATIONS WHERE ID = " + ID;
+        String stmt = "DELETE FROM REGISTRATIONS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setInt(1, ID);
+
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {

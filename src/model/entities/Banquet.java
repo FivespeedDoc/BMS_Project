@@ -6,21 +6,21 @@ import java.sql.Date;
  * @author jimyang
  */
 public class Banquet {
-    private int BIN; // should we use long here?
+    private final int BIN; // should we use long here?
 
-    private String Name;
+    private final String Name;
 
-    private Date DateTime; // should we use date here?
+    private final Date DateTime; // should we use date here?
 
-    private String Address;
+    private final String Address;
 
-    private String Location;
+    private final String Location;
 
-    private String ContactStaffName;
+    private final String ContactStaffName;
 
-    private boolean Available;
+    private final boolean Available;
 
-    private int Quota;
+    private final int Quota;
 
     public Banquet(int BIN, String Name, Date DateTime, String Address, String Location, String ContactStaffName, boolean Available, int Quota) {
         this.BIN = BIN;
