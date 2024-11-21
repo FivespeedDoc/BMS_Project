@@ -49,9 +49,13 @@ public class LoginWindow extends JFrame {
 
         /* Buttons */
         XPanel loginWindowButtons = new XPanel();
-        Button exit = new Button("Exit", _ -> System.exit(0)); loginWindowButtons.add(exit);
-        Button adminLogin = new Button("Admin Login", this::adminLogin); loginWindowButtons.add(adminLogin);
-        BoldButton login = new BoldButton("Login", this::userLogin); loginWindowButtons.add(login);
+        Button exit = new Button("Exit", _ -> System.exit(0));
+            exit.setForeground(Color.RED);
+            loginWindowButtons.add(exit);
+        Button adminLogin = new Button("Admin Login", this::adminLogin);
+            loginWindowButtons.add(adminLogin);
+        BoldButton login = new BoldButton("Login", this::userLogin);
+            loginWindowButtons.add(login);
         getRootPane().setDefaultButton(login);
         SwingUtilities.invokeLater(login::requestFocusInWindow);
         panel.add(loginWindowButtons);
@@ -63,20 +67,26 @@ public class LoginWindow extends JFrame {
     }
 
     private void userLogin(ActionEvent e) {
-        String user = ID.getText();
-        String pass = Arrays.toString(password.getPassword());
+        String userIDstr = ID.getText();
+        String passwordstr = Arrays.toString(password.getPassword());
 
-        JOptionPane.showMessageDialog(this, "Account ID: " + user + "\nPassword: " + pass, "Login Info", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Account ID: " + userIDstr + "\nPassword: " + passwordstr, "Login Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void adminLogin(ActionEvent e) {
-        String adminID = ID.getText();
-        String pass = Arrays.toString(password.getPassword());
-        new AdminWindow(adminID);
+        String adminIDstr = ID.getText();
+        String passwordstr = Arrays.toString(password.getPassword());
+
+        if (!(adminIDstr.equals("frank") && passwordstr.equals("[1, 2, 3, 4, 5, 6]"))) { // this should be rewritten!
+            errorAlert();
+            return;
+        }
+
+        new AdminWindow(adminIDstr);
         dispose();
     }
 
-    private void errorAlert(ActionEvent e) {
-        JOptionPane.showMessageDialog(this, "Sorry, the application is still under development!", "Error", JOptionPane.INFORMATION_MESSAGE);
+    private void errorAlert() {
+        JOptionPane.showMessageDialog(this, "Sorry, an error occur!", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }
