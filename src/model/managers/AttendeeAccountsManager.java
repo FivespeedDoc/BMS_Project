@@ -26,7 +26,6 @@ public class AttendeeAccountsManager {
 
     public AttendeeAccountsManager(Connection con) throws ModelException {
         this.con = con;
-        initializeAttendees();
     }
 
     private void initializeAttendees() throws ModelException { // Initilizes the table for attendees

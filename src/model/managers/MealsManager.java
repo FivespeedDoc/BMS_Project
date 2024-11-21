@@ -26,7 +26,6 @@ public class MealsManager {
 
     public MealsManager(Connection con) throws ModelException {
         this.con = con;
-        initializeMeals();
     }
 
     private void initializeMeals() throws ModelException {

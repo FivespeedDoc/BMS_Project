@@ -65,7 +65,7 @@ public class BanquetsManager {
             while (resultSet.next()) {
                 banquets.add(new Banquet(resultSet.getInt(1),
                         resultSet.getString(2),
-                        resultSet.getDate(3),
+                        resultSet.getTimestamp(3),
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
@@ -98,7 +98,7 @@ public class BanquetsManager {
                 return new Banquet(
                         resultSet.getInt(1),
                         resultSet.getString(2),
-                        resultSet.getDate(3),
+                        resultSet.getTimestamp(3),
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
@@ -143,7 +143,7 @@ public class BanquetsManager {
                 banquets.add(new Banquet(
                         resultSet.getInt(1),
                         resultSet.getString(2),
-                        resultSet.getDate(3),
+                        resultSet.getTimestamp(3),
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),

@@ -1,5 +1,6 @@
 package model.entities;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * <h3>The {@code Banquet} Class</h3>
@@ -10,7 +11,7 @@ public class Banquet {
 
     private final String Name;
 
-    private final Date DateTime; // should we use date here?
+    private final Timestamp DateTime;
 
     private final String Address;
 
@@ -22,7 +23,7 @@ public class Banquet {
 
     private final int Quota;
 
-    public Banquet(int BIN, String Name, Date DateTime, String Address, String Location, String ContactStaffName, boolean Available, int Quota) {
+    public Banquet(int BIN, String Name, Timestamp DateTime, String Address, String Location, String ContactStaffName, boolean Available, int Quota) {
         this.BIN = BIN;
         this.Name = Name;
         this.DateTime = DateTime;
@@ -41,7 +42,7 @@ public class Banquet {
         return Name;
     }
 
-    public Date getDateTime() {
+    public Timestamp getDateTime() {
         return DateTime;
     }
 

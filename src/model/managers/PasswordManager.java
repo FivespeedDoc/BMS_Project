@@ -68,7 +68,6 @@ public class PasswordManager {
      * @return boolean (if the password matches)
      * @throws Exception
      */
-
     public static boolean verifyPassword(String password, HashedPassword hashedPassword) throws ModelException {
         try {
             byte[] salt = Base64.getDecoder().decode(hashedPassword.salt);
