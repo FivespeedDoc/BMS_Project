@@ -70,7 +70,7 @@ public class BanquetsManager {
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
-                        resultSet.getBoolean(7),
+                        resultSet.getString(7).charAt(0),
                         resultSet.getInt(8)));
             }
 
@@ -103,7 +103,7 @@ public class BanquetsManager {
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
-                        resultSet.getBoolean(7),
+                        resultSet.getString(7).charAt(0),
                         resultSet.getInt(8));
             } else {
                 throw new ModelException("Banquet with ID " + BIN + " not found.");
@@ -148,7 +148,7 @@ public class BanquetsManager {
                         resultSet.getString(4),
                         resultSet.getString(5),
                         resultSet.getString(6),
-                        resultSet.getBoolean(7),
+                        resultSet.getString(7).charAt(0),
                         resultSet.getInt(8)));
             }
             return banquets;

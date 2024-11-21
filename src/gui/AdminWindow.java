@@ -27,7 +27,7 @@ public class AdminWindow extends JFrame {
 
     private final String ID;
 
-    private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Name of the Contact Staff", "Available?", "Quota"};
+    private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Name of the Contact Staff", "Available? (Y/N)", "Quota"};
     private List<Banquet> banquets;
 
     public AdminWindow(Controller controller, String ID) {
@@ -56,7 +56,7 @@ public class AdminWindow extends JFrame {
                 "Hung Hom",
                 "Hong Kong",
                 "Not a Freerider!",
-                false,
+                'Y',
                 100));
         banquets.add(new Banquet(2,
                 "Bad",
@@ -64,7 +64,7 @@ public class AdminWindow extends JFrame {
                 "Hung Hom",
                 "Hong Kong",
                 "Freerider!",
-                false,
+                'N',
                 100));
 
         /* Banquet title */

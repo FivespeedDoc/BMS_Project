@@ -19,11 +19,11 @@ public class Banquet {
 
     private final String ContactStaffName;
 
-    private final boolean Available;
+    private final char Available; // 'Y' or 'N'
 
     private final int Quota;
 
-    public Banquet(int BIN, String Name, Timestamp DateTime, String Address, String Location, String ContactStaffName, boolean Available, int Quota) {
+    public Banquet(int BIN, String Name, Timestamp DateTime, String Address, String Location, String ContactStaffName, char Available, int Quota) {
         this.BIN = BIN;
         this.Name = Name;
         this.DateTime = DateTime;
@@ -58,7 +58,7 @@ public class Banquet {
         return ContactStaffName;
     }
 
-    public boolean isAvailable() {
+    public char isAvailable() {
         return Available;
     }
 
