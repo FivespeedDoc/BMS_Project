@@ -64,7 +64,7 @@ public class BanquetsManager {
             ResultSet resultSet = pstmt.executeQuery();
 
             while (resultSet.next()) {
-                banquets.add(new Banquet(resultSet.getInt(1),
+                banquets.add(new Banquet(resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getTimestamp(3),
                         resultSet.getString(4),
@@ -91,13 +91,13 @@ public class BanquetsManager {
         String selectSQL = "SELECT * FROM BANQUETS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
-            pstmt.setInt(1, BIN);
+            pstmt.setLong(1, BIN);
 
             ResultSet resultSet = pstmt.executeQuery();
 
             if (resultSet.next()) {
                 return new Banquet(
-                        resultSet.getInt(1),
+                        resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getTimestamp(3),
                         resultSet.getString(4),
@@ -142,7 +142,7 @@ public class BanquetsManager {
 
             while (resultSet.next()) {
                 banquets.add(new Banquet(
-                        resultSet.getInt(1),
+                        resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getTimestamp(3),
                         resultSet.getString(4),
@@ -174,7 +174,7 @@ public class BanquetsManager {
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attribute);
             pstmt.setString(2, newValue);
-            pstmt.setInt(3, BIN);
+            pstmt.setLong(3, BIN);
             pstmt.executeUpdate();
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
@@ -195,7 +195,7 @@ public class BanquetsManager {
         String stmt = "DELETE FROM BANQUETS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setInt(1, BIN);
+            pstmt.setLong(1, BIN);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new ModelException("Banquet with BIN " + BIN + " not found.");

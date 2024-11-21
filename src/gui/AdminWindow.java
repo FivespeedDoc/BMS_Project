@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -54,30 +53,12 @@ public class AdminWindow extends JFrame {
         calendar.set(Calendar.MINUTE, 0); // Minute
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
 
-        /* Test Data */
-        banquets = new ArrayList<>();
-        banquets.add(new Banquet(1,
-                "Good",
-                new Timestamp(timestamp.getTime()),
-                "Hung Hom",
-                "Hong Kong",
-                "Not a Freerider!",
-                'Y',
-                100));
-        banquets.add(new Banquet(2,
-                "Bad",
-                new Timestamp(timestamp.getTime()),
-                "Hung Hom",
-                "Hong Kong",
-                "Freerider!",
-                'N',
-                100));
-
         /* Banquet title */
         TitleLabel titleLabel = new TitleLabel("Banquets");
         panel.add(titleLabel);
 
         /* Banquet table */
+        banquets = controller.getAllBanquets();
         Table banquetTable = new Table(new DefaultTableModel(
                 BanquetsManager.banquetListToObjectArray(banquets),
                 banquetAttributes));
@@ -85,6 +66,7 @@ public class AdminWindow extends JFrame {
         // tableScrollPane.setPreferredSize(new Dimension(?, ?)); // how to
         panel.add(tableScrollPane);
 
+        /* Banquet table selection */
         RegularLabel selectedBanquet = new RegularLabel("No banquet selected");
             selectedBanquet.setFont(new Font("Arial", Font.BOLD, 16));
         ListSelectionModel rowSelectionModel = banquetTable.getSelectionModel();
@@ -101,12 +83,26 @@ public class AdminWindow extends JFrame {
                 }
             }
         });
+
+        /* Banquet editing selection */
+        banquetTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // double click
+                    int row = banquetTable.rowAtPoint(e.getPoint());
+                    if (row != -1) {
+                        showInfoDialog(selectedRowBIN);
+                    }
+                }
+            }
+        });
+
+        /* Banquet table clear selection */
         banquetTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int row = banquetTable.rowAtPoint(e.getPoint());
-                int col = banquetTable.columnAtPoint(e.getPoint());
-                if (row == -1 || col == -1) {
+                if (row == -1) {
                     banquetTable.clearSelection();
                 }
             }
@@ -134,5 +130,9 @@ public class AdminWindow extends JFrame {
 
         pack();
         setVisible(true);
+    }
+
+    private void showInfoDialog(long BIN) {
+        JOptionPane.showMessageDialog(this, "You're going to edit: " + BIN, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 }

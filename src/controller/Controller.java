@@ -4,10 +4,13 @@ import globalexceptions.BMS_Exception;
 import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
+import model.entities.Banquet;
 import service.managers.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <h2>The {@code Controller} Class</h2>
@@ -46,6 +49,14 @@ public class Controller {
             });
         } catch (ModelException e) {
             throw new BMS_Exception("The application cannot be initialized: " + e.getMessage());
+        }
+    }
+
+    public List<Banquet> getAllBanquets() {
+        try {
+            return banquetsManager.getAllBanquets();
+        } catch (ModelException e) {
+            return new ArrayList<>();
         }
     }
 
