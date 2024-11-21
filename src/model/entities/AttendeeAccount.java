@@ -15,11 +15,11 @@ public class AttendeeAccount {
 
     private final String Type;
 
-    private final int MobileNo;
+    private final long MobileNo;
 
     private final String Organization;
 
-    public AttendeeAccount(String ID, String Password, String Salt, String Name, String Type, int MobileNo, String Organization) {
+    public AttendeeAccount(String ID, String Password, String Salt, String Name, String Type, long MobileNo, String Organization) {
         this.ID = ID;
         this.Password = Password;
         this.Salt = Salt;
@@ -29,7 +29,7 @@ public class AttendeeAccount {
         this.Organization = Organization;
     }
 
-    public AttendeeAccount(String ID, HashedPassword hashedPassword, String Name, String Type, int MobileNo, String Organization) {
+    public AttendeeAccount(String ID, HashedPassword hashedPassword, String Name, String Type, long MobileNo, String Organization) {
         this.ID = ID;
         this.Password = hashedPassword.hashedPassword;
         this.Salt = hashedPassword.salt;
@@ -59,7 +59,7 @@ public class AttendeeAccount {
         return Type;
     }
 
-    public int getMobileNo() {
+    public long getMobileNo() {
         return MobileNo;
     }
 

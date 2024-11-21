@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * @author jimyang
  */
 public class Banquet {
-    private final int BIN; // should we use long here?
+    private final long BIN; // should we use long here?
 
     private final String Name;
 
@@ -23,7 +23,7 @@ public class Banquet {
 
     private final int Quota;
 
-    public Banquet(int BIN, String Name, Timestamp DateTime, String Address, String Location, String ContactStaffName, char Available, int Quota) {
+    public Banquet(long BIN, String Name, Timestamp DateTime, String Address, String Location, String ContactStaffName, char Available, int Quota) {
         this.BIN = BIN;
         this.Name = Name;
         this.DateTime = DateTime;
@@ -34,7 +34,7 @@ public class Banquet {
         this.Quota = Quota;
     }
 
-    public int getBIN() {
+    public long getBIN() {
         return BIN;
     }
 

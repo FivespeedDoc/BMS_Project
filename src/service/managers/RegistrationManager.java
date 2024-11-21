@@ -61,11 +61,11 @@ public class RegistrationManager {
              ResultSet resultSet = pstmt.executeQuery();
 
              while (resultSet.next()) {
-                 registrations.add(new Registration(resultSet.getInt(1),
+                 registrations.add(new Registration(resultSet.getLong(1),
                                 resultSet.getString(2),
                                 resultSet.getString(3),
-                                resultSet.getInt(4),
-                                resultSet.getString(5),
+                                resultSet.getLong(4),
+                                resultSet.getLong(5),
                                 resultSet.getString(6),
                                 resultSet.getString(7)
                          ));
@@ -85,11 +85,11 @@ public class RegistrationManager {
      * @return the {@code Registration} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-     public Registration getRegistration(int ID) throws ModelException {
+     public Registration getRegistration(long ID) throws ModelException {
          String selectSQL = "SELECT * FROM REGISTRATIONS WHERE ID = ?";
 
          try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
-             pstmt.setInt(1, ID);
+             pstmt.setLong(1, ID);
 
             ResultSet resultSet = pstmt.executeQuery();
             if(resultSet.next()) {
@@ -97,7 +97,7 @@ public class RegistrationManager {
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getInt(4),
-                        resultSet.getString(5),
+                        resultSet.getLong(5),
                         resultSet.getString(6),
                         resultSet.getString(7)
                 );
@@ -144,7 +144,7 @@ public class RegistrationManager {
                          resultSet.getString(2),
                          resultSet.getString(3),
                          resultSet.getInt(4),
-                         resultSet.getString(5),
+                         resultSet.getLong(5),
                          resultSet.getString(6),
                          resultSet.getString(7)
                  ));
@@ -174,7 +174,7 @@ public class RegistrationManager {
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attribute);
             pstmt.setString(2, newValue);
-            pstmt.setInt(3, ID);
+            pstmt.setLong(3, ID);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Registration with ID " + ID + " not found.");
@@ -194,7 +194,7 @@ public class RegistrationManager {
         String stmt = "DELETE FROM REGISTRATIONS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setInt(1, ID);
+            pstmt.setLong(1, ID);
 
             int affectedRows = pstmt.executeUpdate();
 

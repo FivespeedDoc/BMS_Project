@@ -1,6 +1,7 @@
 package gui;
 
 import controller.Controller;
+import gui.components.RegularLabel;
 import gui.components.Table;
 import gui.components.TitleLabel;
 import model.entities.Banquet;
@@ -8,6 +9,9 @@ import service.managers.BanquetsManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Timestamp;
@@ -26,6 +30,8 @@ public class AdminWindow extends JFrame {
     private final Controller controller;
 
     private final String ID;
+
+    private long selectedRowBIN;
 
     private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Name of the Contact Staff", "Available? (Y/N)", "Quota"};
     private List<Banquet> banquets;
@@ -79,6 +85,34 @@ public class AdminWindow extends JFrame {
         // tableScrollPane.setPreferredSize(new Dimension(?, ?)); // how to
         panel.add(tableScrollPane);
 
+        RegularLabel selectedBanquet = new RegularLabel("No banquet selected");
+            selectedBanquet.setFont(new Font("Arial", Font.BOLD, 16));
+        ListSelectionModel rowSelectionModel = banquetTable.getSelectionModel();
+        rowSelectionModel.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) { // Make sure this is triggered when the selection is finished
+                int selectedRow = banquetTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    String rowBIN = banquetTable.getValueAt(selectedRow, 0).toString();
+                    selectedRowBIN = Long.parseLong(rowBIN);
+                    String rowName = banquetTable.getValueAt(selectedRow, 1).toString();
+                    selectedBanquet.setText("Selected banquet: " + rowBIN + ", " + rowName);
+                } else {
+                    selectedBanquet.setText("No banquet selected");
+                }
+            }
+        });
+        banquetTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = banquetTable.rowAtPoint(e.getPoint());
+                int col = banquetTable.columnAtPoint(e.getPoint());
+                if (row == -1 || col == -1) {
+                    banquetTable.clearSelection();
+                }
+            }
+        });
+        panel.add(selectedBanquet);
+
         /* Finally */
         add(panel);
         addWindowListener(new WindowAdapter() {
@@ -97,6 +131,8 @@ public class AdminWindow extends JFrame {
                 }
             }
         });
+
+        pack();
         setVisible(true);
     }
 }

@@ -15,6 +15,7 @@ import javax.swing.*;
 public class Application {
     public static void main(String[] args) {
         try {
+            System.setProperty("apple.awt.application.name", "Banquet Management System"); // is this available in Windows?
             Controller controller = new Controller();
         } catch (WrongApplicationStateException e) {
             throw new RuntimeException(e);

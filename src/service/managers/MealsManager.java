@@ -62,8 +62,8 @@ public class MealsManager {
             ResultSet resultSet = pstmt.executeQuery();
 
             while (resultSet.next()) {
-                meals.add(new Meal(resultSet.getInt(1),
-                        resultSet.getInt(2),
+                meals.add(new Meal(resultSet.getLong(1),
+                        resultSet.getLong(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getDouble(5),
@@ -94,8 +94,8 @@ public class MealsManager {
             ResultSet resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
                 return new Meal(
-                        resultSet.getInt(1),
-                        resultSet.getInt(2),
+                        resultSet.getLong(1),
+                        resultSet.getLong(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getDouble(5),
@@ -136,8 +136,8 @@ public class MealsManager {
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 meals.add(new Meal(
-                        resultSet.getInt(1),
-                        resultSet.getInt(2),
+                        resultSet.getLong(1),
+                        resultSet.getLong(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getDouble(5),
@@ -167,8 +167,8 @@ public class MealsManager {
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attribute);
             pstmt.setString(2, newValue);
-            pstmt.setInt(3, BIN);
-            pstmt.setInt(4, ID);
+            pstmt.setLong(3, BIN);
+            pstmt.setLong(4, ID);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
@@ -189,8 +189,8 @@ public class MealsManager {
         String stmt = "DELETE FROM MEALS WHERE BIN = ? AND ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setInt(1, BIN);
-            pstmt.setInt(2, ID);
+            pstmt.setLong(1, BIN);
+            pstmt.setLong(2, ID);
 
             int affectedRows = pstmt.executeUpdate();
 
