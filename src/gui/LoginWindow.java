@@ -14,7 +14,7 @@ import java.util.Arrays;
  * @author FrankYang0610
  */
 public class LoginWindow extends JFrame {
-    private final TextField accountID;
+    private final TextField ID; // account ID for admin and users
 
     private final PasswordField password;
 
@@ -40,9 +40,9 @@ public class LoginWindow extends JFrame {
         //panel.add(Box.createVerticalStrut(10));
 
         /* Input boxes */
-        accountID = new TextField();
+        ID = new TextField();
         password = new PasswordField();
-        panel.add(new UsernamePanel(accountID));
+        panel.add(new UsernamePanel(ID));
         panel.add(new PasswordPanel(password));
 
         // panel.add(Box.createVerticalStrut(10));
@@ -63,14 +63,14 @@ public class LoginWindow extends JFrame {
     }
 
     private void userLogin(ActionEvent e) {
-        String user = accountID.getText();
+        String user = ID.getText();
         String pass = Arrays.toString(password.getPassword());
 
         JOptionPane.showMessageDialog(this, "Account ID: " + user + "\nPassword: " + pass, "Login Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void adminLogin(ActionEvent e) {
-        String adminID = accountID.getText();
+        String adminID = ID.getText();
         String pass = Arrays.toString(password.getPassword());
         new AdminWindow(adminID);
         dispose();

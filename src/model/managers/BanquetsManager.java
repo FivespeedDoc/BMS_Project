@@ -7,6 +7,7 @@ import model.entities.Banquet;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -202,5 +203,26 @@ public class BanquetsManager {
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
+    }
+
+    /**
+     * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.
+     */
+    public static String[][] banquetListToObjectArray(List<Banquet> banquets) {
+        String[][] result = new String[banquets.size()][8];
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // should this be here?
+
+        for (int i = 0; i < banquets.size(); i++) {
+            result[i][0] = String.valueOf(banquets.get(i).getBIN());
+            result[i][1] = String.valueOf(banquets.get(i).getName());
+            result[i][2] = String.valueOf(formatter.format(banquets.get(i).getDateTime()));
+            result[i][3] = String.valueOf(banquets.get(i).getAddress());
+            result[i][4] = String.valueOf(banquets.get(i).getLocation());
+            result[i][5] = String.valueOf(banquets.get(i).getContactStaffName());
+            result[i][6] = String.valueOf(banquets.get(i).isAvailable());
+            result[i][7] = String.valueOf(banquets.get(i).getQuota());
+        }
+
+        return result;
     }
 }
