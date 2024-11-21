@@ -47,7 +47,7 @@ public class UserWindow extends JFrame {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
 
-            String firstName = firstNameField.getText();
+            String firstName = firstNameField.getText();//
             String lastName = lastNameField.getText();
             String address = addressField.getText();
             String attendeeType = (String) attendeeTypeCombo.getSelectedItem();
