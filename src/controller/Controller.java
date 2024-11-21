@@ -1,5 +1,6 @@
 package controller;
 
+import globalexceptions.BMS_Exception;
 import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
@@ -26,7 +27,7 @@ public class Controller {
 
     private final RegistrationManager registrationManager;
 
-    public Controller() throws WrongApplicationStateException {
+    public Controller() throws BMS_Exception {
         try {
             /* The Model */
             // The database connection
@@ -44,7 +45,7 @@ public class Controller {
                 loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             });
         } catch (ModelException e) {
-            throw new WrongApplicationStateException("The application cannot be initialized: " + e.getMessage());
+            throw new BMS_Exception("The application cannot be initialized: " + e.getMessage());
         }
     }
 

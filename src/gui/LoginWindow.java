@@ -62,7 +62,7 @@ public class LoginWindow extends JFrame {
             loginWindowButtons.add(exit);
         Button adminLogin = new Button("Admin Login", this::adminLogin);
             loginWindowButtons.add(adminLogin);
-        BoldButton login = new BoldButton("Login", this::userLogin);
+        Button login = new Button("Login", this::userLogin);
             loginWindowButtons.add(login);
         getRootPane().setDefaultButton(login);
         SwingUtilities.invokeLater(login::requestFocusInWindow);
