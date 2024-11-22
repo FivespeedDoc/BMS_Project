@@ -27,21 +27,28 @@ public class AdminWindow extends JFrame {
 
     private final String adminID;
 
-    private final JTable banquetTable;
-
-    private long selectedRowBIN;
-
-    private String selectedRowName; // for convenience
-
+    /* Banquets */
     private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
-
+    private final JTable banquetTable;
+    private long selectedBanquetBIN;
+    private String selectedBanquetName; // for convenience
     private List<Banquet> banquets;
+
+    /* Meals */
+    private static final String[] mealsAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
+    private final JTable mealTable;
+    private long selectedMealID;
+    private List<String> banquetMeals;
+
+    /* Drinks */
+    private static final String[] banquetDrinksTitle = {"Drink 1", "Drink 2", "Drink 3", "Drink 4", "Extra Drink!"};
+    private static final String[][] banquetDrinks = {{"Coke", "Tea", "Coffee", "Lemon Tea", "Dark Drink (Don't try!)"}};
 
     public AdminWindow(Controller controller, String adminID) {
         super("Administrator: " + adminID);
         this.controller = controller;
         this.adminID = adminID;
-        this.selectedRowBIN = -1;
+        this.selectedBanquetBIN = -1;
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -52,20 +59,48 @@ public class AdminWindow extends JFrame {
 
 
         /* Banquet table panel */
-        JPanel banquetTablePanel = new JPanel();
-        banquetTablePanel.setLayout(new BoxLayout(banquetTablePanel, BoxLayout.Y_AXIS));
+        JPanel tablesPanel = new JPanel();
+        tablesPanel.setLayout(new BoxLayout(tablesPanel, BoxLayout.Y_AXIS));
 
         /* Banquet title */
-        TitleLabel titleLabel = new TitleLabel("Banquets");
-        banquetTablePanel.add(titleLabel);
+        TitleLabel banquetTableTitle = new TitleLabel("Banquets");
+        tablesPanel.add(banquetTableTitle);
 
         /* Banquet table */
         banquets = controller.getAllBanquets();
         banquetTable = new Table(new DefaultTableModel(
                 BanquetsManager.banquetListToObjectArray(banquets),
                 banquetAttributes));
-        JScrollPane tableScrollPane = new JScrollPane(banquetTable);
-        banquetTablePanel.add(tableScrollPane);
+        JScrollPane banquetTableScrollPane = new JScrollPane(banquetTable);
+        tablesPanel.add(banquetTableScrollPane);
+
+        /* Meal title */
+        TitleLabel mealTableTitle = new TitleLabel("Meals");
+        tablesPanel.add(mealTableTitle);
+
+        /* Meal table */
+        mealTable = new Table(new DefaultTableModel(new Object[][]{}, mealsAttributes));
+        mealTable.setRowSelectionAllowed(false);
+        mealTable.setColumnSelectionAllowed(false);
+        mealTable.setCellSelectionEnabled(false);
+        JScrollPane mealTableScrollPane = new JScrollPane(mealTable);
+        mealTableScrollPane.setPreferredSize(new Dimension(mealTableScrollPane.getPreferredSize().width, 200));
+        mealTableScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        tablesPanel.add(mealTableScrollPane);
+
+        /* Drink title */
+        TitleLabel drinkTableTitle = new TitleLabel("Drinks (Fixed Supply)");
+        tablesPanel.add(drinkTableTitle);
+
+        /* Drink table */
+        Table drinkTable = new Table(new DefaultTableModel(banquetDrinks, banquetDrinksTitle));
+        drinkTable.setRowSelectionAllowed(false);
+        drinkTable.setColumnSelectionAllowed(false);
+        drinkTable.setCellSelectionEnabled(false);
+        JScrollPane drinkTableScrollPane = new JScrollPane(drinkTable);
+        drinkTableScrollPane.setPreferredSize(new Dimension(drinkTableScrollPane.getPreferredSize().width, 100));
+        drinkTableScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        tablesPanel.add(drinkTableScrollPane);
 
         /* Menu panel */
         JPanel menuPanel = new JPanel();
@@ -93,6 +128,30 @@ public class AdminWindow extends JFrame {
         Button deleteBanquet = new Button("Delete Banquet", _ -> deleteBanquet());
             deleteBanquet.setMinimumSize(buttonSize); deleteBanquet.setMaximumSize(buttonSize); deleteBanquet.setPreferredSize(buttonSize);
             menuPanel.add(deleteBanquet);
+        menuPanel.add(Box.createVerticalStrut(20));
+        Button newMeal = new Button("New Meal", null);
+            newMeal.setMinimumSize(buttonSize); newMeal.setMaximumSize(buttonSize); newMeal.setPreferredSize(buttonSize);
+            menuPanel.add(newMeal);
+        Button editMeal = new Button("Edit Meal", null);
+            editMeal.setMinimumSize(buttonSize); editMeal.setMaximumSize(buttonSize); editMeal.setPreferredSize(buttonSize);
+            menuPanel.add(editMeal);
+        Button deleteMeal = new Button("Delete Meal", null);
+            deleteMeal.setMinimumSize(buttonSize); deleteMeal.setMaximumSize(buttonSize); deleteMeal.setPreferredSize(buttonSize);
+            menuPanel.add(deleteMeal);
+        menuPanel.add(Box.createVerticalStrut(20));
+        Button refreshTables = new Button("Refresh All Tables", _ -> {
+            banquetTable.clearSelection();
+            selectedBanquet.setText("No banquet selected");
+            selectedBanquetBIN = -1;
+            selectedBanquetName = "";
+            banquets = controller.getAllBanquets();
+            banquetTable.setModel(new DefaultTableModel(
+                    BanquetsManager.banquetListToObjectArray(banquets),
+                    banquetAttributes
+            ));
+        });
+            refreshTables.setMinimumSize(buttonSize); refreshTables.setMaximumSize(buttonSize); refreshTables.setPreferredSize(buttonSize);
+        menuPanel.add(refreshTables);
         menuPanel.add(Box.createVerticalGlue());
         Button logout = new Button("Logout", _ -> {
             int confirm = showConfirmDialog(
@@ -118,25 +177,23 @@ public class AdminWindow extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int selectedRow = banquetTable.rowAtPoint(e.getPoint());
                 if (selectedRow != -1) {
-                    selectedRowBIN = Long.parseLong(banquetTable.getValueAt(selectedRow, 0).toString());
-                    selectedRowName = banquetTable.getValueAt(selectedRow, 1).toString();
-                    selectedBanquet.setText("Selected " + selectedRowBIN + ": " + selectedRowName);
+                    selectedBanquetBIN = Long.parseLong(banquetTable.getValueAt(selectedRow, 0).toString());
+                    selectedBanquetName = banquetTable.getValueAt(selectedRow, 1).toString();
+                    selectedBanquet.setText("Selected " + selectedBanquetBIN + ": " + selectedBanquetName);
 
                     if (e.getClickCount() == 2) {
                         editBanquet();
                     }
                 } else {
-                    banquetTable.clearSelection();
-                    selectedRowBIN = -1;
-                    selectedRowName = "";
                     selectedBanquet.setText("No banquet selected");
+                    clearTableSelections();
                 }
             }
         });
 
 
         /* Finally */
-        panel.add(banquetTablePanel);
+        panel.add(tablesPanel);
         panel.add(menuPanel);
         add(panel);
         addWindowListener(new WindowAdapter() {
@@ -162,46 +219,32 @@ public class AdminWindow extends JFrame {
 
     private void newBanquet() {
         new NewBanquetWindow(controller, AdminWindow.this);
-        banquets = controller.getAllBanquets();
-        banquetTable.setModel(new DefaultTableModel(
-                BanquetsManager.banquetListToObjectArray(banquets),
-                banquetAttributes
-        ));
-
-        banquetTable.clearSelection();
-        selectedRowBIN = -1;
-        selectedRowName = "";
+        clearTableSelections();
+        refreshTables();
     }
 
     private void editBanquet() {
-        if (selectedRowBIN != -1) {
-            new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
-            banquets = controller.getAllBanquets();
-            banquetTable.setModel(new DefaultTableModel(
-                    BanquetsManager.banquetListToObjectArray(banquets),
-                    banquetAttributes
-            ));
-
-            banquetTable.clearSelection();
-            selectedRowBIN = -1;
-            selectedRowName = "";
+        if (selectedBanquetBIN != -1) {
+            new EditBanquetWindow(controller, AdminWindow.this, selectedBanquetBIN);
+            clearTableSelections();
+            refreshTables();
         } else {
             showNoSelectionDialog();
         }
     }
 
     private void deleteBanquet() {
-        if (selectedRowBIN != -1) {
+        if (selectedBanquetBIN != -1) {
             int confirm = JOptionPane.showConfirmDialog(
                     AdminWindow.this,
-                    "Are you sure to delete this banquet: " + selectedRowBIN + ": " + selectedRowName + "? " + "This operation cannot be undone!",
+                    "Are you sure to delete this banquet: " + selectedBanquetBIN + ": " + selectedBanquetName + "? " + "This operation cannot be undone!",
                     "Confirm Deletion",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE
             );
 
             if (confirm == JOptionPane.YES_OPTION) {
-                boolean result = controller.deleteBanquet(selectedRowBIN);
+                boolean result = controller.deleteBanquet(selectedBanquetBIN);
 
                 if (!result) {
                     JOptionPane.showMessageDialog(
@@ -212,19 +255,27 @@ public class AdminWindow extends JFrame {
                     );
                 }
 
-                banquets = controller.getAllBanquets();
-                banquetTable.setModel(new DefaultTableModel(
-                        BanquetsManager.banquetListToObjectArray(banquets),
-                        banquetAttributes
-                ));
+                refreshTables();
             }
 
-            banquetTable.clearSelection();
-            selectedRowBIN = -1;
-            selectedRowName = "";
+            clearTableSelections();
         } else {
             showNoSelectionDialog();
         }
+    }
+
+    private void clearTableSelections() {
+        banquetTable.clearSelection();
+        selectedBanquetBIN = -1;
+        selectedBanquetName = "";
+    }
+
+    private void refreshTables() {
+        banquets = controller.getAllBanquets();
+        banquetTable.setModel(new DefaultTableModel(
+                BanquetsManager.banquetListToObjectArray(banquets),
+                banquetAttributes
+        ));
     }
 
     private void showNoSelectionDialog() {
