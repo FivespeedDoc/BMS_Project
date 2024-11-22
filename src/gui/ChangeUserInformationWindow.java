@@ -75,7 +75,11 @@ public class ChangeUserInformationWindow {
 
                 if(confirmation.isSelected() && PF1STR.equals(PF2STR)){
                     int ID = 31; // Placeholder
-                    AAM.updateAttendee(ID,"Password", PF2STR);
+                    try {
+                        AAM.updateAttendee(ID,"Password", PF2STR);
+                    } catch (ModelException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
 
             }
@@ -102,7 +106,11 @@ public class ChangeUserInformationWindow {
                 String newName = firstNameField.getText() + ' ' + lastNameField.getText();
                 if(confirmation.isSelected()){
                     int ID = 31; // Placeholder
-                    AAM.updateAttendee(ID,"Organization", newName);
+                    try {
+                        AAM.updateAttendee(ID,"Organization", newName);
+                    } catch (ModelException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
 
             }
@@ -127,12 +135,16 @@ public class ChangeUserInformationWindow {
 
                     if(newNum.length() == 8 && newNum.charAt(0) == '9'){ // only limited to HK for now,
                         int ID = 31; // Placeholder
-                        AAM.updateAttendee(ID,"MobileNo", newNum);
+                        try {
+                            AAM.updateAttendee(ID,"MobileNo", newNum);
+                        } catch (ModelException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                     else{
                         JFrame popup = new JFrame();
                         popup.setSize(200,200);
-                        popup.setTitle("Invalid Input");\
+                        popup.setTitle("Invalid Input");
                         TitleLabel title = new TitleLabel("Please enter a valid HK mobile number.");
                         popup.add(title);
                         popup.setVisible(true);
@@ -161,7 +173,11 @@ public class ChangeUserInformationWindow {
             public void actionPerformed(ActionEvent e) {
                 if(confirmation.isSelected()){
                     int ID = 31; // Placeholder
-                    AAM.updateAttendee(ID,"Organization", newOrganizationField.getText());
+                    try {
+                        AAM.updateAttendee(ID,"Organization", newOrganizationField.getText());
+                    } catch (ModelException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
 
             }
@@ -173,7 +189,6 @@ public class ChangeUserInformationWindow {
 
 
     public void InitWindow(){
-
         try {
             AAM = new AttendeeAccountsManager(new Connection());
         } catch (ModelException e) {
