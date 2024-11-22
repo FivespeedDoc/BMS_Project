@@ -84,7 +84,7 @@ public class BanquetsManager {
      * @param banquet the {@code Banquet} object (Any of fields of the banquet object must not be null, except BIN, which will not be taken into consideration)
      * @throws ModelException
      */
-    public void newBanquet(Banquet banquet) throws ModelException {
+    public void addBanquet(Banquet banquet) throws ModelException {
         String insertSQL = "INSERT INTO BANQUETS (Name, DateTime, Address, Location, ContactStaffName, Available, Quota) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 

@@ -5,8 +5,6 @@ import gui.components.Button;
 import gui.components.TextAndFieldPanel;
 import gui.components.TextField;
 import gui.components.ButtonsPanel;
-import model.entities.Banquet;
-import service.utilities.DateTimeFormatter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -87,7 +85,7 @@ public class NewBanquetWindow extends JDialog {
     }
 
     private void confirmAdd(ActionEvent e) {
-        if (controller.newBanquet(nameField.getText(),
+        if (controller.addBanquet(nameField.getText(),
                 dateTimeField.getText(),
                 addressField.getText(),
                 locationField.getText(),

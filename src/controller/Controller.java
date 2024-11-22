@@ -69,7 +69,7 @@ public class Controller {
         return null;
     }
 
-    public boolean newBanquet(String Name, String DateTime, String Address, String Location, String ContactStaffName, String Available, String Quota) {
+    public boolean addBanquet(String Name, String DateTime, String Address, String Location, String ContactStaffName, String Available, String Quota) {
         try {
             if (Name.isEmpty() || DateTime.isEmpty() || Address.isEmpty() || Location.isEmpty() || ContactStaffName.isEmpty() || Available.isEmpty() || Quota.isEmpty()) {
                 return false;
@@ -83,7 +83,7 @@ public class Controller {
                     ContactStaffName,
                     Available.charAt(0),
                     Integer.parseInt(Quota));
-            banquetsManager.newBanquet(banquet);
+            banquetsManager.addBanquet(banquet);
             return true;
         } catch (ModelException | ParseException | NumberFormatException e) {
             return false;
