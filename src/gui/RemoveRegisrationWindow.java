@@ -19,7 +19,7 @@ public class RemoveRegisrationWindow extends JFrame {
     private void initUI() {
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 2, 10, 20));
+        panel.setLayout(new GridLayout(5, 3, 10, 10));
 
 
         JTextField emailField = new JTextField();
@@ -27,7 +27,7 @@ public class RemoveRegisrationWindow extends JFrame {
 
         JLabel emailLabel = new JLabel("   E-mail Address:");
         JLabel passwordLabel = new JLabel("   Password:");
-        JLabel confirmLabel = new JLabel("<html>   Are you sure you want to delete your account?<br>This action cannot be undone!</html>");
+        JLabel confirmLabel = new JLabel("<html> Are you sure you want to delete your account?<br>This action cannot be undone!</html>");
 
         JButton confirmButton = new JButton("  Confirm Delete");
         JButton cancelButton = new JButton("  Cancel");
