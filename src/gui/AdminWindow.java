@@ -1,6 +1,7 @@
 package gui;
 
 import controller.Controller;
+import gui.components.Button;
 import gui.components.RegularLabel;
 import gui.components.Table;
 import gui.components.TitleLabel;
@@ -8,15 +9,10 @@ import model.entities.Banquet;
 import service.managers.BanquetsManager;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.sql.Timestamp;
-import java.util.Calendar;
+import java.awt.event.*;
 import java.util.List;
 
 import static javax.swing.JOptionPane.*;
@@ -29,17 +25,23 @@ import static javax.swing.JOptionPane.*;
 public class AdminWindow extends JFrame {
     private final Controller controller;
 
-    private final String ID;
+    private final String adminID;
+
+    private final JTable banquetTable;
 
     private long selectedRowBIN;
 
+    private String selectedRowName; // for convenience
+
     private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
+
     private List<Banquet> banquets;
 
     public AdminWindow(Controller controller, String adminID) {
         super("Administrator: " + adminID);
         this.controller = controller;
-        this.ID = adminID;
+        this.adminID = adminID;
+        this.selectedRowBIN = -1;
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -59,65 +61,83 @@ public class AdminWindow extends JFrame {
 
         /* Banquet table */
         banquets = controller.getAllBanquets();
-        Table banquetTable = new Table(new DefaultTableModel(
+        banquetTable = new Table(new DefaultTableModel(
                 BanquetsManager.banquetListToObjectArray(banquets),
                 banquetAttributes));
         JScrollPane tableScrollPane = new JScrollPane(banquetTable);
         banquetTablePanel.add(tableScrollPane);
 
+        /* Menu panel */
+        JPanel menuPanel = new JPanel();
+        menuPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+        menuPanel.setMinimumSize(new Dimension(230, 0));
+        menuPanel.setMaximumSize(new Dimension(230, Integer.MAX_VALUE));
+        menuPanel.setPreferredSize(new Dimension(230, menuPanel.getPreferredSize().height));
 
         /* Banquet table selection */
         RegularLabel selectedBanquet = new RegularLabel("No banquet selected");
-            selectedBanquet.setFont(new Font("Arial", Font.BOLD, 16));
-        ListSelectionModel rowSelectionModel = banquetTable.getSelectionModel();
-        rowSelectionModel.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) { // Make sure this is triggered when the selection is finished
-                int selectedRow = banquetTable.getSelectedRow();
+        selectedBanquet.setFont(new Font("Arial", Font.PLAIN, 16));
+        menuPanel.add(selectedBanquet);
+
+        menuPanel.add(Box.createVerticalStrut(20));
+
+        /* Menu */
+        Dimension buttonSize = new Dimension(200, 50);
+        Button newBanquet = new Button("New Banquet", null);
+            newBanquet.setMinimumSize(buttonSize); newBanquet.setMaximumSize(buttonSize); newBanquet.setPreferredSize(buttonSize);
+            menuPanel.add(newBanquet);
+        Button editBanquet = new Button("Edit Banquet", _ -> editBanquet());
+            editBanquet.setMinimumSize(buttonSize); editBanquet.setMaximumSize(buttonSize); editBanquet.setPreferredSize(buttonSize);
+            menuPanel.add(editBanquet);
+        Button deleteBanquet = new Button("Delete Banquet", null);
+            deleteBanquet.setMinimumSize(buttonSize); deleteBanquet.setMaximumSize(buttonSize); deleteBanquet.setPreferredSize(buttonSize);
+            menuPanel.add(deleteBanquet);
+        menuPanel.add(Box.createVerticalGlue());
+        Button logout = new Button("Logout", _ -> {
+            int confirm = showConfirmDialog(
+                    AdminWindow.this,
+                    "This operation will log you out.",
+                    "Log out?",
+                    YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                AdminWindow.this.dispose();
+                new LoginWindow(controller);
+            }
+        });
+            logout.setForeground(Color.RED);
+            logout.setMinimumSize(buttonSize); logout.setMaximumSize(buttonSize); logout.setPreferredSize(buttonSize);
+            menuPanel.add(logout);
+
+
+        /* Banquet table selection */
+        banquetTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = banquetTable.rowAtPoint(e.getPoint());
                 if (selectedRow != -1) {
-                    String rowBIN = banquetTable.getValueAt(selectedRow, 0).toString();
-                    selectedRowBIN = Long.parseLong(rowBIN);
-                    String rowName = banquetTable.getValueAt(selectedRow, 1).toString();
-                    selectedBanquet.setText("Selected: " + rowBIN + ", " + rowName);
+                    selectedRowBIN = Long.parseLong(banquetTable.getValueAt(selectedRow, 0).toString());
+                    selectedRowName = banquetTable.getValueAt(selectedRow, 1).toString();
+                    selectedBanquet.setText("Selected " + selectedRowBIN + ": " + selectedRowName);
+
+                    if (e.getClickCount() == 2) {
+                        editBanquet();
+                    }
                 } else {
+                    selectedRowBIN = -1;
+                    selectedRowName = "";
+                    banquetTable.clearSelection();
                     selectedBanquet.setText("No banquet selected");
                 }
             }
         });
 
-        /* Banquet editing selection */
-        banquetTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // double click
-                    int row = banquetTable.rowAtPoint(e.getPoint());
-                    if (row != -1) {
-                        new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
-                        banquets = controller.getAllBanquets();
-                        banquetTable.setModel(new DefaultTableModel(
-                                BanquetsManager.banquetListToObjectArray(banquets),
-                                banquetAttributes));
-                    }
-                }
-            }
-        });
-
-        /* Banquet table clear selection */
-        banquetTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int row = banquetTable.rowAtPoint(e.getPoint());
-                if (row == -1) {
-                    banquetTable.clearSelection();
-                }
-            }
-        });
-
-
-        /* Near finally */
-        panel.add(banquetTablePanel);
-        panel.add(selectedBanquet);
 
         /* Finally */
+        panel.add(banquetTablePanel);
+        panel.add(menuPanel);
         add(panel);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -138,5 +158,25 @@ public class AdminWindow extends JFrame {
 
         pack();
         setVisible(true);
+    }
+
+    private void editBanquet() {
+        if (selectedRowBIN != -1) {
+            new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
+            banquets = controller.getAllBanquets();
+            banquetTable.setModel(new DefaultTableModel(
+                    BanquetsManager.banquetListToObjectArray(banquets),
+                    banquetAttributes
+            ));
+            selectedRowBIN = -1;
+            selectedRowName = "";
+        } else {
+            JOptionPane.showMessageDialog(
+                    AdminWindow.this,
+                    "Please select a banquet to edit.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
     }
 }
