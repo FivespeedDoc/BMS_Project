@@ -163,12 +163,11 @@ public class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateAttendee(String ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE ATTENDEE_ACCOUNTS SET ? = ? WHERE ID = ?"; // should this be adopted?
+        String stmt = "UPDATE ATTENDEE_ACCOUNTS SET " + attribute + " = ? WHERE ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setString(1, attribute);
-            pstmt.setString(2, newValue);
-            pstmt.setString(3, ID);
+            pstmt.setString(1, newValue);
+            pstmt.setString(2, ID);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Attendee with ID " + ID + " not found.");

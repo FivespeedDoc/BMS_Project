@@ -169,12 +169,11 @@ public class RegistrationManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateRegistration(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE REGISTRATIONS SET ? = ? WHERE ID = ?"; // should this be adopted?
+        String stmt = "UPDATE REGISTRATIONS SET " + attribute + " = ? WHERE ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setString(1, attribute);
-            pstmt.setString(2, newValue);
-            pstmt.setLong(3, ID);
+            pstmt.setString(1, newValue);
+            pstmt.setLong(2, ID);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Registration with ID " + ID + " not found.");

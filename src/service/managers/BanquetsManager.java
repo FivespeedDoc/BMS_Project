@@ -182,21 +182,19 @@ public class BanquetsManager {
      * @implNote This seems not compatible with the MVC design pattern, but since we have the Stage I report and this is a small system, this is acceptable. Related regulations will also be presented in {@code Controller}.
      */
     public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException {
-        String stmt = "UPDATE BANQUETS SET ? = ? WHERE BIN = ?";
+        String stmt = "UPDATE BANQUETS SET " + attribute +" = ? WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setString(1, attribute);
-
             switch (attribute) {
                 case "DateTime":
-                    pstmt.setTimestamp(2, Timestamp.valueOf(newValue));
+                    pstmt.setTimestamp(1, Timestamp.valueOf(newValue));
                 case "Quota":
-                    pstmt.setInt(2, Integer.parseInt(newValue));
+                    pstmt.setInt(1, Integer.parseInt(newValue));
                 default:
-                    pstmt.setString(2, newValue);
+                    pstmt.setString(1, newValue);
             }
 
-            pstmt.setLong(3, BIN);
+            pstmt.setLong(2, BIN);
             pstmt.executeUpdate();
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {

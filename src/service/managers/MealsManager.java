@@ -162,13 +162,12 @@ public class MealsManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateMeal(int BIN, int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE MEALS SET ? = ? WHERE BIN = ? AND ID = ?"; // should this be adopted?
+        String stmt = "UPDATE MEALS SET " + attribute + " = ? WHERE BIN = ? AND ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setString(1, attribute);
-            pstmt.setString(2, newValue);
-            pstmt.setLong(3, BIN);
-            pstmt.setLong(4, ID);
+            pstmt.setString(1, newValue);
+            pstmt.setLong(2, BIN);
+            pstmt.setLong(3, ID);
 
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
