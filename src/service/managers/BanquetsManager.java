@@ -23,8 +23,6 @@ import java.util.NoSuchElementException;
 public class BanquetsManager {
     private final Connection con;
 
-
-
     public BanquetsManager(Connection con) throws ModelException {
         this.con = con;
         initializeBanquets();
@@ -94,7 +92,9 @@ public class BanquetsManager {
             pstmt.setString(6, Character.toString(banquet.isAvailable()));
             pstmt.setInt(7, banquet.getQuota());
 
-            if (pstmt.executeUpdate() == 0) {
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
                 throw new ModelException("Cannot create a new banquet.");
             }
         } catch (SQLException e) {
@@ -225,7 +225,9 @@ public class BanquetsManager {
             pstmt.setLong(2, BIN);
             pstmt.executeUpdate();
 
-            if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
+            int affectedRows = pstmt.getUpdateCount();
+
+            if (affectedRows == 0) {
                 throw new NoSuchElementException("Banquet with BIN " + BIN + " not found.");
             }
         } catch (SQLException | ParseException e) {
@@ -245,7 +247,9 @@ public class BanquetsManager {
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setLong(1, BIN);
 
-            if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
                 throw new ModelException("Banquet with BIN " + BIN + " not found.");
             }
         } catch (SQLException e) {

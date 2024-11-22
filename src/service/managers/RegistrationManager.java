@@ -175,7 +175,9 @@ public class RegistrationManager {
             pstmt.setString(1, newValue);
             pstmt.setLong(2, ID);
 
-            if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
                 throw new NoSuchElementException("Registration with ID " + ID + " not found.");
             }
         } catch (SQLException e) {

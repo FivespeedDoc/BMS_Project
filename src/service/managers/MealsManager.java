@@ -169,7 +169,9 @@ public class MealsManager {
             pstmt.setLong(2, BIN);
             pstmt.setLong(3, ID);
 
-            if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
                 throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
             }
         } catch (SQLException e) {

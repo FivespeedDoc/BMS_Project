@@ -169,7 +169,9 @@ public class AttendeeAccountsManager {
             pstmt.setString(1, newValue);
             pstmt.setString(2, ID);
 
-            if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
                 throw new NoSuchElementException("Attendee with ID " + ID + " not found.");
             }
         } catch (SQLException e) {

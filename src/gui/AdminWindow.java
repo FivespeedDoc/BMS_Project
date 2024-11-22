@@ -90,7 +90,7 @@ public class AdminWindow extends JFrame {
         Button editBanquet = new Button("Edit Banquet", _ -> editBanquet());
             editBanquet.setMinimumSize(buttonSize); editBanquet.setMaximumSize(buttonSize); editBanquet.setPreferredSize(buttonSize);
             menuPanel.add(editBanquet);
-        Button deleteBanquet = new Button("Delete Banquet", null);
+        Button deleteBanquet = new Button("Delete Banquet", _ -> deleteBanquet());
             deleteBanquet.setMinimumSize(buttonSize); deleteBanquet.setMaximumSize(buttonSize); deleteBanquet.setPreferredSize(buttonSize);
             menuPanel.add(deleteBanquet);
         menuPanel.add(Box.createVerticalGlue());
@@ -126,9 +126,9 @@ public class AdminWindow extends JFrame {
                         editBanquet();
                     }
                 } else {
+                    banquetTable.clearSelection();
                     selectedRowBIN = -1;
                     selectedRowName = "";
-                    banquetTable.clearSelection();
                     selectedBanquet.setText("No banquet selected");
                 }
             }
@@ -167,6 +167,8 @@ public class AdminWindow extends JFrame {
                 BanquetsManager.banquetListToObjectArray(banquets),
                 banquetAttributes
         ));
+
+        banquetTable.clearSelection();
         selectedRowBIN = -1;
         selectedRowName = "";
     }
@@ -179,6 +181,8 @@ public class AdminWindow extends JFrame {
                     BanquetsManager.banquetListToObjectArray(banquets),
                     banquetAttributes
             ));
+
+            banquetTable.clearSelection();
             selectedRowBIN = -1;
             selectedRowName = "";
         } else {
@@ -188,12 +192,34 @@ public class AdminWindow extends JFrame {
 
     private void deleteBanquet() {
         if (selectedRowBIN != -1) {
-            // new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
-            banquets = controller.getAllBanquets();
-            banquetTable.setModel(new DefaultTableModel(
-                    BanquetsManager.banquetListToObjectArray(banquets),
-                    banquetAttributes
-            ));
+            int confirm = JOptionPane.showConfirmDialog(
+                    AdminWindow.this,
+                    "Are you sure to delete this banquet: " + selectedRowBIN + ": " + selectedRowName + "? " + "This operation cannot be undone!",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean result = controller.deleteBanquet(selectedRowBIN);
+
+                if (!result) {
+                    JOptionPane.showMessageDialog(
+                            AdminWindow.this,
+                            "Cannot delete the banquet.",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                }
+
+                banquets = controller.getAllBanquets();
+                banquetTable.setModel(new DefaultTableModel(
+                        BanquetsManager.banquetListToObjectArray(banquets),
+                        banquetAttributes
+                ));
+            }
+
+            banquetTable.clearSelection();
             selectedRowBIN = -1;
             selectedRowName = "";
         } else {
@@ -204,7 +230,7 @@ public class AdminWindow extends JFrame {
     private void showNoSelectionDialog() {
         JOptionPane.showMessageDialog(
                 AdminWindow.this,
-                "Please select a banquet to edit.",
+                "Please select a banquet to manage.",
                 "No Selection",
                 JOptionPane.WARNING_MESSAGE
         );
