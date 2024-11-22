@@ -197,6 +197,12 @@ public class AttendeeAccountsManager {
             pstmt.setString(7, attendeeAccount.getOrganization());
             pstmt.executeUpdate();
 
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new ModelException("Cannot add Attendee account.");
+            }
+
         }
         catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());

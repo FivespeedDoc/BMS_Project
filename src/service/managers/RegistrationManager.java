@@ -184,6 +184,29 @@ public class RegistrationManager {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
+    public void addRegistration(Registration registration) throws ModelException {
+        String stmt = "INSERT INTO REGISTRATIONS (ID, AttendeeID, GuestName, Bin, MealID, Drink, Seat) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, registration.getID());
+            pstmt.setString(2, registration.getAttendeeID());
+            pstmt.setString(3, registration.getGuestName());
+            pstmt.setLong(4, registration.getBIN());
+            pstmt.setLong(5, registration.getMealID());
+            pstmt.setString(6, registration.getDrink());
+            pstmt.setString(7, registration.getSeat());
+            pstmt.executeUpdate();
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new ModelException("Cannot add Registration.");
+            }
+
+        }
+        catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
 
     /**
      * Deletes an {@code registration} record from the database based on the provided Register ID.

@@ -194,7 +194,11 @@ public class MealsManager {
             pstmt.setString(4, meal.getType());
             pstmt.setDouble(5, meal.getPrice());
             pstmt.setString(6, meal.getSpecialCuisine());
-            pstmt.executeUpdate();
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new ModelException("Cannot add Meal.");
+            }
 
         }
         catch (SQLException e) {
