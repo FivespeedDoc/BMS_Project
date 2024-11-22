@@ -14,4 +14,10 @@ public class TextField extends JTextField {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
     }
+
+    public TextField(String str) {
+        super(str);
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+    }
 }

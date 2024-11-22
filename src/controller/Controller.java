@@ -60,6 +60,25 @@ public class Controller {
         }
     }
 
+    public Banquet getBanquet(long BIN) {
+        try {
+            return banquetsManager.getBanquet(BIN);
+        } catch (ModelException ignored) {}
+        return null;
+    }
+
+    /**
+     * @return if the operation is executed successfully.
+     */
+    public boolean updateBanquet(long BIN, String attribute, String newValue) {
+        try {
+            banquetsManager.updateBanquet(BIN, attribute, newValue);
+            return true;
+        } catch (ModelException e) {
+            return false;
+        }
+    }
+
     public boolean isUser(String ID, char[] password) {
         try {
             return Arrays.equals(password, attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray()); // this is safe enough, because attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray() is a temporary variable.

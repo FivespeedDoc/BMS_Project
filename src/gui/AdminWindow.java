@@ -35,10 +35,10 @@ public class AdminWindow extends JFrame {
     private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Name of the Contact Staff", "Available? (Y/N)", "Quota"};
     private List<Banquet> banquets;
 
-    public AdminWindow(Controller controller, String ID) {
-        super("Administrator: " + ID);
+    public AdminWindow(Controller controller, String adminID) {
+        super("Administrator: " + adminID);
         this.controller = controller;
-        this.ID = ID;
+        this.ID = adminID;
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -91,7 +91,7 @@ public class AdminWindow extends JFrame {
                 if (e.getClickCount() == 2) { // double click
                     int row = banquetTable.rowAtPoint(e.getPoint());
                     if (row != -1) {
-                        showInfoDialog(selectedRowBIN);
+                        new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
                     }
                 }
             }

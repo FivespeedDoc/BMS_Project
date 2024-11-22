@@ -87,7 +87,7 @@ public class BanquetsManager {
      * @return the {@code Banquet} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-    public Banquet getBanquet(int BIN) throws ModelException {
+    public Banquet getBanquet(long BIN) throws ModelException {
         String selectSQL = "SELECT * FROM BANQUETS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
@@ -168,7 +168,7 @@ public class BanquetsManager {
      * @param newValue     the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
      */
-    public void updateBanquet(int BIN, String attribute, String newValue) throws ModelException { // This method should be improved later.
+    public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE BANQUETS SET ? = ? WHERE BIN = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
