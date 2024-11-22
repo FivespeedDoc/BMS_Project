@@ -180,6 +180,29 @@ public class MealsManager {
     }
 
     /**
+     * Methods for adding a meal
+     * @param meal a meal object (all fields in the meal object must not be null)
+     * @throws ModelException
+     */
+
+    public void addMeal(Meal meal) throws ModelException {
+        String stmt = "INSERT INTO MEALS (BIN, ID, Name, Type, Price, SpecialCuisine) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, meal.getBIN());
+            pstmt.setLong(2, meal.getID());
+            pstmt.setString(3, meal.getName());
+            pstmt.setString(4, meal.getType());
+            pstmt.setDouble(5, meal.getPrice());
+            pstmt.setString(6, meal.getSpecialCuisine());
+            pstmt.executeUpdate();
+
+        }
+        catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
+    /**
      * Deletes a {@code Meal} record from the database based on the provided meal ID.
      *
      * @param BIN the unique identifier of the meal to delete.

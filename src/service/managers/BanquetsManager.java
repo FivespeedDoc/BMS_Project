@@ -236,6 +236,34 @@ public class BanquetsManager {
     }
 
     /**
+     * Methods for adding a banquet
+     * @param banquet Object (Any of fields of the banquet object must not be null)
+     * @throws ModelException
+     */
+
+    // Same as new Banquet
+    public void addBanquet(Banquet banquet) throws ModelException {
+        String stmt = "INSERT INTO BANQUETS (BIN, Name, DateTime, Address, Location, ContactStaffName, Available, Quota) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, banquet.getBIN());
+            pstmt.setString(2, banquet.getName());
+            pstmt.setTimestamp(3, banquet.getDateTime());
+            pstmt.setString(4, banquet.getAddress());
+            pstmt.setString(5, banquet.getLocation());
+            pstmt.setString(6, banquet.getContactStaffName());
+            pstmt.setString(7, String.valueOf(banquet.isAvailable()));
+            pstmt.setInt(8, banquet.getQuota());
+            pstmt.executeUpdate();
+
+        }
+        catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+
+    }
+
+
+    /**
      * Deletes a {@code Banquet} record from the database based on the provided banquet ID.
      *
      * @param BIN the unique identifier of the banquet to delete.
@@ -256,6 +284,7 @@ public class BanquetsManager {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
+
 
     /**
      * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.

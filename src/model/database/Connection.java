@@ -11,6 +11,8 @@ import java.sql.*;
 public class Connection {
     private final java.sql.Connection con;
 
+    //currently using SQLite, might need to switch to oracle SQLPlus
+
     private final String URL = "jdbc:sqlite:identifier.sqlite";
     // private final String USER = "root"; // no need in SQLite
     // private final String PASSWORD = ""; // no need in SQLite

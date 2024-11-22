@@ -25,6 +25,7 @@ public class Administrator {
         return Password;
     }
 
+    //Might add back later, not used for now, password stored in plain text.
     /* public String getSalt() {
         return Salt;
     } */

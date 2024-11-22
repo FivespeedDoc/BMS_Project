@@ -180,6 +180,30 @@ public class AttendeeAccountsManager {
     }
 
     /**
+     *
+     * @param attendeeAccount an attendeeAccount object (All fields in the object must not be null)
+     * @throws ModelException
+     */
+
+    public void addAttendeeAccount(AttendeeAccount attendeeAccount) throws ModelException {
+        String stmt = "INSERT INTO ATTENDEE_ACCOUNTS (ID, Password, Salt, Name, Type, MobileNo, Organization) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, attendeeAccount.getID());
+            pstmt.setString(2, attendeeAccount.getPassword());
+            pstmt.setString(3, attendeeAccount.getSalt());
+            pstmt.setString(4, attendeeAccount.getName());
+            pstmt.setString(5, attendeeAccount.getType());
+            pstmt.setLong(6, attendeeAccount.getMobileNo());
+            pstmt.setString(7, attendeeAccount.getOrganization());
+            pstmt.executeUpdate();
+
+        }
+        catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
+    /**
      * Deletes an {@code Attendee} record from the database based on the provided Attende ID.
      *
      * @param ID the unique identifier of the Attendee to delete.
