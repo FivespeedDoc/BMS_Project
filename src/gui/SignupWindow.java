@@ -39,37 +39,48 @@ public class SignupWindow extends JDialog {
 
         /* Text and field panels */
         userIDField = new TextField("Must be an email address.");
-        TextAndFieldPanel userIDPanel = new TextAndFieldPanel("Account ID", userIDField);
+        XPanel userIDPanel = new XPanel("Account ID", userIDField);
         panel.add(userIDPanel);
+        ///
         passwordField = new PasswordField();
-        TextAndFieldPanel passwordPanel = new TextAndFieldPanel(passwordField);
+        XPanel passwordPanel = new XPanel(passwordField);
         panel.add(passwordPanel);
+        ///
         rePasswordField = new PasswordField();
-        TextAndFieldPanel rePasswordPanel = new TextAndFieldPanel(rePasswordField, true);
+        XPanel rePasswordPanel = new XPanel(rePasswordField, true);
         panel.add(rePasswordPanel);
+        ///
         nameField = new TextField("Your name");
-        TextAndFieldPanel namePanel = new TextAndFieldPanel("Name", nameField);
+        XPanel namePanel = new XPanel("Name", nameField);
         panel.add(namePanel);
+        ///
         addressField = new TextField("Your address");
-        TextAndFieldPanel addressPanel = new TextAndFieldPanel("Address", addressField);
+        XPanel addressPanel = new XPanel("Address", addressField);
         panel.add(addressPanel);
+        ///
         typeField = new TextField("One of 'Staff', 'Student', 'Alumni' and 'Guest'"); // this should be changed later
-        TextAndFieldPanel typePanel = new TextAndFieldPanel("Type", typeField);
+        XPanel typePanel = new XPanel("Type", typeField);
         panel.add(typePanel);
+        ///
         mobileNoField = new TextField("Your phone number");
-        TextAndFieldPanel mobileNoPanel = new TextAndFieldPanel("Phone Number", mobileNoField);
+        XPanel mobileNoPanel = new XPanel("Phone Number", mobileNoField);
         panel.add(mobileNoPanel);
+        ///
         organizationField = new TextField("Your affiliated organization");
-        TextAndFieldPanel organizationPanel = new TextAndFieldPanel("Organization", organizationField);
+        XPanel organizationPanel = new XPanel("Organization", organizationField);
         panel.add(organizationPanel);
 
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
+        ///
         Button cancel = new Button("Cancel", _ -> dispose());
         buttons.add(cancel);
+        ///
         buttons.add(Box.createHorizontalGlue());
+        ///
         Button confirmChange = new Button("Sign Up", null);
         buttons.add(confirmChange);
+        ///
         getRootPane().setDefaultButton(confirmChange);
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);

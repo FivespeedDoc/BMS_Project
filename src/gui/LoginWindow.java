@@ -50,23 +50,29 @@ public class LoginWindow extends JFrame {
         /* Input boxes */
         IDField = new TextField();
         passwordField = new PasswordField();
-        panel.add(new TextAndFieldPanel("Account ID", IDField));
-        panel.add(new TextAndFieldPanel(passwordField));
+        panel.add(new XPanel("Account ID", IDField));
+        panel.add(new XPanel(passwordField));
 
         // panel.add(Box.createVerticalStrut(10));
 
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
+        ///
         Button exit = new Button("Exit", _ -> System.exit(0));
             exit.setForeground(Color.RED);
             buttons.add(exit);
+        ///
         Button adminLogin = new Button("Admin Login", this::adminLogin);
             buttons.add(adminLogin);
+        ///
         Button userLogin = new Button("User Login", this::userLogin);
             buttons.add(userLogin);
+        ///
         buttons.add(Box.createHorizontalGlue());
+        ///
         Button userSignup = new Button("Signup", _ -> new SignupWindow(controller, this));
             buttons.add(userSignup);
+        ///
         getRootPane().setDefaultButton(userLogin);
         SwingUtilities.invokeLater(userLogin::requestFocusInWindow);
         panel.add(buttons);

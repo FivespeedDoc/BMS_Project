@@ -119,26 +119,35 @@ public class AdminWindow extends JFrame {
 
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
+        ///
         Button newBanquet = new Button("New Banquet", _ -> newBanquet());
             newBanquet.setMinimumSize(buttonSize); newBanquet.setMaximumSize(buttonSize); newBanquet.setPreferredSize(buttonSize);
             menuPanel.add(newBanquet);
+        ///
         Button editBanquet = new Button("Edit Banquet", _ -> editBanquet());
             editBanquet.setMinimumSize(buttonSize); editBanquet.setMaximumSize(buttonSize); editBanquet.setPreferredSize(buttonSize);
             menuPanel.add(editBanquet);
+        ///
         Button deleteBanquet = new Button("Delete Banquet", _ -> deleteBanquet());
             deleteBanquet.setMinimumSize(buttonSize); deleteBanquet.setMaximumSize(buttonSize); deleteBanquet.setPreferredSize(buttonSize);
             menuPanel.add(deleteBanquet);
+        ///
         menuPanel.add(Box.createVerticalStrut(20));
+        ///
         Button newMeal = new Button("New Meal", null);
             newMeal.setMinimumSize(buttonSize); newMeal.setMaximumSize(buttonSize); newMeal.setPreferredSize(buttonSize);
             menuPanel.add(newMeal);
+        ///
         Button editMeal = new Button("Edit Meal", null);
             editMeal.setMinimumSize(buttonSize); editMeal.setMaximumSize(buttonSize); editMeal.setPreferredSize(buttonSize);
             menuPanel.add(editMeal);
+        ///
         Button deleteMeal = new Button("Delete Meal", null);
             deleteMeal.setMinimumSize(buttonSize); deleteMeal.setMaximumSize(buttonSize); deleteMeal.setPreferredSize(buttonSize);
             menuPanel.add(deleteMeal);
+        ///
         menuPanel.add(Box.createVerticalStrut(20));
+        ///
         Button refreshTables = new Button("Refresh All Tables", _ -> {
             banquetTable.clearSelection();
             selectedBanquet.setText("No banquet selected");
@@ -152,7 +161,9 @@ public class AdminWindow extends JFrame {
         });
             refreshTables.setMinimumSize(buttonSize); refreshTables.setMaximumSize(buttonSize); refreshTables.setPreferredSize(buttonSize);
         menuPanel.add(refreshTables);
+        ///
         menuPanel.add(Box.createVerticalGlue());
+        ///
         Button logout = new Button("Logout", _ -> {
             int confirm = showConfirmDialog(
                     AdminWindow.this,

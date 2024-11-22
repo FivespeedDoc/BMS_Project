@@ -208,7 +208,8 @@ public class BanquetsManager {
      * @implNote This seems not compatible with the MVC design pattern, but since we have the Stage I report and this is a small system, this is acceptable. Related regulations will also be presented in {@code Controller}.
      */
     public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException {
-        String stmt = "UPDATE BANQUETS SET " + attribute +" = ? WHERE BIN = ?";
+        System.out.println("("+attribute+")");
+        String stmt = "UPDATE BANQUETS SET " + attribute + " = ? WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             switch (attribute) {
@@ -228,12 +229,11 @@ public class BanquetsManager {
             }
 
             pstmt.setLong(2, BIN);
-            pstmt.executeUpdate();
 
-            int affectedRows = pstmt.getUpdateCount();
+            int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new NoSuchElementException("Banquet with BIN " + BIN + " not found.");
+                throw new ModelException("Banquet with BIN " + BIN + " not found.");
             }
         } catch (SQLException | ParseException e) {
             throw new ModelException("Error: " + e.getMessage());

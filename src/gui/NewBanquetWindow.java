@@ -1,12 +1,12 @@
 package gui;
 
 import controller.Controller;
+import gui.components.*;
 import gui.components.Button;
-import gui.components.TextAndFieldPanel;
 import gui.components.TextField;
-import gui.components.ButtonsPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -26,8 +26,6 @@ public class NewBanquetWindow extends JDialog {
 
     private final TextField contactStaffNameField;
 
-    private final TextField availableField;
-
     private final TextField quotaField;
 
     public NewBanquetWindow(Controller controller, JFrame adminWindow) { // it is guaranteed the BIN always exists
@@ -45,37 +43,48 @@ public class NewBanquetWindow extends JDialog {
 
         /* Text and field panels */
         TextField BINField = new TextField("Will be assigned"); BINField.setEnabled(false);
-        TextAndFieldPanel BINPanel = new TextAndFieldPanel("BIN", BINField);
+        XPanel BINPanel = new XPanel("BIN", BINField);
         panel.add(BINPanel);
+        ///
         nameField = new TextField("Name of the banquet");
-        TextAndFieldPanel namePanel = new TextAndFieldPanel("Name", nameField);
+        XPanel namePanel = new XPanel("Name", nameField);
         panel.add(namePanel);
+        ///
         dateTimeField = new TextField("Must be in dd/MM/yyyy HH:mm format");
-        TextAndFieldPanel dateTimePanel = new TextAndFieldPanel("Date & Time", dateTimeField);
+        XPanel dateTimePanel = new XPanel("Date & Time", dateTimeField);
         panel.add(dateTimePanel);
+        ///
         addressField = new TextField("Where to have the banquet?");
-        TextAndFieldPanel addressPanel = new TextAndFieldPanel("Address", addressField);
+        XPanel addressPanel = new XPanel("Address", addressField);
         panel.add(addressPanel);
+        ///
         locationField = new TextField("Hong Kong");
-        TextAndFieldPanel locationPanel = new TextAndFieldPanel("Location", locationField);
+        XPanel locationPanel = new XPanel("Location", locationField);
         panel.add(locationPanel);
+        ///
         contactStaffNameField = new TextField("Contact Frank!");
-        TextAndFieldPanel contactStaffNamePanel = new TextAndFieldPanel("Contact Staff", contactStaffNameField);
+        XPanel contactStaffNamePanel = new XPanel("Contact Staff", contactStaffNameField);
         panel.add(contactStaffNamePanel);
-        availableField = new TextField("Must be Y or N"); // this should be changed later.
-        TextAndFieldPanel availablePanel = new TextAndFieldPanel("Available?", availableField);
+        ///
+        JRadioButton YButton = new JRadioButton("Y"); YButton.setEnabled(false);
+        JRadioButton NButton = new JRadioButton("N"); NButton.setSelected(true); NButton.setEnabled(false);
+        XPanel availablePanel = new XPanel("Available", new ButtonGroup(), YButton, NButton);
         panel.add(availablePanel);
+        ///
         quotaField = new TextField("100? or more?");
-        TextAndFieldPanel quotaPanel = new TextAndFieldPanel("Quota", quotaField);
+        XPanel quotaPanel = new XPanel("Quota", quotaField);
         panel.add(quotaPanel);
 
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
         Button cancel = new Button("Cancel", _ -> dispose());
         buttons.add(cancel);
+        ///
         buttons.add(Box.createHorizontalGlue());
+        ///
         Button confirmChange = new Button("Confirm Add", this::confirmAdd);
         buttons.add(confirmChange);
+        ///
         getRootPane().setDefaultButton(confirmChange);
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
@@ -90,7 +99,7 @@ public class NewBanquetWindow extends JDialog {
                 addressField.getText(),
                 locationField.getText(),
                 contactStaffNameField.getText(),
-                availableField.getText(),
+                "N", // the new-created banquet should always be unavailable.
                 quotaField.getText())) {
             dispose();
         } else {

@@ -2,7 +2,7 @@ package gui;
 
 import controller.Controller;
 import gui.components.Button;
-import gui.components.TextAndFieldPanel;
+import gui.components.XPanel;
 import gui.components.TextField;
 import gui.components.ButtonsPanel;
 import model.entities.Banquet;
@@ -36,7 +36,7 @@ public class EditBanquetWindow extends JDialog {
 
     private final TextField quotaField;
 
-    public EditBanquetWindow(Controller controller, JFrame adminWindow, long BIN) { // it is guaranteed the BIN always exists
+    public EditBanquetWindow(Controller controller, JFrame adminWindow, long BIN) { // it is guaranteed the BIN always exists in the db
         super(adminWindow, "Edit Banquet", true);
         this.controller = controller;
         this.BIN = BIN;
@@ -53,37 +53,48 @@ public class EditBanquetWindow extends JDialog {
 
         /* Text and field panels */
         TextField BINField = new TextField(Long.toString(BIN)); BINField.setEnabled(false);
-        TextAndFieldPanel BINPanel = new TextAndFieldPanel("BIN", BINField);
+        XPanel BINPanel = new XPanel("BIN", BINField);
         panel.add(BINPanel);
+        ///
         nameField = new TextField(banquet.getName());
-        TextAndFieldPanel namePanel = new TextAndFieldPanel("Name", nameField);
+        XPanel namePanel = new XPanel("Name", nameField);
         panel.add(namePanel);
+        ///
         dateTimeField = new TextField(DateTimeFormatter.format(banquet.getDateTime()));
-        TextAndFieldPanel dateTimePanel = new TextAndFieldPanel("Date & Time", dateTimeField);
+        XPanel dateTimePanel = new XPanel("Date & Time", dateTimeField);
         panel.add(dateTimePanel);
+        ///
         addressField = new TextField(banquet.getAddress());
-        TextAndFieldPanel addressPanel = new TextAndFieldPanel("Address", addressField);
+        XPanel addressPanel = new XPanel("Address", addressField);
         panel.add(addressPanel);
+        ///
         locationField = new TextField(banquet.getLocation());
-        TextAndFieldPanel locationPanel = new TextAndFieldPanel("Location", locationField);
+        XPanel locationPanel = new XPanel("Location", locationField);
         panel.add(locationPanel);
+        ///
         contactStaffNameField = new TextField(banquet.getContactStaffName());
-        TextAndFieldPanel contactStaffNamePanel = new TextAndFieldPanel("Contact Staff", contactStaffNameField);
+        XPanel contactStaffNamePanel = new XPanel("Contact Staff", contactStaffNameField);
         panel.add(contactStaffNamePanel);
+        ///
         availableField = new TextField(Character.toString(banquet.isAvailable())); // this should be changed later.
-        TextAndFieldPanel availablePanel = new TextAndFieldPanel("Available?", availableField);
+        XPanel availablePanel = new XPanel("Available?", availableField);
         panel.add(availablePanel);
+        ///
         quotaField = new TextField(Integer.toString(banquet.getQuota()));
-        TextAndFieldPanel quotaPanel = new TextAndFieldPanel("Quota", quotaField);
+        XPanel quotaPanel = new XPanel("Quota", quotaField);
         panel.add(quotaPanel);
 
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
+        ///
         Button cancel = new Button("Cancel", _ -> dispose());
         buttons.add(cancel);
+        ///
         buttons.add(Box.createHorizontalGlue());
+        ///
         Button confirmChange = new Button("Confirm Change", this::applyChanges);
         buttons.add(confirmChange);
+        ///
         getRootPane().setDefaultButton(confirmChange);
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
