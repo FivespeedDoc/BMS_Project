@@ -8,8 +8,8 @@ import java.awt.*;
  * All containers for arranging components along the X-axis should use this class.
  * @author FrankYang0610
  */
-public class XPanel extends JPanel {
-    public XPanel() {
+public class ButtonsPanel extends JPanel {
+    public ButtonsPanel() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);

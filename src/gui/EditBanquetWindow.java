@@ -5,9 +5,8 @@ import gui.components.Button;
 import gui.components.TextAndFieldPanel;
 import gui.components.TextField;
 import gui.components.TitleLabel;
-import gui.components.XPanel;
+import gui.components.ButtonsPanel;
 import model.entities.Banquet;
-import service.managers.BanquetsManager;
 import service.utilities.DateTimeFormatter;
 
 import javax.swing.*;
@@ -44,7 +43,7 @@ public class EditBanquetWindow extends JDialog {
         this.controller = controller;
         this.BIN = BIN;
         this.banquet = controller.getBanquet(BIN);
-        setSize(500, 400);
+        setSize(500, 375);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -53,10 +52,6 @@ public class EditBanquetWindow extends JDialog {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        /* The title */
-        TitleLabel title = new TitleLabel("Editing the banquet: " + BIN);
-        panel.add(title, BorderLayout.CENTER);
 
         /* Text and field panels */
         TextField BINField = new TextField(Long.toString(BIN)); BINField.setEnabled(false);
@@ -85,14 +80,14 @@ public class EditBanquetWindow extends JDialog {
         panel.add(quotaPanel);
 
         /* Buttons */
-        XPanel buttons = new XPanel();
+        ButtonsPanel buttons = new ButtonsPanel();
         Button cancel = new Button("Cancel", _ -> { dispose(); });
         buttons.add(cancel);
         buttons.add(Box.createHorizontalGlue());
-        Button confirm = new Button("Confirm", this::applyChanges);
-        buttons.add(confirm);
-        getRootPane().setDefaultButton(confirm);
-        SwingUtilities.invokeLater(confirm::requestFocusInWindow);
+        Button confirmChange = new Button("Confirm Change", this::applyChanges);
+        buttons.add(confirmChange);
+        getRootPane().setDefaultButton(confirmChange);
+        SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
 
         add(panel);
@@ -123,7 +118,7 @@ public class EditBanquetWindow extends JDialog {
         }
 
         if (!Character.toString(banquet.isAvailable()).equals(availableField.getText())) {
-            success &= controller.updateBanquet(BIN, "Available?", availableField.getText());
+            success &= controller.updateBanquet(BIN, "Available", availableField.getText());
         }
 
         if (!Integer.toString(banquet.getQuota()).equals(quotaField.getText())) {

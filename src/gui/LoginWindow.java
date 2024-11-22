@@ -56,7 +56,7 @@ public class LoginWindow extends JFrame {
         // panel.add(Box.createVerticalStrut(10));
 
         /* Buttons */
-        XPanel buttons = new XPanel();
+        ButtonsPanel buttons = new ButtonsPanel();
         Button exit = new Button("Exit", _ -> System.exit(0));
             exit.setForeground(Color.RED);
             buttons.add(exit);

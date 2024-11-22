@@ -1,5 +1,6 @@
 package gui.components;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -7,9 +8,16 @@ import java.awt.*;
  * All panels related to entering a username should use this class.
  * @author FrankYang0610
  */
-public class TextAndFieldPanel extends XPanel {
-    public TextAndFieldPanel(String text, TextField textField) {
+public class TextAndFieldPanel extends JPanel {
+    public TextAndFieldPanel() {
         super();
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+    }
+
+    public TextAndFieldPanel(String text, TextField textField) {
+        this();
         RegularLabel IDLabel = new RegularLabel(text);
         IDLabel.setPreferredSize(new Dimension(100, 25));
         IDLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -18,7 +26,7 @@ public class TextAndFieldPanel extends XPanel {
     }
 
     public TextAndFieldPanel(PasswordField passwordField) {
-        super();
+        this();
         RegularLabel IDLabel = new RegularLabel("Password");
         IDLabel.setPreferredSize(new Dimension(100, 25));
         IDLabel.setAlignmentX(Component.LEFT_ALIGNMENT);

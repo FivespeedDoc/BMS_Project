@@ -46,17 +46,16 @@ public class AdminWindow extends JFrame {
         /* The panel */
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-        /* Calendar, should be deleted later */
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 10); // Hour
-        calendar.set(Calendar.MINUTE, 0); // Minute
-        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+
+        /* Banquet table panel */
+        JPanel banquetTablePanel = new JPanel();
+        banquetTablePanel.setLayout(new BoxLayout(banquetTablePanel, BoxLayout.Y_AXIS));
 
         /* Banquet title */
         TitleLabel titleLabel = new TitleLabel("Banquets");
-        panel.add(titleLabel);
+        banquetTablePanel.add(titleLabel);
 
         /* Banquet table */
         banquets = controller.getAllBanquets();
@@ -64,8 +63,8 @@ public class AdminWindow extends JFrame {
                 BanquetsManager.banquetListToObjectArray(banquets),
                 banquetAttributes));
         JScrollPane tableScrollPane = new JScrollPane(banquetTable);
-        // tableScrollPane.setPreferredSize(new Dimension(?, ?)); // how to
-        panel.add(tableScrollPane);
+        banquetTablePanel.add(tableScrollPane);
+
 
         /* Banquet table selection */
         RegularLabel selectedBanquet = new RegularLabel("No banquet selected");
@@ -78,7 +77,7 @@ public class AdminWindow extends JFrame {
                     String rowBIN = banquetTable.getValueAt(selectedRow, 0).toString();
                     selectedRowBIN = Long.parseLong(rowBIN);
                     String rowName = banquetTable.getValueAt(selectedRow, 1).toString();
-                    selectedBanquet.setText("Selected banquet: " + rowBIN + ", " + rowName);
+                    selectedBanquet.setText("Selected: " + rowBIN + ", " + rowName);
                 } else {
                     selectedBanquet.setText("No banquet selected");
                 }
@@ -112,6 +111,10 @@ public class AdminWindow extends JFrame {
                 }
             }
         });
+
+
+        /* Near finally */
+        panel.add(banquetTablePanel);
         panel.add(selectedBanquet);
 
         /* Finally */
@@ -121,7 +124,7 @@ public class AdminWindow extends JFrame {
             public void windowClosing(WindowEvent e) {
                 int confirm = showConfirmDialog(
                         AdminWindow.this,
-                        "Close this window will log you out!",
+                        "Closing this window will log you out!",
                         "Log out?",
                         YES_NO_OPTION
                 );
@@ -135,9 +138,5 @@ public class AdminWindow extends JFrame {
 
         pack();
         setVisible(true);
-    }
-
-    private void showInfoDialog(long BIN) {
-        JOptionPane.showMessageDialog(this, "You're going to edit: " + BIN, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 }
