@@ -7,7 +7,7 @@ public class UserWindow extends JFrame {
 
     public UserWindow() {
         setTitle("User Window");
-        setSize(400, 300);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         initUI();
@@ -17,7 +17,7 @@ public class UserWindow extends JFrame {
     private void initUI() {
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1, 10, 10));
+        panel.setLayout(new GridLayout(5, 1, 10, 20));
 
 
         JButton banquetRegistrationButton = new JButton("  Banquet Registration");
