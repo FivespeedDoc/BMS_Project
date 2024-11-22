@@ -19,18 +19,18 @@ public class RemoveRegisrationWindow extends JFrame {
     private void initUI() {
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1, 10, 10));
+        panel.setLayout(new GridLayout(5, 2, 10, 20));
 
 
         JTextField emailField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
 
-        JLabel emailLabel = new JLabel("E-mail Address:");
-        JLabel passwordLabel = new JLabel("Password:");
-        JLabel confirmLabel = new JLabel("<html>Are you sure you want to delete your account?<br>This action cannot be undone!</html>");
+        JLabel emailLabel = new JLabel("   E-mail Address:");
+        JLabel passwordLabel = new JLabel("   Password:");
+        JLabel confirmLabel = new JLabel("<html>   Are you sure you want to delete your account?<br>This action cannot be undone!</html>");
 
-        JButton confirmButton = new JButton("Confirm Delete");
-        JButton cancelButton = new JButton("Cancel");
+        JButton confirmButton = new JButton("  Confirm Delete");
+        JButton cancelButton = new JButton("  Cancel");
 
         confirmButton.addActionListener(new ActionListener() {
             @Override
@@ -43,11 +43,10 @@ public class RemoveRegisrationWindow extends JFrame {
                     return;
                 }
 
-                // 模拟调用后端 API 执行删除操作
                 boolean success = removeAccount(email, password);
                 if (success) {
                     JOptionPane.showMessageDialog(RemoveRegisrationWindow.this, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    System.exit(0); // 退出程序
+                    System.exit(0);
                 } else {
                     JOptionPane.showMessageDialog(RemoveRegisrationWindow.this, "Failed to delete account. Please check your credentials.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -56,10 +55,9 @@ public class RemoveRegisrationWindow extends JFrame {
 
         cancelButton.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Account deletion cancelled.", "Info", JOptionPane.INFORMATION_MESSAGE);
-            dispose(); // 关闭当前窗口
+            dispose();
         });
 
-        // 添加组件到面板
         panel.add(emailLabel);
         panel.add(emailField);
         panel.add(passwordLabel);
