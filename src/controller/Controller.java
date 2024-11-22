@@ -6,8 +6,10 @@ import model.ModelException;
 import model.database.Connection;
 import model.entities.Banquet;
 import service.managers.*;
+import service.utilities.DateTimeFormatter;
 
 import javax.swing.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +69,27 @@ public class Controller {
         return null;
     }
 
+    public boolean newBanquet(String Name, String DateTime, String Address, String Location, String ContactStaffName, String Available, String Quota) {
+        try {
+            if (Name.isEmpty() || DateTime.isEmpty() || Address.isEmpty() || Location.isEmpty() || ContactStaffName.isEmpty() || Available.isEmpty() || Quota.isEmpty()) {
+                return false;
+            }
+
+            Banquet banquet = new Banquet(-1,
+                    Name,
+                    DateTimeFormatter.parse(DateTime),
+                    Address,
+                    Location,
+                    ContactStaffName,
+                    Available.charAt(0),
+                    Integer.parseInt(Quota));
+            banquetsManager.newBanquet(banquet);
+            return true;
+        } catch (ModelException | ParseException | NumberFormatException e) {
+            return false;
+        }
+    }
+
     /**
      * <h4>Allowed {@code attribute} types</h4>
      * <ul>
@@ -83,6 +106,15 @@ public class Controller {
     public boolean updateBanquet(long BIN, String attribute, String newValue) {
         try {
             banquetsManager.updateBanquet(BIN, attribute, newValue);
+            return true;
+        } catch (ModelException e) {
+            return false;
+        }
+    }
+
+    public boolean deleteBanquet(long BIN) {
+        try {
+            banquetsManager.deleteBanquet(BIN);
             return true;
         } catch (ModelException e) {
             return false;

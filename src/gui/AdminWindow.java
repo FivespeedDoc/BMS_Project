@@ -84,7 +84,7 @@ public class AdminWindow extends JFrame {
 
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
-        Button newBanquet = new Button("New Banquet", null);
+        Button newBanquet = new Button("New Banquet", _ -> newBanquet());
             newBanquet.setMinimumSize(buttonSize); newBanquet.setMaximumSize(buttonSize); newBanquet.setPreferredSize(buttonSize);
             menuPanel.add(newBanquet);
         Button editBanquet = new Button("Edit Banquet", _ -> editBanquet());
@@ -160,6 +160,17 @@ public class AdminWindow extends JFrame {
         setVisible(true);
     }
 
+    private void newBanquet() {
+        new NewBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
+        banquets = controller.getAllBanquets();
+        banquetTable.setModel(new DefaultTableModel(
+                BanquetsManager.banquetListToObjectArray(banquets),
+                banquetAttributes
+        ));
+        selectedRowBIN = -1;
+        selectedRowName = "";
+    }
+
     private void editBanquet() {
         if (selectedRowBIN != -1) {
             new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
@@ -171,12 +182,31 @@ public class AdminWindow extends JFrame {
             selectedRowBIN = -1;
             selectedRowName = "";
         } else {
-            JOptionPane.showMessageDialog(
-                    AdminWindow.this,
-                    "Please select a banquet to edit.",
-                    "No Selection",
-                    JOptionPane.WARNING_MESSAGE
-            );
+            showNoSelectionDialog();
         }
+    }
+
+    private void deleteBanquet() {
+        if (selectedRowBIN != -1) {
+            // new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
+            banquets = controller.getAllBanquets();
+            banquetTable.setModel(new DefaultTableModel(
+                    BanquetsManager.banquetListToObjectArray(banquets),
+                    banquetAttributes
+            ));
+            selectedRowBIN = -1;
+            selectedRowName = "";
+        } else {
+            showNoSelectionDialog();
+        }
+    }
+
+    private void showNoSelectionDialog() {
+        JOptionPane.showMessageDialog(
+                AdminWindow.this,
+                "Please select a banquet to edit.",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE
+        );
     }
 }

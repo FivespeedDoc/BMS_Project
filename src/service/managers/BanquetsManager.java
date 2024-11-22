@@ -81,6 +81,27 @@ public class BanquetsManager {
         }
     }
 
+    public void newBanquet(Banquet banquet) throws ModelException {
+        String insertSQL = "INSERT INTO BANQUETS (Name, DateTime, Address, Location, ContactStaffName, Available, Quota) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(insertSQL)) {
+            pstmt.setString(1, banquet.getName());
+            pstmt.setTimestamp(2, banquet.getDateTime());
+            pstmt.setString(3, banquet.getAddress());
+            pstmt.setString(4, banquet.getLocation());
+            pstmt.setString(5, banquet.getContactStaffName());
+            pstmt.setString(6, Character.toString(banquet.isAvailable()));
+            pstmt.setInt(7, banquet.getQuota());
+
+            if (pstmt.executeUpdate() == 0) {
+                throw new ModelException("Cannot create a new banquet.");
+            }
+        } catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
     /**
      * Retrieves a {@code Banquet} object from the database based on the provided banquet ID.
      *
@@ -218,7 +239,7 @@ public class BanquetsManager {
      * @param BIN the unique identifier of the banquet to delete.
      * @throws ModelException if any errors encountered.
      */
-    public void deleteBanquet(int BIN) throws ModelException {
+    public void deleteBanquet(long BIN) throws ModelException {
         String stmt = "DELETE FROM BANQUETS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
