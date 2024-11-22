@@ -62,7 +62,7 @@ public class ChangeUserInformationWindow {
                 String PF2STR = new String(PF2.getPassword());
 
                 if(confirmation.isSelected() && PF1STR.equals(PF2STR)){
-                    int ID = 31; // Placeholder
+                    String ID = 31; // Placeholder
                     try {
                         AAM.updateAttendee(ID,"Password", PF2STR);
                     } catch (ModelException ex) {
@@ -93,7 +93,7 @@ public class ChangeUserInformationWindow {
             public void actionPerformed(ActionEvent e) {
                 String newName = firstNameField.getText() + ' ' + lastNameField.getText();
                 if(confirmation.isSelected()){
-                    int ID = 31; // Placeholder
+                    String ID = 31; // Placeholder
                     try {
                         AAM.updateAttendee(ID,"Organization", newName);
                     } catch (ModelException ex) {
@@ -122,7 +122,7 @@ public class ChangeUserInformationWindow {
                 if(confirmation.isSelected()){
 
                     if(newNum.length() == 8 && newNum.charAt(0) == '9'){ // only limited to HK for now,
-                        int ID = 31; // Placeholder
+                        String ID = 31; // Placeholder
                         try {
                             AAM.updateAttendee(ID,"MobileNo", newNum);
                         } catch (ModelException ex) {
@@ -160,7 +160,7 @@ public class ChangeUserInformationWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(confirmation.isSelected()){
-                    int ID = 31; // Placeholder
+                    String ID = 31; // Placeholder
                     try {
                         AAM.updateAttendee(ID,"Organization", newOrganizationField.getText());
                     } catch (ModelException ex) {
