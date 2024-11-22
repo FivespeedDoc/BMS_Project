@@ -3,12 +3,10 @@ package service.managers;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.Banquet;
+import service.utilities.DateTimeFormatter;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.sql.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,6 +22,8 @@ import java.util.NoSuchElementException;
 */
 public class BanquetsManager {
     private final Connection con;
+
+
 
     public BanquetsManager(Connection con) throws ModelException {
         this.con = con;
@@ -186,12 +186,19 @@ public class BanquetsManager {
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             switch (attribute) {
-                case "DateTime":
-                    pstmt.setTimestamp(1, Timestamp.valueOf(newValue));
-                case "Quota":
+                case "DateTime": {
+                    Timestamp parsedNewValue = DateTimeFormatter.parse(newValue);
+                    pstmt.setTimestamp(1, parsedNewValue);
+                    break;
+                }
+                case "Quota": {
                     pstmt.setInt(1, Integer.parseInt(newValue));
-                default:
+                    break;
+                }
+                default: {
                     pstmt.setString(1, newValue);
+                    break;
+                }
             }
 
             pstmt.setLong(2, BIN);
@@ -200,8 +207,8 @@ public class BanquetsManager {
             if (/* affectedRowCnt = */ pstmt.executeUpdate() == 0) {
                 throw new NoSuchElementException("Banquet with BIN " + BIN + " not found.");
             }
-        } catch (SQLException e) {
-            throw new ModelException("Database error: " + e.getMessage());
+        } catch (SQLException | ParseException e) {
+            throw new ModelException("Error: " + e.getMessage());
         }
     }
 
@@ -230,12 +237,11 @@ public class BanquetsManager {
      */
     public static String[][] banquetListToObjectArray(List<Banquet> banquets) {
         String[][] result = new String[banquets.size()][8];
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // should this be here?
 
         for (int i = 0; i < banquets.size(); i++) {
             result[i][0] = String.valueOf(banquets.get(i).getBIN());
             result[i][1] = String.valueOf(banquets.get(i).getName());
-            result[i][2] = String.valueOf(formatter.format(banquets.get(i).getDateTime()));
+            result[i][2] = DateTimeFormatter.format(banquets.get(i).getDateTime());
             result[i][3] = String.valueOf(banquets.get(i).getAddress());
             result[i][4] = String.valueOf(banquets.get(i).getLocation());
             result[i][5] = String.valueOf(banquets.get(i).getContactStaffName());

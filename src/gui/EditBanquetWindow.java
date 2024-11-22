@@ -7,11 +7,17 @@ import gui.components.TextField;
 import gui.components.TitleLabel;
 import gui.components.XPanel;
 import model.entities.Banquet;
+import service.managers.BanquetsManager;
+import service.utilities.DateTimeFormatter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * <h3>The Edit Banquet Window</h3>
+ * @author FrankYang0610
+ */
 public class EditBanquetWindow extends JDialog {
     private final Controller controller;
 
@@ -59,7 +65,7 @@ public class EditBanquetWindow extends JDialog {
         nameField = new TextField(banquet.getName());
         TextAndFieldPanel namePanel = new TextAndFieldPanel("Name", nameField);
         panel.add(namePanel);
-        dateTimeField = new TextField(banquet.getDateTime().toString());
+        dateTimeField = new TextField(DateTimeFormatter.format(banquet.getDateTime()));
         TextAndFieldPanel dateTimePanel = new TextAndFieldPanel("Date & Time", dateTimeField);
         panel.add(dateTimePanel);
         addressField = new TextField(banquet.getAddress());
@@ -100,9 +106,9 @@ public class EditBanquetWindow extends JDialog {
             success &= controller.updateBanquet(BIN, "Name", nameField.getText());
         }
 
-        //if (!banquet.getDateTime().equals(dateTimeField.getText())) { // this should be changed later.
-        //    success &= controller.updateBanquet(BIN, "DateTime", dateTimeField.getText());
-        //}
+        if (!DateTimeFormatter.format(banquet.getDateTime()).equals(dateTimeField.getText())) { // this should be changed later.
+            success &= controller.updateBanquet(BIN, "DateTime", dateTimeField.getText());
+        }
 
         if (!banquet.getAddress().equals(addressField.getText())) {
             success &= controller.updateBanquet(BIN, "Address", addressField.getText());
