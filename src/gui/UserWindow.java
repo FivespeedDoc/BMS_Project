@@ -1,4 +1,5 @@
 package gui;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -23,14 +24,14 @@ public class UserWindow extends JFrame {
         JButton banquetWithdrawButton = new JButton("  Banquet Withdraw");
         JButton banquetChangeButton = new JButton("  Banquet Change");
         JButton editUserInfoButton = new JButton("  Edit User Information");
-        JButton exitButton = new JButton("  Exit");
+        JButton exitButton = new JButton("  Deregister");
 
 
         banquetRegistrationButton.addActionListener(e -> showBanquetRegistrationWindow());
         banquetWithdrawButton.addActionListener(e -> showBanquetWithdrawWindow());
         banquetChangeButton.addActionListener(e -> showBanquetChangeWindow());
         editUserInfoButton.addActionListener(e -> showEditUserInfoWindow());
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(e -> showRemoveRegistrationWindow());
 
 
         panel.add(banquetRegistrationButton);
@@ -46,25 +47,25 @@ public class UserWindow extends JFrame {
 
     private void showBanquetRegistrationWindow() {
         JOptionPane.showMessageDialog(this, "Banquet Registration Window", "Info", JOptionPane.INFORMATION_MESSAGE);
-
     }
-
 
     private void showBanquetWithdrawWindow() {
         JOptionPane.showMessageDialog(this, "Banquet Withdraw Window", "Info", JOptionPane.INFORMATION_MESSAGE);
-
     }
 
 
     private void showBanquetChangeWindow() {
         JOptionPane.showMessageDialog(this, "Banquet Change Window", "Info", JOptionPane.INFORMATION_MESSAGE);
-
     }
 
 
     private void showEditUserInfoWindow() {
         JOptionPane.showMessageDialog(this, "Edit User Information Window", "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
 
+
+    private void showRemoveRegistrationWindow() {
+        new RemoveRegisrationWindow();
     }
 
     public static void main(String[] args) {
