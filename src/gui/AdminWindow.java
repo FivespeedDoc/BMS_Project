@@ -32,7 +32,7 @@ public class AdminWindow extends JFrame {
 
     private long selectedRowBIN;
 
-    private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Name of the Contact Staff", "Available? (Y/N)", "Quota"};
+    private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
     private List<Banquet> banquets;
 
     public AdminWindow(Controller controller, String adminID) {

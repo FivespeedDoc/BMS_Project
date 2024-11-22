@@ -19,7 +19,7 @@ public class TextAndFieldPanel extends XPanel {
 
     public TextAndFieldPanel(PasswordField passwordField) {
         super();
-        RegularLabel IDLabel = new RegularLabel("Password:");
+        RegularLabel IDLabel = new RegularLabel("Password");
         IDLabel.setPreferredSize(new Dimension(100, 25));
         IDLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(IDLabel);

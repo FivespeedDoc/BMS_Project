@@ -50,7 +50,7 @@ public class LoginWindow extends JFrame {
         /* Input boxes */
         IDField = new TextField();
         passwordField = new PasswordField();
-        panel.add(new TextAndFieldPanel("Account ID:", IDField));
+        panel.add(new TextAndFieldPanel("Account ID", IDField));
         panel.add(new TextAndFieldPanel(passwordField));
 
         // panel.add(Box.createVerticalStrut(10));

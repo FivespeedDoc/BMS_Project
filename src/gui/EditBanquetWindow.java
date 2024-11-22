@@ -39,12 +39,29 @@ public class EditBanquetWindow extends JDialog {
 
         /* Text and field panels */
         TextField BINField = new TextField(Long.toString(BIN)); BINField.setEnabled(false);
-        TextAndFieldPanel BINPanel = new TextAndFieldPanel("BIN: ", BINField);
+        TextAndFieldPanel BINPanel = new TextAndFieldPanel("BIN", BINField);
         panel.add(BINPanel);
         TextField nameField = new TextField(banquet.getName());
-        TextAndFieldPanel namePanel = new TextAndFieldPanel("Name: ", nameField);
+        TextAndFieldPanel namePanel = new TextAndFieldPanel("Name", nameField);
         panel.add(namePanel);
-        // ...
+        TextField dateTimeField = new TextField(banquet.getDateTime().toString());
+        TextAndFieldPanel dateTimePanel = new TextAndFieldPanel("Date & Time", dateTimeField);
+        panel.add(dateTimePanel);
+        TextField addressField = new TextField(banquet.getAddress());
+        TextAndFieldPanel addressPanel = new TextAndFieldPanel("Address", addressField);
+        panel.add(addressPanel);
+        TextField locationField = new TextField(banquet.getLocation());
+        TextAndFieldPanel locationPanel = new TextAndFieldPanel("Location", locationField);
+        panel.add(locationPanel);
+        TextField contactStaffNameField = new TextField(banquet.getContactStaffName());
+        TextAndFieldPanel contactStaffNamePanel = new TextAndFieldPanel("Contact Staff", contactStaffNameField);
+        panel.add(contactStaffNamePanel);
+        TextField availableField = new TextField(Character.toString(banquet.isAvailable()));
+        TextAndFieldPanel availablePanel = new TextAndFieldPanel("Available?", availableField);
+        panel.add(availablePanel);
+        TextField quotaField = new TextField(Integer.toString(banquet.getQuota()));
+        TextAndFieldPanel quotaPanel = new TextAndFieldPanel("Quota", quotaField);
+        panel.add(quotaPanel);
 
         /* Buttons */
         XPanel buttons = new XPanel();
