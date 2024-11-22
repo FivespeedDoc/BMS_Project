@@ -19,11 +19,11 @@ public class UserWindow extends JFrame {
         panel.setLayout(new GridLayout(5, 1, 10, 10));
 
 
-        JButton banquetRegistrationButton = new JButton("Banquet Registration");
-        JButton banquetWithdrawButton = new JButton("Banquet Withdraw");
-        JButton banquetChangeButton = new JButton("Banquet Change");
-        JButton editUserInfoButton = new JButton("Edit User Information");
-        JButton exitButton = new JButton("Exit");
+        JButton banquetRegistrationButton = new JButton("  Banquet Registration");
+        JButton banquetWithdrawButton = new JButton("  Banquet Withdraw");
+        JButton banquetChangeButton = new JButton("  Banquet Change");
+        JButton editUserInfoButton = new JButton("  Edit User Information");
+        JButton exitButton = new JButton("  Exit");
 
 
         banquetRegistrationButton.addActionListener(e -> showBanquetRegistrationWindow());
