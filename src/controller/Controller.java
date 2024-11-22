@@ -68,6 +68,16 @@ public class Controller {
     }
 
     /**
+     * <h4>Allowed {@code attribute} types</h4>
+     * <ul>
+     *     <li>{@code "Name"}</li>
+     *     <li>{@code "DateTime"}</li>
+     *     <li>{@code "Address"}</li>
+     *     <li>{@code "Location"}</li>
+     *     <li>{@code "ContactStaffName"}</li>
+     *     <li>{@code "Available"}</li>
+     *     <li>{@code "Quota"}</li>
+     * </ul>
      * @return if the operation is executed successfully.
      */
     public boolean updateBanquet(long BIN, String attribute, String newValue) {

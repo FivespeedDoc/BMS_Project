@@ -56,7 +56,7 @@ public class EditBanquetWindow extends JDialog {
         TextField contactStaffNameField = new TextField(banquet.getContactStaffName());
         TextAndFieldPanel contactStaffNamePanel = new TextAndFieldPanel("Contact Staff", contactStaffNameField);
         panel.add(contactStaffNamePanel);
-        TextField availableField = new TextField(Character.toString(banquet.isAvailable()));
+        TextField availableField = new TextField(Character.toString(banquet.isAvailable())); // this should be changed later.
         TextAndFieldPanel availablePanel = new TextAndFieldPanel("Available?", availableField);
         panel.add(availablePanel);
         TextField quotaField = new TextField(Integer.toString(banquet.getQuota()));

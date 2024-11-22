@@ -7,6 +7,7 @@ import model.entities.Banquet;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,17 +164,38 @@ public class BanquetsManager {
      * <p>This method updates the value of a specified column for the banquet identified by
      * the provided banquet ID.</p>
      *
+     * <h4>Allowed {@code attribute} types</h4>
+     * <ul>
+     *     <li>{@code "Name"}</li>
+     *     <li>{@code "DateTime"}</li>
+     *     <li>{@code "Address"}</li>
+     *     <li>{@code "Location"}</li>
+     *     <li>{@code "ContactStaffName"}</li>
+     *     <li>{@code "Available"}</li>
+     *     <li>{@code "Quota"}</li>
+     * </ul>
+     *
      * @param BIN the unique identifier of the banquet to update.
      * @param attribute    the column name to update. Must be one of the allowed columns.
      * @param newValue     the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
+     * @implNote This seems not compatible with the MVC design pattern, but since we have the Stage I report and this is a small system, this is acceptable. Related regulations will also be presented in {@code Controller}.
      */
-    public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE BANQUETS SET ? = ? WHERE BIN = ?"; // should this be adopted?
+    public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException {
+        String stmt = "UPDATE BANQUETS SET ? = ? WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attribute);
-            pstmt.setString(2, newValue);
+
+            switch (attribute) {
+                case "DateTime":
+                    pstmt.setTimestamp(2, Timestamp.valueOf(newValue));
+                case "Quota":
+                    pstmt.setInt(2, Integer.parseInt(newValue));
+                default:
+                    pstmt.setString(2, newValue);
+            }
+
             pstmt.setLong(3, BIN);
             pstmt.executeUpdate();
 
