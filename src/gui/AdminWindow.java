@@ -161,7 +161,7 @@ public class AdminWindow extends JFrame {
     }
 
     private void newBanquet() {
-        new NewBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
+        new NewBanquetWindow(controller, AdminWindow.this);
         banquets = controller.getAllBanquets();
         banquetTable.setModel(new DefaultTableModel(
                 BanquetsManager.banquetListToObjectArray(banquets),

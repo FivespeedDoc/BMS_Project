@@ -30,7 +30,7 @@ public class NewBanquetWindow extends JDialog {
 
     private final TextField quotaField;
 
-    public NewBanquetWindow(Controller controller, JFrame adminWindow, long BIN) { // it is guaranteed the BIN always exists
+    public NewBanquetWindow(Controller controller, JFrame adminWindow) { // it is guaranteed the BIN always exists
         super(adminWindow, "Add Banquet", true);
         this.controller = controller;
         setSize(500, 350);

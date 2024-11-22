@@ -33,4 +33,13 @@ public class TextAndFieldPanel extends JPanel {
         this.add(IDLabel);
         this.add(passwordField);
     }
+
+    public TextAndFieldPanel(PasswordField passwordField, boolean rePasswordIdentifier) {
+        this();
+        RegularLabel IDLabel = new RegularLabel("Re-Password");
+        IDLabel.setPreferredSize(new Dimension(100, 25));
+        IDLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        this.add(IDLabel);
+        this.add(passwordField);
+    }
 }
