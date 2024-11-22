@@ -10,6 +10,7 @@ import model.entities.Banquet;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class EditBanquetWindow extends JDialog {
     private final Controller controller;
@@ -18,7 +19,21 @@ public class EditBanquetWindow extends JDialog {
 
     private final Banquet banquet;
 
-    public EditBanquetWindow(Controller controller, JFrame adminWindow, long BIN) {
+    private final TextField nameField;
+
+    private final TextField dateTimeField;
+
+    private final TextField addressField;
+
+    private final TextField locationField;
+
+    private final TextField contactStaffNameField;
+
+    private final TextField availableField;
+
+    private final TextField quotaField;
+
+    public EditBanquetWindow(Controller controller, JFrame adminWindow, long BIN) { // it is guaranteed the BIN always exists
         super(adminWindow, "Edit Banquet", true);
         this.controller = controller;
         this.BIN = BIN;
@@ -41,25 +56,25 @@ public class EditBanquetWindow extends JDialog {
         TextField BINField = new TextField(Long.toString(BIN)); BINField.setEnabled(false);
         TextAndFieldPanel BINPanel = new TextAndFieldPanel("BIN", BINField);
         panel.add(BINPanel);
-        TextField nameField = new TextField(banquet.getName());
+        nameField = new TextField(banquet.getName());
         TextAndFieldPanel namePanel = new TextAndFieldPanel("Name", nameField);
         panel.add(namePanel);
-        TextField dateTimeField = new TextField(banquet.getDateTime().toString());
+        dateTimeField = new TextField(banquet.getDateTime().toString());
         TextAndFieldPanel dateTimePanel = new TextAndFieldPanel("Date & Time", dateTimeField);
         panel.add(dateTimePanel);
-        TextField addressField = new TextField(banquet.getAddress());
+        addressField = new TextField(banquet.getAddress());
         TextAndFieldPanel addressPanel = new TextAndFieldPanel("Address", addressField);
         panel.add(addressPanel);
-        TextField locationField = new TextField(banquet.getLocation());
+        locationField = new TextField(banquet.getLocation());
         TextAndFieldPanel locationPanel = new TextAndFieldPanel("Location", locationField);
         panel.add(locationPanel);
-        TextField contactStaffNameField = new TextField(banquet.getContactStaffName());
+        contactStaffNameField = new TextField(banquet.getContactStaffName());
         TextAndFieldPanel contactStaffNamePanel = new TextAndFieldPanel("Contact Staff", contactStaffNameField);
         panel.add(contactStaffNamePanel);
-        TextField availableField = new TextField(Character.toString(banquet.isAvailable())); // this should be changed later.
+        availableField = new TextField(Character.toString(banquet.isAvailable())); // this should be changed later.
         TextAndFieldPanel availablePanel = new TextAndFieldPanel("Available?", availableField);
         panel.add(availablePanel);
-        TextField quotaField = new TextField(Integer.toString(banquet.getQuota()));
+        quotaField = new TextField(Integer.toString(banquet.getQuota()));
         TextAndFieldPanel quotaPanel = new TextAndFieldPanel("Quota", quotaField);
         panel.add(quotaPanel);
 
@@ -68,7 +83,7 @@ public class EditBanquetWindow extends JDialog {
         Button cancel = new Button("Cancel", _ -> { dispose(); });
         buttons.add(cancel);
         buttons.add(Box.createHorizontalGlue());
-        Button confirm = new Button("Confirm", null);
+        Button confirm = new Button("Confirm", this::applyChanges);
         buttons.add(confirm);
         getRootPane().setDefaultButton(confirm);
         SwingUtilities.invokeLater(confirm::requestFocusInWindow);
@@ -76,5 +91,47 @@ public class EditBanquetWindow extends JDialog {
 
         add(panel);
         setVisible(true);
+    }
+
+    private void applyChanges(ActionEvent e) {
+        boolean success = true;
+
+        if (!banquet.getName().equals(nameField.getText())) {
+            success &= controller.updateBanquet(BIN, "Name", nameField.getText());
+        }
+
+        //if (!banquet.getDateTime().equals(dateTimeField.getText())) { // this should be changed later.
+        //    success &= controller.updateBanquet(BIN, "DateTime", dateTimeField.getText());
+        //}
+
+        if (!banquet.getAddress().equals(addressField.getText())) {
+            success &= controller.updateBanquet(BIN, "Address", addressField.getText());
+        }
+
+        if (!banquet.getLocation().equals(locationField.getText())) {
+            success &= controller.updateBanquet(BIN, "Location", locationField.getText());
+        }
+
+        if (!banquet.getContactStaffName().equals(contactStaffNameField.getText())) {
+            success &= controller.updateBanquet(BIN, "ContactStaffName", contactStaffNameField.getText());
+        }
+
+        if (!Character.toString(banquet.isAvailable()).equals(availableField.getText())) {
+            success &= controller.updateBanquet(BIN, "Available?", availableField.getText());
+        }
+
+        if (!Integer.toString(banquet.getQuota()).equals(quotaField.getText())) {
+            success &= controller.updateBanquet(BIN, "Quota", quotaField.getText());
+        }
+
+        if (!success) {
+            showWrongLoginInfoDialog();
+        } else {
+            dispose();
+        }
+    }
+
+    private void showWrongLoginInfoDialog() {
+        JOptionPane.showMessageDialog(this, "Error! Some changes cannot be applied.", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -8,6 +8,7 @@ import model.entities.Banquet;
 import service.managers.BanquetsManager;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -92,6 +93,10 @@ public class AdminWindow extends JFrame {
                     int row = banquetTable.rowAtPoint(e.getPoint());
                     if (row != -1) {
                         new EditBanquetWindow(controller, AdminWindow.this, selectedRowBIN);
+                        banquets = controller.getAllBanquets();
+                        banquetTable.setModel(new DefaultTableModel(
+                                BanquetsManager.banquetListToObjectArray(banquets),
+                                banquetAttributes));
                     }
                 }
             }
