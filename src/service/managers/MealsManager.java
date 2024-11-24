@@ -262,7 +262,7 @@ public final class MealsManager {
      * @param ID the uniqure identifier of the meal to delete
      * @throws ModelException if any errors encountered.
      */
-    public void deleteMeal(long BIN, long ID) throws ModelException {
+    public void deleteMeal(long BIN, long ID, BanquetsManager banquetsManager, BanquetsMealsJointManager bmjManager) throws ModelException {
         String stmt = "DELETE FROM MEALS WHERE BIN = ? AND ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -274,6 +274,8 @@ public final class MealsManager {
             if (affectedRows == 0) {
                 throw new ModelException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
             }
+
+            banquetsManager.updateBanquet(BIN, "Available", "N", bmjManager); // circular dependency??
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }

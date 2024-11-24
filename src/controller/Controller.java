@@ -29,6 +29,8 @@ public final class Controller {
 
     private final BanquetsManager banquetsManager;
 
+    private final BanquetsMealsJointManager bmjManager;
+
     private final MealsManager mealsManager;
 
     private final RegistrationManager registrationManager;
@@ -42,6 +44,7 @@ public final class Controller {
             this.administratorsManager = new AdministratorsManager(connection);
             this.attendeeAccountsManager = new AttendeeAccountsManager(connection);
             this.banquetsManager = new BanquetsManager(connection);
+            this.bmjManager = new BanquetsMealsJointManager(connection);
             this.mealsManager = new MealsManager(connection);
             this.registrationManager = new RegistrationManager(connection);
 
@@ -110,7 +113,7 @@ public final class Controller {
      */
     public boolean updateBanquet(long BIN, String attribute, String newValue) {
         try {
-            banquetsManager.updateBanquet(BIN, attribute, newValue, mealsManager);
+            banquetsManager.updateBanquet(BIN, attribute, newValue, bmjManager);
             return true;
         } catch (ModelException e) {
             return false;
@@ -183,7 +186,7 @@ public final class Controller {
 
     public boolean deleteMeal(long BIN, long ID) {
         try {
-            mealsManager.deleteMeal(BIN, ID);
+            mealsManager.deleteMeal(BIN, ID, banquetsManager, bmjManager);
             return true;
         } catch (ModelException e) {
             return false;

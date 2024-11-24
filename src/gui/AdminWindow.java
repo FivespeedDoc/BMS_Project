@@ -342,7 +342,7 @@ public final class AdminWindow extends JFrame {
                             JOptionPane.WARNING_MESSAGE
                     );
                 }
-                refreshMealTable();
+                refreshAllTables();
             }
         }
     }

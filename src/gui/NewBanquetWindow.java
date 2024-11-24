@@ -92,6 +92,16 @@ public final class NewBanquetWindow extends JDialog {
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
 
+        /* Press ESC to dispose */
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
         add(panel);
         setVisible(true);
     }
