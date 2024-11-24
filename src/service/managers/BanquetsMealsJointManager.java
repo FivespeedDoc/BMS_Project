@@ -7,8 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BanquetsMealsJointManager {
-    private Connection con;
+public final class BanquetsMealsJointManager {
+    private final Connection con;
 
     public BanquetsMealsJointManager(Connection con) {
         this.con = con;
