@@ -5,6 +5,7 @@ import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.Banquet;
+import model.entities.Meal;
 import service.managers.*;
 import service.utilities.DateTimeFormatter;
 
@@ -118,6 +119,14 @@ public class Controller {
             return true;
         } catch (ModelException e) {
             return false;
+        }
+    }
+
+    public List<Meal> getBanquetMeals(long BIN) {
+        try {
+            return mealsManager.getBanquetMeals(BIN);
+        } catch (ModelException e) {
+            return new ArrayList<>();
         }
     }
 

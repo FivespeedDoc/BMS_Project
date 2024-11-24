@@ -2,7 +2,9 @@ package service.managers;
 
 import model.ModelException;
 import model.database.Connection;
+import model.entities.Banquet;
 import model.entities.Meal;
+import service.utilities.DateTimeFormatter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -80,29 +82,29 @@ public class MealsManager {
      * Retrieves a {@code meal} object from the database based on the provided BIN and ID.
      *
      * @param BIN the unique identifier of the meal to retrieve.
-     * @param ID the unique identifier of the meal to retrieve.
      * @return the {@code Meal} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-    public Meal getMeal(int BIN, int ID) throws ModelException {
-        String selectSQL = "SELECT * FROM MEALS WHERE BIN = ? AND ID = ?";
+    public List<Meal> getBanquetMeals(long BIN) throws ModelException {
+        String selectSQL = "SELECT * FROM MEALS WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
-            pstmt.setInt(1, BIN);
-            pstmt.setInt(2, ID);
+            pstmt.setLong(1, BIN);
 
             ResultSet resultSet = pstmt.executeQuery();
-            if (resultSet.next()) {
-                return new Meal(
+            List<Meal> meals = new ArrayList<>();
+
+            while (resultSet.next()) {
+                meals.add(new Meal(
                         resultSet.getLong(1),
                         resultSet.getLong(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getDouble(5),
-                        resultSet.getString(6));
-            } else {
-                throw new ModelException("Meal with ID " + BIN + " And " + ID +"not found.");
+                        resultSet.getString(6)));
             }
+
+            return meals;
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
@@ -157,8 +159,8 @@ public class MealsManager {
      *
      * @param BIN the unique identifier of the meal to update.
      * @param ID the unique identifier of the meal to update.
-     * @param attribute    the column name to update. Must be one of the allowed columns.
-     * @param newValue     the new value to set for the specified column.
+     * @param attribute the column name to update. Must be one of the allowed columns.
+     * @param newValue the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
      */
     public void updateMeal(int BIN, int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
@@ -182,9 +184,8 @@ public class MealsManager {
     /**
      * Methods for adding a meal
      * @param meal a meal object (all fields in the meal object must not be null)
-     * @throws ModelException
+     * @throws ModelException if any errors encountered.
      */
-
     public void addMeal(Meal meal) throws ModelException {
         String stmt = "INSERT INTO MEALS (BIN, ID, Name, Type, Price, SpecialCuisine) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -228,5 +229,24 @@ public class MealsManager {
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
+    }
+
+
+    /**
+     * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.
+     */
+    public static String[][] mealListToObjectArray(List<Meal> meals) {
+        String[][] result = new String[meals.size()][6];
+
+        for (int i = 0; i < meals.size(); i++) {
+            result[i][0] = String.valueOf(meals.get(i).getBIN());
+            result[i][1] = String.valueOf(meals.get(i).getID());
+            result[i][2] = meals.get(i).getName();
+            result[i][3] = meals.get(i).getType();
+            result[i][4] = Double.toString(meals.get(i).getPrice());
+            result[i][5] = meals.get(i).getSpecialCuisine();
+        }
+
+        return result;
     }
 }

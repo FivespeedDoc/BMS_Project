@@ -262,7 +262,6 @@ public class BanquetsManager {
         }
     }
 
-
     /**
      * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.
      */

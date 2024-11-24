@@ -6,7 +6,9 @@ import gui.components.RegularLabel;
 import gui.components.Table;
 import gui.components.TitleLabel;
 import model.entities.Banquet;
+import model.entities.Meal;
 import service.managers.BanquetsManager;
+import service.managers.MealsManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -38,7 +40,7 @@ public class AdminWindow extends JFrame {
     private static final String[] mealsAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
     private final JTable mealTable;
     private long selectedMealID;
-    private List<String> banquetMeals;
+    private List<Meal> banquetMeals;
 
     /* Drinks */
     private static final String[] banquetDrinksTitle = {"Drink 1", "Drink 2", "Drink 3", "Drink 4", "Extra Drink!"};
@@ -149,7 +151,7 @@ public class AdminWindow extends JFrame {
         menuPanel.add(Box.createVerticalStrut(20));
         ///
         Button refreshTables = new Button("Refresh All Tables", _ -> {
-            banquetTable.clearSelection();
+            clearAllTableSelections();
             selectedBanquet.setText("No banquet selected");
             selectedBanquetBIN = -1;
             selectedBanquetName = "";
@@ -186,18 +188,37 @@ public class AdminWindow extends JFrame {
         banquetTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedRow = banquetTable.rowAtPoint(e.getPoint());
-                if (selectedRow != -1) {
-                    selectedBanquetBIN = Long.parseLong(banquetTable.getValueAt(selectedRow, 0).toString());
-                    selectedBanquetName = banquetTable.getValueAt(selectedRow, 1).toString();
+                int selectedBanquetRow = banquetTable.rowAtPoint(e.getPoint());
+                if (selectedBanquetRow != -1) {
+                    selectedBanquetBIN = Long.parseLong(banquetTable.getValueAt(selectedBanquetRow, 0).toString());
+                    selectedBanquetName = banquetTable.getValueAt(selectedBanquetRow, 1).toString();
                     selectedBanquet.setText("Selected " + selectedBanquetBIN + ": " + selectedBanquetName);
+
+                    // Refresh meals here
+                    banquetMeals = controller.getBanquetMeals(selectedBanquetBIN);
+                    mealTable.setModel(new DefaultTableModel(
+                            MealsManager.mealListToObjectArray(banquetMeals),
+                            mealsAttributes));
 
                     if (e.getClickCount() == 2) {
                         editBanquet();
                     }
                 } else {
+                    clearAllTableSelections();
                     selectedBanquet.setText("No banquet selected");
-                    clearTableSelections();
+                }
+
+                /* Click meal table */
+                int selectedMealRow = mealTable.rowAtPoint(e.getPoint());
+                if (selectedMealRow != -1) {
+                    selectedMealID = Long.parseLong(mealTable.getValueAt(selectedMealRow, 0).toString());
+
+                    if (e.getClickCount() == 2) {
+                        // need to add
+                    }
+                } else {
+                    mealTable.clearSelection();
+                    selectedBanquet.setText("No banquet selected");
                 }
             }
         });
@@ -230,14 +251,12 @@ public class AdminWindow extends JFrame {
 
     private void newBanquet() {
         new NewBanquetWindow(controller, AdminWindow.this);
-        clearTableSelections();
         refreshTables();
     }
 
     private void editBanquet() {
         if (selectedBanquetBIN != -1) {
             new EditBanquetWindow(controller, AdminWindow.this, selectedBanquetBIN);
-            clearTableSelections();
             refreshTables();
         } else {
             showNoSelectionDialog();
@@ -269,19 +288,22 @@ public class AdminWindow extends JFrame {
                 refreshTables();
             }
 
-            clearTableSelections();
         } else {
             showNoSelectionDialog();
         }
     }
 
-    private void clearTableSelections() {
+    private void clearAllTableSelections() {
+        mealTable.clearSelection();
+        selectedMealID = -1;
+        mealTable.setModel(new DefaultTableModel(new String[][]{}, mealsAttributes));
         banquetTable.clearSelection();
         selectedBanquetBIN = -1;
         selectedBanquetName = "";
     }
 
     private void refreshTables() {
+        clearAllTableSelections();
         banquets = controller.getAllBanquets();
         banquetTable.setModel(new DefaultTableModel(
                 BanquetsManager.banquetListToObjectArray(banquets),
