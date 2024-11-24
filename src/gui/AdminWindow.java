@@ -293,6 +293,11 @@ public final class AdminWindow extends JFrame {
 
     private void newMeal() {
         if (selectedBanquetBIN != -1) {
+            if (banquetMeals.size() == 4) {
+                showNoMoreMealToAddDialog();
+                return;
+            }
+
             new NewMealWindow(controller, this, selectedBanquetBIN);
             refreshMealTable();
         } else {
@@ -339,6 +344,15 @@ public final class AdminWindow extends JFrame {
                 AdminWindow.this,
                 "Please select a banquet to manage.",
                 "No Selection",
+                JOptionPane.WARNING_MESSAGE
+        );
+    }
+
+    private void showNoMoreMealToAddDialog() {
+        JOptionPane.showMessageDialog(
+                AdminWindow.this,
+                "It is only allowed for four meals in each banquet.",
+                "Can't add a new meal",
                 JOptionPane.WARNING_MESSAGE
         );
     }
