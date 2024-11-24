@@ -234,17 +234,17 @@ public class MealsManager {
 
     /**
      * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.
+     * <b>This method will omit the {@code BIN} attribute!</b>
      */
     public static String[][] mealListToObjectArray(List<Meal> meals) {
-        String[][] result = new String[meals.size()][6];
+        String[][] result = new String[meals.size()][5];
 
         for (int i = 0; i < meals.size(); i++) {
-            result[i][0] = String.valueOf(meals.get(i).getBIN());
-            result[i][1] = String.valueOf(meals.get(i).getID());
-            result[i][2] = meals.get(i).getName();
-            result[i][3] = meals.get(i).getType();
-            result[i][4] = Double.toString(meals.get(i).getPrice());
-            result[i][5] = meals.get(i).getSpecialCuisine();
+            result[i][0] = String.valueOf(meals.get(i).getID());
+            result[i][1] = meals.get(i).getName();
+            result[i][2] = meals.get(i).getType();
+            result[i][3] = Double.toString(meals.get(i).getPrice());
+            result[i][4] = meals.get(i).getSpecialCuisine();
         }
 
         return result;

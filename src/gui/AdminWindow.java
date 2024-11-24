@@ -82,9 +82,6 @@ public class AdminWindow extends JFrame {
 
         /* Meal table */
         mealTable = new Table(new DefaultTableModel(new Object[][]{}, mealsAttributes));
-        mealTable.setRowSelectionAllowed(false);
-        mealTable.setColumnSelectionAllowed(false);
-        mealTable.setCellSelectionEnabled(false);
         JScrollPane mealTableScrollPane = new JScrollPane(mealTable);
         mealTableScrollPane.setPreferredSize(new Dimension(mealTableScrollPane.getPreferredSize().width, 200));
         mealTableScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
@@ -194,12 +191,13 @@ public class AdminWindow extends JFrame {
                     selectedBanquetName = banquetTable.getValueAt(selectedBanquetRow, 1).toString();
                     selectedBanquet.setText("Selected " + selectedBanquetBIN + ": " + selectedBanquetName);
 
-                    // Refresh meals here
+                    // Refresh meal table
                     banquetMeals = controller.getBanquetMeals(selectedBanquetBIN);
                     mealTable.setModel(new DefaultTableModel(
                             MealsManager.mealListToObjectArray(banquetMeals),
                             mealsAttributes));
 
+                    // double-click a banquet
                     if (e.getClickCount() == 2) {
                         editBanquet();
                     }
@@ -207,12 +205,18 @@ public class AdminWindow extends JFrame {
                     clearAllTableSelections();
                     selectedBanquet.setText("No banquet selected");
                 }
+            }
+        });
 
-                /* Click meal table */
+        /* Meal table selection */
+        mealTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
                 int selectedMealRow = mealTable.rowAtPoint(e.getPoint());
                 if (selectedMealRow != -1) {
                     selectedMealID = Long.parseLong(mealTable.getValueAt(selectedMealRow, 0).toString());
 
+                    // double-click a meal
                     if (e.getClickCount() == 2) {
                         // need to add
                     }
