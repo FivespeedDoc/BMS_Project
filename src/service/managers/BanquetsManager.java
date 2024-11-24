@@ -94,7 +94,7 @@ public final class BanquetsManager {
             pstmt.setString(3, banquet.getAddress());
             pstmt.setString(4, banquet.getLocation());
             pstmt.setString(5, banquet.getContactStaffName());
-            pstmt.setString(6, Character.toString(banquet.isAvailable()));
+            pstmt.setString(6, "N"); // the newly-created banquet are always unavailable.
             pstmt.setInt(7, banquet.getQuota());
 
             int affectedRows = pstmt.executeUpdate();
@@ -207,7 +207,7 @@ public final class BanquetsManager {
      * @throws ModelException if any errors encountered.
      * @implNote This seems not compatible with the MVC design pattern, but since we have the Stage I report and this is a small system, this is acceptable. Related regulations will also be presented in {@code Controller}.
      */
-    public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException {
+    public void updateBanquet(long BIN, String attribute, String newValue, MealsManager mealsManager) throws ModelException {
         System.out.println("("+attribute+")");
         String stmt = "UPDATE BANQUETS SET " + attribute + " = ? WHERE BIN = ?";
 
@@ -216,6 +216,13 @@ public final class BanquetsManager {
                 case "DateTime": {
                     Timestamp parsedNewValue = DateTimeFormatter.parse(newValue);
                     pstmt.setTimestamp(1, parsedNewValue);
+                    break;
+                }
+                case "Available": {
+                    if (mealsManager.getBanquetMealCount(BIN) != 4) {
+                        throw new ModelException("Cannot change the available state. Meals is not 4.");
+                    }
+                    pstmt.setString(1, newValue);
                     break;
                 }
                 case "Quota": {

@@ -71,9 +71,12 @@ public final class Controller {
         }
     }
 
-    public boolean addBanquet(String name, String dateTime, String address, String location, String contactStaffName, String available, String quota) {
+    /**
+     * @implNote The newly-created banquets are always unavailable.
+     */
+    public boolean addBanquet(String name, String dateTime, String address, String location, String contactStaffName, String quota) {
         try {
-            if (name.isEmpty() || dateTime.isEmpty() || address.isEmpty() || location.isEmpty() || contactStaffName.isEmpty() || available.isEmpty() || quota.isEmpty()) {
+            if (name.isEmpty() || dateTime.isEmpty() || address.isEmpty() || location.isEmpty() || contactStaffName.isEmpty() || quota.isEmpty()) {
                 return false;
             }
 
@@ -83,7 +86,7 @@ public final class Controller {
                     address,
                     location,
                     contactStaffName,
-                    available.charAt(0),
+                    'N',
                     Integer.parseInt(quota));
             banquetsManager.addBanquet(banquet);
             return true;
@@ -107,7 +110,7 @@ public final class Controller {
      */
     public boolean updateBanquet(long BIN, String attribute, String newValue) {
         try {
-            banquetsManager.updateBanquet(BIN, attribute, newValue);
+            banquetsManager.updateBanquet(BIN, attribute, newValue, mealsManager);
             return true;
         } catch (ModelException e) {
             return false;
@@ -139,6 +142,26 @@ public final class Controller {
         }
     }
 
+    public boolean addMeal(long BIN, String ID, String name, String type, String price, String specialCuisine) {
+        try {
+            if (ID.isEmpty() || name.isEmpty() || type.isEmpty() || price.isEmpty() || specialCuisine.isEmpty()) {
+                return false;
+            }
+
+            Meal meal = new Meal(BIN,
+                    Long.parseLong(ID),
+                    name,
+                    type,
+                    Double.parseDouble(price),
+                    specialCuisine);
+
+            mealsManager.addMeal(meal);
+            return true;
+        } catch (ModelException | NumberFormatException e) {
+            return false;
+        }
+    }
+
     /**
      * <h4>Allowed {@code attribute} types</h4>
      * <ul>
@@ -158,22 +181,11 @@ public final class Controller {
         }
     }
 
-    public boolean addMeal(long BIN, String ID, String name, String type, String price, String specialCuisine) {
+    public boolean deleteMeal(long BIN, long ID) {
         try {
-            if (ID.isEmpty() || name.isEmpty() || type.isEmpty() || price.isEmpty() || specialCuisine.isEmpty()) {
-                return false;
-            }
-
-            Meal meal = new Meal(BIN,
-                    Long.parseLong(ID),
-                    name,
-                    type,
-                    Double.parseDouble(price),
-                    specialCuisine);
-
-            mealsManager.addMeal(meal);
+            mealsManager.deleteMeal(BIN, ID);
             return true;
-        } catch (ModelException | NumberFormatException e) {
+        } catch (ModelException e) {
             return false;
         }
     }

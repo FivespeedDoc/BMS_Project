@@ -102,7 +102,6 @@ public final class NewBanquetWindow extends JDialog {
                 addressField.getText(),
                 locationField.getText(),
                 contactStaffNameField.getText(),
-                "N", // the new-created banquet should always be unavailable.
                 quotaField.getText())) {
             dispose();
         } else {

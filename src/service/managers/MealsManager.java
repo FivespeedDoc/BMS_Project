@@ -262,7 +262,7 @@ public final class MealsManager {
      * @param ID the uniqure identifier of the meal to delete
      * @throws ModelException if any errors encountered.
      */
-    public void deleteMeal(int BIN, int ID) throws ModelException {
+    public void deleteMeal(long BIN, long ID) throws ModelException {
         String stmt = "DELETE FROM MEALS WHERE BIN = ? AND ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {

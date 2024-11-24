@@ -1,15 +1,13 @@
 package gui;
 
 import controller.Controller;
-import gui.components.Button;
-import gui.components.XPanel;
-import gui.components.TextField;
-import gui.components.ButtonsPanel;
+import gui.components.*;
 import model.entities.Banquet;
 import service.utilities.DateTimeFormatter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * <h3>The Edit Banquet Window</h3>
@@ -32,7 +30,7 @@ public final class EditBanquetWindow extends JDialog {
 
     private final TextField contactStaffNameField;
 
-    private final TextField availableField;
+    private char selectedAvailableState;
 
     private final TextField quotaField;
 
@@ -41,6 +39,7 @@ public final class EditBanquetWindow extends JDialog {
         this.controller = controller;
         this.BIN = BIN;
         this.banquet = controller.getBanquet(BIN); assert banquet != null;
+        this.selectedAvailableState = this.banquet.isAvailable();
         setSize(500, 375);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -76,8 +75,12 @@ public final class EditBanquetWindow extends JDialog {
         XPanel contactStaffNamePanel = new XPanel("Contact Staff", contactStaffNameField);
         panel.add(contactStaffNamePanel);
         ///
-        availableField = new TextField(Character.toString(banquet.isAvailable())); // this should be changed later.
-        XPanel availablePanel = new XPanel("Available?", availableField);
+        JRadioButton YButton = new JRadioButton("Y"); YButton.setSelected(selectedAvailableState == 'Y');
+        JRadioButton NButton = new JRadioButton("N"); NButton.setSelected(selectedAvailableState == 'N');
+        XPanel availablePanel = new XPanel("Available", new ButtonGroup(), YButton, NButton);
+        availablePanel.add(Box.createHorizontalGlue());
+        RegularLabel unavailableLabel = new RegularLabel("Only with 4 meals can be set available."); unavailableLabel.setEnabled(false);
+        availablePanel.add(unavailableLabel);
         panel.add(availablePanel);
         ///
         quotaField = new TextField(Integer.toString(banquet.getQuota()));
@@ -98,6 +101,9 @@ public final class EditBanquetWindow extends JDialog {
         getRootPane().setDefaultButton(confirmChange);
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
+
+        YButton.addActionListener(_ -> selectedAvailableState = 'Y');
+        NButton.addActionListener(_ -> selectedAvailableState = 'N');
 
         add(panel);
         setVisible(true);
@@ -126,8 +132,8 @@ public final class EditBanquetWindow extends JDialog {
             success &= controller.updateBanquet(BIN, "ContactStaffName", contactStaffNameField.getText());
         }
 
-        if (!Character.toString(banquet.isAvailable()).equals(availableField.getText())) {
-            success &= controller.updateBanquet(BIN, "Available", availableField.getText());
+        if (selectedAvailableState != banquet.isAvailable()) {
+            success &= controller.updateBanquet(BIN, "Available", Character.toString(selectedAvailableState));
         }
 
         if (!Integer.toString(banquet.getQuota()).equals(quotaField.getText())) {

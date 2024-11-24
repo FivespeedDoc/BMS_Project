@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.swing.JOptionPane.*;
@@ -30,18 +31,20 @@ public final class AdminWindow extends JFrame {
     private final String adminID;
 
     /* Banquets */
+    private final RegularLabel selectedBanquetLabel;
     private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
     private final JTable banquetTable;
     private long selectedBanquetBIN = -1;
     private String selectedBanquetName; // for convenience
-    private List<Banquet> banquets;
+    private List<Banquet> banquets = new ArrayList<>(); // for safety
 
     /* Meals */
+    private final RegularLabel selectedMealLabel;
     private static final String[] mealsAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
     private final JTable mealTable;
     private long selectedMealID = -1;
     private String selectedMealName; // for convenience
-    private List<Meal> banquetMeals;
+    private List<Meal> banquetMeals = new ArrayList<>(); // for safety
 
     /* Drinks */
     private static final String[] banquetDrinksTitle = {"Drink 1", "Drink 2", "Drink 3", "Drink 4", "Extra Drink!"};
@@ -111,12 +114,12 @@ public final class AdminWindow extends JFrame {
         menuPanel.setPreferredSize(new Dimension(230, menuPanel.getPreferredSize().height));
 
         /* Banquet table selection */
-        RegularLabel selectedBanquetLabel = new RegularLabel("No banquet selected");
+        selectedBanquetLabel = new RegularLabel("No banquet selected");
         selectedBanquetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         menuPanel.add(selectedBanquetLabel);
 
         /* Meal selection */
-        RegularLabel selectedMealLabel = new RegularLabel("No meal selected");
+        selectedMealLabel = new RegularLabel("No meal selected");
         selectedMealLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         menuPanel.add(selectedMealLabel);
 
@@ -147,29 +150,19 @@ public final class AdminWindow extends JFrame {
             editMealButton.setMinimumSize(buttonSize); editMealButton.setMaximumSize(buttonSize); editMealButton.setPreferredSize(buttonSize);
             menuPanel.add(editMealButton);
         ///
-        Button deleteMealButton = new Button("Delete Meal", null);
+        Button deleteMealButton = new Button("Delete Meal", _ -> deleteMeal());
             deleteMealButton.setMinimumSize(buttonSize); deleteMealButton.setMaximumSize(buttonSize); deleteMealButton.setPreferredSize(buttonSize);
             menuPanel.add(deleteMealButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button refreshTablesButton = new Button("Refresh All Tables", _ -> {
-            clearAllTableSelections();
-            selectedBanquetLabel.setText("No banquet selected");
-            selectedBanquetBIN = -1;
-            selectedBanquetName = "";
-            banquets = controller.getAllBanquets();
-            banquetTable.setModel(new DefaultTableModel(
-                    BanquetsManager.banquetListToObjectArray(banquets),
-                    banquetAttributes
-            ));
-        });
+        Button refreshTablesButton = new Button("Refresh All Tables", _ -> refreshAllTables());
             refreshTablesButton.setMinimumSize(buttonSize); refreshTablesButton.setMaximumSize(buttonSize); refreshTablesButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshTablesButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button viewRegistrationsButton = new Button("View Registrations", null);
+        Button viewRegistrationsButton = new Button("View Registrations", _ -> viewRegistrations());
             viewRegistrationsButton.setMinimumSize(buttonSize); viewRegistrationsButton.setMaximumSize(buttonSize); viewRegistrationsButton.setPreferredSize(buttonSize);
         menuPanel.add(viewRegistrationsButton);
         ///
@@ -210,7 +203,6 @@ public final class AdminWindow extends JFrame {
                     }
                 } else {
                     clearAllTableSelections();
-                    selectedBanquetLabel.setText("No banquet selected");
                 }
             }
         });
@@ -230,8 +222,7 @@ public final class AdminWindow extends JFrame {
                         editMeal();
                     }
                 } else {
-                    mealTable.clearSelection();
-                    selectedMealLabel.setText("No meal selected");
+                    clearMealTableSelection();
                 }
             }
         });
@@ -264,13 +255,13 @@ public final class AdminWindow extends JFrame {
 
     private void newBanquet() {
         new NewBanquetWindow(controller, AdminWindow.this);
-        refreshTables();
+        refreshAllTables();
     }
 
     private void editBanquet() {
         if (selectedBanquetBIN != -1) {
             new EditBanquetWindow(controller, AdminWindow.this, selectedBanquetBIN);
-            refreshTables();
+            refreshAllTables();
         } else {
             showNoBanquetSelectionDialog();
         }
@@ -288,7 +279,6 @@ public final class AdminWindow extends JFrame {
 
             if (confirm == JOptionPane.YES_OPTION) {
                 boolean result = controller.deleteBanquet(selectedBanquetBIN);
-
                 if (!result) {
                     JOptionPane.showMessageDialog(
                             AdminWindow.this,
@@ -297,10 +287,8 @@ public final class AdminWindow extends JFrame {
                             JOptionPane.WARNING_MESSAGE
                     );
                 }
-
-                refreshTables();
+                refreshAllTables();
             }
-
         } else {
             showNoBanquetSelectionDialog();
         }
@@ -312,7 +300,6 @@ public final class AdminWindow extends JFrame {
                 showNoMoreMealToAddDialog();
                 return;
             }
-
             new NewMealWindow(controller, this, selectedBanquetBIN);
             refreshMealTable();
         } else {
@@ -331,14 +318,50 @@ public final class AdminWindow extends JFrame {
         }
     }
 
+    private void deleteMeal() {
+        if (selectedBanquetBIN == -1) {
+            showNoBanquetSelectionDialog();
+        } else if (selectedMealID == -1) {
+            showNoMealSelectionDialog();
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(
+                    AdminWindow.this,
+                    "Are you sure to delete this meal: " + selectedMealID + ": " + selectedMealName + "? " + "This operation cannot be undone!",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean result = controller.deleteMeal(selectedBanquetBIN, selectedMealID);
+                if (!result) {
+                    JOptionPane.showMessageDialog(
+                            AdminWindow.this,
+                            "Cannot delete the meal.",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                }
+                refreshMealTable();
+            }
+        }
+    }
+
+    /**
+     * The following method will clear the selection on the meal table and update the data of the table.
+     */
     private void refreshMealTable() {
+        clearMealTableSelection();
         banquetMeals = controller.getAllBanquetMeals(selectedBanquetBIN);
         mealTable.setModel(new DefaultTableModel(
                 MealsManager.mealListToObjectArray(banquetMeals),
                 mealsAttributes));
     }
 
-    private void refreshTables() {
+    /**
+     * The following method will clear all selections and refresh all data. The meal table will be cleared.
+     */
+    private void refreshAllTables() {
         clearAllTableSelections();
         banquets = controller.getAllBanquets();
         banquetTable.setModel(new DefaultTableModel(
@@ -347,13 +370,34 @@ public final class AdminWindow extends JFrame {
         ));
     }
 
-    private void clearAllTableSelections() {
+    /**
+     * The following method will only clear the selection on the meal table.
+     */
+    private void clearMealTableSelection() {
+        selectedMealLabel.setText("No meal selected");
         mealTable.clearSelection();
         selectedMealID = -1;
-        mealTable.setModel(new DefaultTableModel(new String[][]{}, mealsAttributes));
+        selectedBanquetName = "";
+    }
+
+    /**
+     * The following method will clear the selections on all tables. The meal table will be cleared.
+     */
+    private void clearAllTableSelections() {
+        clearMealTableSelection();
+        banquetMeals.clear();
+        mealTable.setModel(new DefaultTableModel(
+                MealsManager.mealListToObjectArray(banquetMeals),
+                mealsAttributes
+        ));
+        selectedBanquetLabel.setText("No banquet selected");
         banquetTable.clearSelection();
         selectedBanquetBIN = -1;
         selectedBanquetName = "";
+    }
+
+    private void viewRegistrations() {
+        new ViewRegistrationsWindow(controller);
     }
 
     private void showNoBanquetSelectionDialog() {
