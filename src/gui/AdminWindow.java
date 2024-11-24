@@ -40,6 +40,7 @@ public final class AdminWindow extends JFrame {
     private static final String[] mealsAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
     private final JTable mealTable;
     private long selectedMealID = -1;
+    private String selectedMealName; // for convenience
     private List<Meal> banquetMeals;
 
     /* Drinks */
@@ -110,46 +111,51 @@ public final class AdminWindow extends JFrame {
         menuPanel.setPreferredSize(new Dimension(230, menuPanel.getPreferredSize().height));
 
         /* Banquet table selection */
-        RegularLabel selectedBanquet = new RegularLabel("No banquet selected");
-        selectedBanquet.setFont(new Font("Arial", Font.PLAIN, 16));
-        menuPanel.add(selectedBanquet);
+        RegularLabel selectedBanquetLabel = new RegularLabel("No banquet selected");
+        selectedBanquetLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        menuPanel.add(selectedBanquetLabel);
+
+        /* Meal selection */
+        RegularLabel selectedMealLabel = new RegularLabel("No meal selected");
+        selectedMealLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        menuPanel.add(selectedMealLabel);
 
         menuPanel.add(Box.createVerticalStrut(20));
 
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
         ///
-        Button newBanquet = new Button("New Banquet", _ -> newBanquet());
-            newBanquet.setMinimumSize(buttonSize); newBanquet.setMaximumSize(buttonSize); newBanquet.setPreferredSize(buttonSize);
-            menuPanel.add(newBanquet);
+        Button newBanquetButton = new Button("New Banquet", _ -> newBanquet());
+            newBanquetButton.setMinimumSize(buttonSize); newBanquetButton.setMaximumSize(buttonSize); newBanquetButton.setPreferredSize(buttonSize);
+            menuPanel.add(newBanquetButton);
         ///
-        Button editBanquet = new Button("Edit Banquet", _ -> editBanquet());
-            editBanquet.setMinimumSize(buttonSize); editBanquet.setMaximumSize(buttonSize); editBanquet.setPreferredSize(buttonSize);
-            menuPanel.add(editBanquet);
+        Button editBanquetButton = new Button("Edit Banquet", _ -> editBanquet());
+            editBanquetButton.setMinimumSize(buttonSize); editBanquetButton.setMaximumSize(buttonSize); editBanquetButton.setPreferredSize(buttonSize);
+            menuPanel.add(editBanquetButton);
         ///
-        Button deleteBanquet = new Button("Delete Banquet", _ -> deleteBanquet());
-            deleteBanquet.setMinimumSize(buttonSize); deleteBanquet.setMaximumSize(buttonSize); deleteBanquet.setPreferredSize(buttonSize);
-            menuPanel.add(deleteBanquet);
-        ///
-        menuPanel.add(Box.createVerticalStrut(20));
-        ///
-        Button newMeal = new Button("New Meal", _ -> newMeal());
-            newMeal.setMinimumSize(buttonSize); newMeal.setMaximumSize(buttonSize); newMeal.setPreferredSize(buttonSize);
-            menuPanel.add(newMeal);
-        ///
-        Button editMeal = new Button("Edit Meal", null);
-            editMeal.setMinimumSize(buttonSize); editMeal.setMaximumSize(buttonSize); editMeal.setPreferredSize(buttonSize);
-            menuPanel.add(editMeal);
-        ///
-        Button deleteMeal = new Button("Delete Meal", null);
-            deleteMeal.setMinimumSize(buttonSize); deleteMeal.setMaximumSize(buttonSize); deleteMeal.setPreferredSize(buttonSize);
-            menuPanel.add(deleteMeal);
+        Button deleteBanquetButton = new Button("Delete Banquet", _ -> deleteBanquet());
+            deleteBanquetButton.setMinimumSize(buttonSize); deleteBanquetButton.setMaximumSize(buttonSize); deleteBanquetButton.setPreferredSize(buttonSize);
+            menuPanel.add(deleteBanquetButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button refreshTables = new Button("Refresh All Tables", _ -> {
+        Button newMealButton = new Button("New Meal", _ -> newMeal());
+            newMealButton.setMinimumSize(buttonSize); newMealButton.setMaximumSize(buttonSize); newMealButton.setPreferredSize(buttonSize);
+            menuPanel.add(newMealButton);
+        ///
+        Button editMealButton = new Button("Edit Meal", _ -> editMeal());
+            editMealButton.setMinimumSize(buttonSize); editMealButton.setMaximumSize(buttonSize); editMealButton.setPreferredSize(buttonSize);
+            menuPanel.add(editMealButton);
+        ///
+        Button deleteMealButton = new Button("Delete Meal", null);
+            deleteMealButton.setMinimumSize(buttonSize); deleteMealButton.setMaximumSize(buttonSize); deleteMealButton.setPreferredSize(buttonSize);
+            menuPanel.add(deleteMealButton);
+        ///
+        menuPanel.add(Box.createVerticalStrut(20));
+        ///
+        Button refreshTablesButton = new Button("Refresh All Tables", _ -> {
             clearAllTableSelections();
-            selectedBanquet.setText("No banquet selected");
+            selectedBanquetLabel.setText("No banquet selected");
             selectedBanquetBIN = -1;
             selectedBanquetName = "";
             banquets = controller.getAllBanquets();
@@ -158,12 +164,18 @@ public final class AdminWindow extends JFrame {
                     banquetAttributes
             ));
         });
-            refreshTables.setMinimumSize(buttonSize); refreshTables.setMaximumSize(buttonSize); refreshTables.setPreferredSize(buttonSize);
-        menuPanel.add(refreshTables);
+            refreshTablesButton.setMinimumSize(buttonSize); refreshTablesButton.setMaximumSize(buttonSize); refreshTablesButton.setPreferredSize(buttonSize);
+        menuPanel.add(refreshTablesButton);
+        ///
+        menuPanel.add(Box.createVerticalStrut(20));
+        ///
+        Button viewRegistrationsButton = new Button("View Registrations", null);
+            viewRegistrationsButton.setMinimumSize(buttonSize); viewRegistrationsButton.setMaximumSize(buttonSize); viewRegistrationsButton.setPreferredSize(buttonSize);
+        menuPanel.add(viewRegistrationsButton);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
-        Button logout = new Button("Logout", _ -> {
+        Button logoutButton = new Button("Logout", _ -> {
             int confirm = showConfirmDialog(
                     AdminWindow.this,
                     "This operation will log you out.",
@@ -176,9 +188,9 @@ public final class AdminWindow extends JFrame {
                 new LoginWindow(controller);
             }
         });
-            logout.setForeground(Color.RED);
-            logout.setMinimumSize(buttonSize); logout.setMaximumSize(buttonSize); logout.setPreferredSize(buttonSize);
-            menuPanel.add(logout);
+            logoutButton.setForeground(Color.RED);
+            logoutButton.setMinimumSize(buttonSize); logoutButton.setMaximumSize(buttonSize); logoutButton.setPreferredSize(buttonSize);
+            menuPanel.add(logoutButton);
 
 
         /* Banquet table selection */
@@ -189,7 +201,7 @@ public final class AdminWindow extends JFrame {
                 if (selectedBanquetRow != -1) {
                     selectedBanquetBIN = Long.parseLong(banquetTable.getValueAt(selectedBanquetRow, 0).toString());
                     selectedBanquetName = banquetTable.getValueAt(selectedBanquetRow, 1).toString();
-                    selectedBanquet.setText("Selected " + selectedBanquetBIN + ": " + selectedBanquetName);
+                    selectedBanquetLabel.setText("Banquet " + selectedBanquetBIN + ": " + selectedBanquetName);
                     refreshMealTable();
 
                     // double-click a banquet
@@ -198,7 +210,7 @@ public final class AdminWindow extends JFrame {
                     }
                 } else {
                     clearAllTableSelections();
-                    selectedBanquet.setText("No banquet selected");
+                    selectedBanquetLabel.setText("No banquet selected");
                 }
             }
         });
@@ -210,13 +222,16 @@ public final class AdminWindow extends JFrame {
                 int selectedMealRow = mealTable.rowAtPoint(e.getPoint());
                 if (selectedMealRow != -1) {
                     selectedMealID = Long.parseLong(mealTable.getValueAt(selectedMealRow, 0).toString());
+                    selectedMealName = mealTable.getValueAt(selectedMealRow, 1).toString();
+                    selectedMealLabel.setText("Meal " + selectedMealID + ": " + selectedMealName);
 
                     // double-click a meal
                     if (e.getClickCount() == 2) {
-                        // need to add
+                        editMeal();
                     }
                 } else {
                     mealTable.clearSelection();
+                    selectedMealLabel.setText("No meal selected");
                 }
             }
         });
@@ -249,7 +264,7 @@ public final class AdminWindow extends JFrame {
 
     private void newBanquet() {
         new NewBanquetWindow(controller, AdminWindow.this);
-        // refreshTables();
+        refreshTables();
     }
 
     private void editBanquet() {
@@ -305,8 +320,19 @@ public final class AdminWindow extends JFrame {
         }
     }
 
+    private void editMeal() {
+        if (selectedBanquetBIN == -1) {
+            showNoBanquetSelectionDialog();
+        } else if (selectedMealID == -1) {
+            showNoMealSelectionDialog();
+        } else {
+            new EditMealWindow(controller, this, selectedBanquetBIN, selectedMealID);
+            refreshMealTable();
+        }
+    }
+
     private void refreshMealTable() {
-        banquetMeals = controller.getBanquetMeals(selectedBanquetBIN);
+        banquetMeals = controller.getAllBanquetMeals(selectedBanquetBIN);
         mealTable.setModel(new DefaultTableModel(
                 MealsManager.mealListToObjectArray(banquetMeals),
                 mealsAttributes));
@@ -342,7 +368,7 @@ public final class AdminWindow extends JFrame {
     private void showNoMealSelectionDialog() {
         JOptionPane.showMessageDialog(
                 AdminWindow.this,
-                "Please select a banquet to manage.",
+                "Please select a meal to manage.",
                 "No Selection",
                 JOptionPane.WARNING_MESSAGE
         );

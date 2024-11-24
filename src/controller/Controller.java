@@ -66,8 +66,9 @@ public final class Controller {
     public Banquet getBanquet(long BIN) {
         try {
             return banquetsManager.getBanquet(BIN);
-        } catch (ModelException ignored) {}
-        return null;
+        } catch (ModelException e) {
+            return null;
+        }
     }
 
     public boolean addBanquet(String name, String dateTime, String address, String location, String contactStaffName, String available, String quota) {
@@ -122,11 +123,38 @@ public final class Controller {
         }
     }
 
-    public List<Meal> getBanquetMeals(long BIN) {
+    public List<Meal> getAllBanquetMeals(long BIN) {
         try {
-            return mealsManager.getBanquetMeals(BIN);
+            return mealsManager.getAllBanquetMeals(BIN);
         } catch (ModelException e) {
             return new ArrayList<>();
+        }
+    }
+
+    public Meal getBanquetMeal(long BIN, long ID) {
+        try {
+            return mealsManager.getBanquetMeal(BIN, ID);
+        } catch (ModelException e) {
+            return null;
+        }
+    }
+
+    /**
+     * <h4>Allowed {@code attribute} types</h4>
+     * <ul>
+     *     <li>{@code "Name"}</li>
+     *     <li>{@code "Type"}</li>
+     *     <li>{@code "Price"}</li>
+     *     <li>{@code "SpecialCuisine"}</li>
+     * </ul>
+     * @return if the operation is executed successfully.
+     */
+    public boolean updateMeal(long BIN, long ID, String attribute, String newValue) {
+        try {
+            mealsManager.updateMeal(BIN, ID, attribute, newValue);
+            return true;
+        } catch (ModelException e) {
+            return false;
         }
     }
 

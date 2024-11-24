@@ -40,7 +40,7 @@ public final class EditBanquetWindow extends JDialog {
         super(adminWindow, "Edit Banquet", true);
         this.controller = controller;
         this.BIN = BIN;
-        this.banquet = controller.getBanquet(BIN);
+        this.banquet = controller.getBanquet(BIN); assert banquet != null;
         setSize(500, 375);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);

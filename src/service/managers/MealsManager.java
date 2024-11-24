@@ -2,9 +2,7 @@ package service.managers;
 
 import model.ModelException;
 import model.database.Connection;
-import model.entities.Banquet;
 import model.entities.Meal;
-import service.utilities.DateTimeFormatter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -85,10 +83,10 @@ public final class MealsManager {
      * @return the {@code Meal} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-    public List<Meal> getBanquetMeals(long BIN) throws ModelException {
-        String selectSQL = "SELECT * FROM MEALS WHERE BIN = ?";
+    public List<Meal> getAllBanquetMeals(long BIN) throws ModelException {
+        String stmt = "SELECT * FROM MEALS WHERE BIN = ?";
 
-        try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setLong(1, BIN);
 
             ResultSet resultSet = pstmt.executeQuery();
@@ -105,6 +103,31 @@ public final class MealsManager {
             }
 
             return meals;
+        } catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
+    public Meal getBanquetMeal(long BIN, long ID) throws ModelException {
+        String stmt = "SELECT * FROM MEALS WHERE BIN = ? AND ID = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, BIN);
+            pstmt.setLong(2, ID);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (resultSet.next()) {
+                return new Meal(
+                        resultSet.getLong(1),
+                        resultSet.getLong(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getDouble(5),
+                        resultSet.getString(6));
+            } else {
+                throw new ModelException("Cannot find meal with ID " + ID + " in banquet " + BIN);
+            }
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
@@ -163,11 +186,16 @@ public final class MealsManager {
      * @param newValue the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
      */
-    public void updateMeal(int BIN, int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
+    public void updateMeal(long BIN, long ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE MEALS SET " + attribute + " = ? WHERE BIN = ? AND ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setString(1, newValue);
+            if (attribute.equals("Price")) {
+                pstmt.setDouble(1, Double.parseDouble(newValue));
+            } else {
+                pstmt.setString(1, newValue);
+            }
+
             pstmt.setLong(2, BIN);
             pstmt.setLong(3, ID);
 
@@ -176,7 +204,7 @@ public final class MealsManager {
             if (affectedRows == 0) {
                 throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NumberFormatException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
