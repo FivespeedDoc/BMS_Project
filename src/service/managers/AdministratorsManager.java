@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * @author jimyang
  * @author FrankYang0610
  */
-public class AdministratorsManager {
+public final class AdministratorsManager {
     private final Connection con;
 
     public AdministratorsManager(Connection con) {

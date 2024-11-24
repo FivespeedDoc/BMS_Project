@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
  * @author jimyang
  * @author FrankYang0610
  */
-public class MealsManager {
+public final class MealsManager {
     private final Connection con;
 
     public MealsManager(Connection con) throws ModelException {

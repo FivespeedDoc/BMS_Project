@@ -4,7 +4,7 @@ package model.entities;
  * <h3>The {@code Meal} Class</h3>
  * @author jimyang
  */
-public class Meal {
+public final class Meal {
     private final long BIN;
     private final long ID;
 

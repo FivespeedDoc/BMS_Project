@@ -4,7 +4,7 @@ package model.entities;
  * <h3>The {@code HashedPassword} Class</h3>
  * @author jimyang
  */
-public class HashedPassword {
+public final class HashedPassword {
     public String hashedPassword;
 
     public String salt;

@@ -17,7 +17,7 @@ import model.entities.HashedPassword;
  *
  * @author jimyang
  */
-public class PasswordManager {
+public final class PasswordManager {
     /**
      * <h3>Password Hashing function</h3>
      * @param password (String, in plain text)

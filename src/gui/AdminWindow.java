@@ -24,7 +24,7 @@ import static javax.swing.JOptionPane.*;
  * <h4>Admins can manage all banquets here.</h4>
  * @author FrankYang0610
  */
-public class AdminWindow extends JFrame {
+public final class AdminWindow extends JFrame {
     private final Controller controller;
 
     private final String adminID;

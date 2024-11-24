@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
  * <h3>The Add Meal Window</h3>
  * @author FrankYang0610
  */
-public class NewMealWindow extends JDialog {
+public final class NewMealWindow extends JDialog {
     private final Controller controller;
 
     private final long BIN;

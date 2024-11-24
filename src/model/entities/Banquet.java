@@ -6,7 +6,7 @@ import java.sql.Timestamp;
  * <h3>The {@code Banquet} Class</h3>
  * @author jimyang
  */
-public class Banquet {
+public final class Banquet {
     private final long BIN; // it is safer to use long here.
 
     private final String Name;

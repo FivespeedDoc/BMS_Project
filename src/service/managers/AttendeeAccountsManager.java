@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
  * @author jimyang
  * @author FrankYang0610
 */
-public class AttendeeAccountsManager {
+public final class AttendeeAccountsManager {
     private final Connection con;
 
     public AttendeeAccountsManager(Connection con) throws ModelException {

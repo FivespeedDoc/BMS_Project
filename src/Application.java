@@ -9,7 +9,7 @@ import globalexceptions.BMS_Exception;
  *
  * @author FrankYang0610
  */
-public class Application {
+public final class Application {
     public static void main(String[] args) {
         try {
             System.setProperty("apple.awt.application.name", "Banquet Management System"); // is this available in Windows?

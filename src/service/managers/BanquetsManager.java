@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
  * @author jimyang
  * @author FrankYang0610
 */
-public class BanquetsManager {
+public final class BanquetsManager {
     private final Connection con;
 
     public BanquetsManager(Connection con) throws ModelException {

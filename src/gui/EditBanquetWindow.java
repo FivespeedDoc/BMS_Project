@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
  * <h3>The Edit Banquet Window</h3>
  * @author FrankYang0610
  */
-public class EditBanquetWindow extends JDialog {
+public final class EditBanquetWindow extends JDialog {
     private final Controller controller;
 
     private final long BIN;

@@ -5,7 +5,7 @@ import gui.components.*;
 
 import javax.swing.*;
 
-public class SignupWindow extends JDialog {
+public final class SignupWindow extends JDialog {
     private final Controller controller;
 
     private final TextField userIDField;

@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
  * @author FrankYang0610
  */
 
-public class RegistrationManager {
+public final class RegistrationManager {
     private final Connection con;
     public RegistrationManager(Connection con) {
         this.con = con;

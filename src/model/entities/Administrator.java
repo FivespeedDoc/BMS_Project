@@ -4,7 +4,7 @@ package model.entities;
  * <h3>The {@code Administrator} Class</h3>
  * @author jimyang
  */
-public class Administrator {
+public final class Administrator {
     private final String ID;
 
     private final String Password;

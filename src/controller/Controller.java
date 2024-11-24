@@ -20,7 +20,7 @@ import java.util.List;
  * @author FrankYang0610
  * @author jimyang
  */
-public class Controller {
+public final class Controller {
     private final Connection connection;
 
     private final AdministratorsManager administratorsManager;

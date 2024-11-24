@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
  * <h3>The Add Banquet Window</h3>
  * @author FrankYang0610
  */
-public class NewBanquetWindow extends JDialog {
+public final class NewBanquetWindow extends JDialog {
     private final Controller controller;
 
     private final TextField nameField;

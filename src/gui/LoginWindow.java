@@ -14,7 +14,7 @@ import java.util.Arrays;
  * <h3>The Login Window</h3>
  * @author FrankYang0610
  */
-public class LoginWindow extends JFrame {
+public final class LoginWindow extends JFrame {
     private final Controller controller;
 
     private final TextField IDField; // account ID for admin and users
