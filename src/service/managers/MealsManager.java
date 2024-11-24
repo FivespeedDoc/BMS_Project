@@ -181,6 +181,23 @@ public class MealsManager {
         }
     }
 
+    public int getBanquetMealCount(long BIN) throws ModelException {
+        String stmt = "SELECT COUNT(*) FROM MEALS WHERE BIN = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, BIN);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                throw new ModelException("Meal with BIN " + BIN + " not found.");
+            }
+        } catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
     /**
      * Methods for adding a meal
      * @param meal a meal object (all fields in the meal object must not be null)
@@ -188,7 +205,12 @@ public class MealsManager {
      */
     public void addMeal(Meal meal) throws ModelException {
         String stmt = "INSERT INTO MEALS (BIN, ID, Name, Type, Price, SpecialCuisine) VALUES (?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            if (getBanquetMealCount(meal.getBIN()) >= 4) {
+                throw new ModelException("There are already four meals in the banquet. It is not allowed to add more meals.");
+            }
+
             pstmt.setLong(1, meal.getBIN());
             pstmt.setLong(2, meal.getID());
             pstmt.setString(3, meal.getName());
@@ -200,9 +222,7 @@ public class MealsManager {
             if (affectedRows == 0) {
                 throw new ModelException("Cannot add Meal.");
             }
-
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }

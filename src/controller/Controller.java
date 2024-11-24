@@ -70,20 +70,20 @@ public class Controller {
         return null;
     }
 
-    public boolean addBanquet(String Name, String DateTime, String Address, String Location, String ContactStaffName, String Available, String Quota) {
+    public boolean addBanquet(String name, String dateTime, String address, String location, String contactStaffName, String available, String quota) {
         try {
-            if (Name.isEmpty() || DateTime.isEmpty() || Address.isEmpty() || Location.isEmpty() || ContactStaffName.isEmpty() || Available.isEmpty() || Quota.isEmpty()) {
+            if (name.isEmpty() || dateTime.isEmpty() || address.isEmpty() || location.isEmpty() || contactStaffName.isEmpty() || available.isEmpty() || quota.isEmpty()) {
                 return false;
             }
 
             Banquet banquet = new Banquet(-1,
-                    Name,
-                    DateTimeFormatter.parse(DateTime),
-                    Address,
-                    Location,
-                    ContactStaffName,
-                    Available.charAt(0),
-                    Integer.parseInt(Quota));
+                    name,
+                    DateTimeFormatter.parse(dateTime),
+                    address,
+                    location,
+                    contactStaffName,
+                    available.charAt(0),
+                    Integer.parseInt(quota));
             banquetsManager.addBanquet(banquet);
             return true;
         } catch (ModelException | ParseException | NumberFormatException e) {
@@ -127,6 +127,26 @@ public class Controller {
             return mealsManager.getBanquetMeals(BIN);
         } catch (ModelException e) {
             return new ArrayList<>();
+        }
+    }
+
+    public boolean addMeal(long BIN, String ID, String name, String type, String price, String specialCuisine) {
+        try {
+            if (ID.isEmpty() || name.isEmpty() || type.isEmpty() || price.isEmpty() || specialCuisine.isEmpty()) {
+                return false;
+            }
+
+            Meal meal = new Meal(BIN,
+                    Long.parseLong(ID),
+                    name,
+                    type,
+                    Double.parseDouble(price),
+                    specialCuisine);
+
+            mealsManager.addMeal(meal);
+            return true;
+        } catch (ModelException | NumberFormatException e) {
+            return false;
         }
     }
 

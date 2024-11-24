@@ -69,6 +69,9 @@ public class NewBanquetWindow extends JDialog {
         JRadioButton YButton = new JRadioButton("Y"); YButton.setEnabled(false);
         JRadioButton NButton = new JRadioButton("N"); NButton.setSelected(true); NButton.setEnabled(false);
         XPanel availablePanel = new XPanel("Available", new ButtonGroup(), YButton, NButton);
+        availablePanel.add(Box.createHorizontalGlue());
+        RegularLabel unavailableLabel = new RegularLabel("Newly created banquets are unavailable."); unavailableLabel.setEnabled(false);
+        availablePanel.add(unavailableLabel);
         panel.add(availablePanel);
         ///
         quotaField = new TextField("100? or more?");
