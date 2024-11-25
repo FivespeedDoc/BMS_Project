@@ -1,82 +1,164 @@
 package gui;
 
+import controller.Controller;
+import gui.components.*;
+import model.entities.AttendeeAccount;
+
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
-@Deprecated
-public class ChangeUserInformationWindow extends JFrame {
+/**
+ * <h3>The Change User Information Window</h3>
+ * @author FrankYang0610
+ */
+public final class ChangeUserInformationWindow extends JDialog {
+    private final Controller controller;
 
-    public ChangeUserInformationWindow() {
-        setTitle("Change User Information");
-        setSize(500, 500);
+    private final AttendeeAccount account;
+
+    private final TextField userIDField;
+
+    private final PasswordField passwordField;
+
+    private final PasswordField rePasswordField;
+
+    private final TextField nameField;
+
+    private final TextField addressField;
+
+    private final TextField typeField;
+
+    private final TextField mobileNoField;
+
+    private final TextField organizationField;
+
+    public ChangeUserInformationWindow(Controller controller, JFrame loginWindow, AttendeeAccount account) {
+        super(loginWindow, "Sign Up", true);
+        this.controller = controller;
+        this.account = account;
+        setSize(500, 375);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        initUI();
+        setResizable(false);
+
+        /* The panel */
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        /* Text and field panels */
+        userIDField = new TextField(this.account.getID());
+        XPanel userIDPanel = new XPanel("Account ID", userIDField);
+        panel.add(userIDPanel);
+        ///
+        passwordField = new PasswordField();
+        XPanel passwordPanel = new XPanel(passwordField, false);
+        panel.add(passwordPanel);
+        ///
+        rePasswordField = new PasswordField();
+        XPanel rePasswordPanel = new XPanel(rePasswordField, true);
+        panel.add(rePasswordPanel);
+        ///
+        nameField = new TextField(this.account.getName());
+        XPanel namePanel = new XPanel("Name", nameField);
+        panel.add(namePanel);
+        ///
+        addressField = new TextField(this.account.getAddress());
+        XPanel addressPanel = new XPanel("Address", addressField);
+        panel.add(addressPanel);
+        ///
+        typeField = new TextField(this.account.getType()); // this should be changed later
+        XPanel typePanel = new XPanel("Type", typeField);
+        panel.add(typePanel);
+        ///
+        mobileNoField = new TextField(Long.toString(this.account.getMobileNo()));
+        XPanel mobileNoPanel = new XPanel("Phone Number", mobileNoField);
+        panel.add(mobileNoPanel);
+        ///
+        organizationField = new TextField(this.account.getOrganization());
+        XPanel organizationPanel = new XPanel("Organization", organizationField);
+        panel.add(organizationPanel);
+
+        /* Buttons */
+        ButtonsPanel buttons = new ButtonsPanel();
+        ///
+        Button cancel = new Button("Cancel", _ -> dispose());
+        buttons.add(cancel);
+        ///
+        buttons.add(Box.createHorizontalGlue());
+        ///
+        Button confirmChange = new Button("Confirm Change", this::confirmChange);
+        buttons.add(confirmChange);
+        ///
+        getRootPane().setDefaultButton(confirmChange);
+        SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
+        panel.add(buttons);
+
+        /* Press ESC to dispose */
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        add(panel);
         setVisible(true);
     }
 
-    private void initUI() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(9, 2, 10, 10)); // 9 rows, 2 columns
+    private void confirmChange(ActionEvent e) {
+        if (!Arrays.equals(passwordField.getPassword(), rePasswordField.getPassword())) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        boolean success = false;
 
-        JLabel firstNameLabel = new JLabel("First Name:");
-        JTextField firstNameField = new JTextField();
+        if (!account.getName().equals(nameField.getText())) {
+            // need to fill
+        }
 
-        JLabel lastNameLabel = new JLabel("Last Name:");
-        JTextField lastNameField = new JTextField();
+        if (!account.getAddress().equals(addressField.getText())) {
+            // need to fill
+        }
 
-        JLabel addressLabel = new JLabel("Address:");
-        JTextField addressField = new JTextField();
+        if (!account.getType().equals(typeField.getText())) {
+            // need to fill
+        }
 
-        JLabel attendeeTypeLabel = new JLabel("Attendee Type:");
-        JComboBox<String> attendeeTypeCombo = new JComboBox<>(new String[]{"Staff", "Student", "Alumni", "Guest"});
+        if (account.getMobileNo() != Long.parseLong(mobileNoField.getText())) {
+            // need to fill
+        }
 
-        JLabel emailLabel = new JLabel("E-mail Address:");
-        JTextField emailField = new JTextField();
+        if (!account.getOrganization().equals(organizationField.getText())) {
+            // need to fill
+        }
 
-        JLabel passwordLabel = new JLabel("Password:");
-        JPasswordField passwordField = new JPasswordField();
+        if (success) {
+            changeAppliedDialog();
+            dispose();
+        } else {
+            showErrorDialog();
+        }
 
-        JLabel mobileNumberLabel = new JLabel("Mobile Number:");
-        JTextField mobileNumberField = new JTextField();
-
-        JLabel affiliatedOrgLabel = new JLabel("Affiliated Organization:");
-        JComboBox<String> affiliatedOrgCombo = new JComboBox<>(new String[]{"PolyU", "SPEED", "HKCC", "Others"});
-
-        JButton saveButton = new JButton("Save");
-        JButton cancelButton = new JButton("Cancel");
-
-        saveButton.addActionListener(e -> saveUserInfo());
-        cancelButton.addActionListener(e -> dispose());
-
-
-        panel.add(firstNameLabel);
-        panel.add(firstNameField);
-        panel.add(lastNameLabel);
-        panel.add(lastNameField);
-        panel.add(addressLabel);
-        panel.add(addressField);
-        panel.add(attendeeTypeLabel);
-        panel.add(attendeeTypeCombo);
-        panel.add(emailLabel);
-        panel.add(emailField);
-        panel.add(passwordLabel);
-        panel.add(passwordField);
-        panel.add(mobileNumberLabel);
-        panel.add(mobileNumberField);
-        panel.add(affiliatedOrgLabel);
-        panel.add(affiliatedOrgCombo);
-
-        panel.add(saveButton);
-        panel.add(cancelButton);
-
-        add(panel);
+        if (controller.userSignUp(userIDField.getText(),
+                passwordField.getPassword(),
+                nameField.getText(),
+                addressField.getText(),
+                typeField.getText(),
+                mobileNoField.getText(),
+                organizationField.getText())) {
+        }
     }
 
-    private void saveUserInfo() {
+    private void changeAppliedDialog() {
+        JOptionPane.showMessageDialog(this, "Your changes have applied!", "Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
 
-        JOptionPane.showMessageDialog(this, "User Information Saved!", "Info", JOptionPane.INFORMATION_MESSAGE);
-        dispose();
+    private void showErrorDialog() {
+        JOptionPane.showMessageDialog(this, "Cannot change your personal information. Please check if your changes align the requirements and try again.", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }
