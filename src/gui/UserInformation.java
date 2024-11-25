@@ -2,6 +2,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public class UserInformation extends JFrame {
 
     public UserInformation() {

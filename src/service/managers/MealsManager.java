@@ -281,7 +281,6 @@ public final class MealsManager {
         }
     }
 
-
     /**
      * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.
      * <b>This method will omit the {@code BIN} attribute!</b>

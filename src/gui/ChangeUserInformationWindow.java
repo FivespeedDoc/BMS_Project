@@ -3,6 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public class ChangeUserInformationWindow extends JFrame {
 
     public ChangeUserInformationWindow() {
@@ -17,7 +18,6 @@ public class ChangeUserInformationWindow extends JFrame {
     private void initUI() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(9, 2, 10, 10)); // 9 rows, 2 columns
-
 
         JLabel firstNameLabel = new JLabel("First Name:");
         JTextField firstNameField = new JTextField();
