@@ -3,6 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
+@Deprecated
 public class ChangeUserInformationWindow extends JFrame {
 
     public ChangeUserInformationWindow() {

@@ -7,6 +7,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
+/**
+ * <h3>The Signup Window</h3>
+ * @author FrankYang0610
+ */
 public final class SignupWindow extends JDialog {
     private final Controller controller;
 

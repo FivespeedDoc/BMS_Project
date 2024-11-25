@@ -4,6 +4,10 @@ import controller.Controller;
 
 import javax.swing.*;
 
+/**
+ * <h3>The View Registration Window</h3>
+ * @author FrankYang0610
+ */
 public final class ViewRegistrationsWindow extends JFrame {
     private final Controller controller;
 
