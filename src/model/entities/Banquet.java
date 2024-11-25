@@ -19,7 +19,7 @@ public final class Banquet {
 
     private final String ContactStaffName;
 
-    private final char Available; // 'Y' or 'N'
+    private final char Available; // 'Y' or 'N, Stored as CHAR'
 
     private final int Quota;
 
