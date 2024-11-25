@@ -4,6 +4,7 @@ import controller.Controller;
 import gui.components.*;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 public final class SignupWindow extends JDialog {
     private final Controller controller;
@@ -43,7 +44,7 @@ public final class SignupWindow extends JDialog {
         panel.add(userIDPanel);
         ///
         passwordField = new PasswordField();
-        XPanel passwordPanel = new XPanel(passwordField);
+        XPanel passwordPanel = new XPanel(passwordField, false);
         panel.add(passwordPanel);
         ///
         rePasswordField = new PasswordField();
@@ -84,6 +85,16 @@ public final class SignupWindow extends JDialog {
         getRootPane().setDefaultButton(confirmChange);
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
+
+        /* Press ESC to dispose */
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
 
         add(panel);
         setVisible(true);
