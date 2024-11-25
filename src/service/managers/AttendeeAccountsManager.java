@@ -3,6 +3,7 @@ package service.managers;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.AttendeeAccount;
+import model.entities.HashedPasswordAndSalt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,12 +65,12 @@ public final class AttendeeAccountsManager {
 
             while (resultSet.next()) {
                 attendees.add(new AttendeeAccount(resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3),
+                        new HashedPasswordAndSalt(resultSet.getString(2), resultSet.getString(3)),
                         resultSet.getString(4),
                         resultSet.getString(5),
-                        resultSet.getLong(6),
-                        resultSet.getString(7)));
+                        resultSet.getString(6),
+                        resultSet.getLong(7),
+                        resultSet.getString(8)));
             }
 
             return attendees;
@@ -95,12 +96,12 @@ public final class AttendeeAccountsManager {
 
             if (resultSet.next()) {
                 return new AttendeeAccount(resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3),
+                        new HashedPasswordAndSalt(resultSet.getString(2), resultSet.getString(3)),
                         resultSet.getString(4),
                         resultSet.getString(5),
-                        resultSet.getLong(6),
-                        resultSet.getString(7));
+                        resultSet.getString(6),
+                        resultSet.getLong(7),
+                        resultSet.getString(8));
             } else {
                 throw new ModelException("Attendee_Account with ID " + ID + " not found.");
             }
@@ -138,12 +139,12 @@ public final class AttendeeAccountsManager {
 
             while (resultSet.next()) {
                 attendees.add(new AttendeeAccount(resultSet.getString(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3),
+                        new HashedPasswordAndSalt(resultSet.getString(2), resultSet.getString(3)),
                         resultSet.getString(4),
                         resultSet.getString(5),
-                        resultSet.getLong(6),
-                        resultSet.getString(7)));
+                        resultSet.getString(6),
+                        resultSet.getLong(7),
+                        resultSet.getString(8)));
             }
             return attendees;
         } catch (SQLException e) {
@@ -186,23 +187,22 @@ public final class AttendeeAccountsManager {
      */
 
     public void addAttendeeAccount(AttendeeAccount attendeeAccount) throws ModelException {
-        String stmt = "INSERT INTO ATTENDEE_ACCOUNTS (ID, Password, Salt, Name, Type, MobileNo, Organization) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String stmt = "INSERT INTO ATTENDEE_ACCOUNTS (ID, HashedPassword, HashedSalt, Name, Address, Type, MobileNo, Organization) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attendeeAccount.getID());
-            pstmt.setString(2, attendeeAccount.getPassword());
-            pstmt.setString(3, attendeeAccount.getSalt());
+            pstmt.setString(2, attendeeAccount.getHashedPasswordAndSalt().getHashedPassword());
+            pstmt.setString(3, attendeeAccount.getHashedPasswordAndSalt().getHashedSalt());
             pstmt.setString(4, attendeeAccount.getName());
-            pstmt.setString(5, attendeeAccount.getType());
-            pstmt.setLong(6, attendeeAccount.getMobileNo());
-            pstmt.setString(7, attendeeAccount.getOrganization());
-            pstmt.executeUpdate();
+            pstmt.setString(5, attendeeAccount.getAddress());
+            pstmt.setString(6, attendeeAccount.getType());
+            pstmt.setLong(7, attendeeAccount.getMobileNo());
+            pstmt.setString(8, attendeeAccount.getOrganization());
 
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {
                 throw new ModelException("Cannot add Attendee account.");
             }
-
         }
         catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());

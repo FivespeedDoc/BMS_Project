@@ -3,6 +3,7 @@ package service.managers;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.Administrator;
+import model.entities.HashedPasswordAndSalt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,7 +26,24 @@ public final class AdministratorsManager {
 
     public AdministratorsManager(Connection con) {
         this.con = con;
+        // setupAdmin();
     }
+
+    private void setupAdmin() {
+        try {
+            PasswordManager passwordManager = new PasswordManager();
+            HashedPasswordAndSalt hashedPasswordAndSalt = passwordManager.generateHashedPassword(new char[]{'0', '0', '0', '0', '0', '0'});
+            String stmt = "INSERT INTO ADMINISTRATORS (ID, HashedPassword, HashedSalt) VALUES (?, ?, ?)";
+
+            try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+                pstmt.setString(1, "admin");
+                pstmt.setString(2, hashedPasswordAndSalt.getHashedPassword());
+                pstmt.setString(3, hashedPasswordAndSalt.getHashedSalt());
+                pstmt.executeUpdate();
+            }  catch (SQLException ignored) {}
+        } catch (ModelException ignored) {}
+    }
+     // only for test initialize.
 
     public Administrator getAdministrator(String ID) throws ModelException {
         String stmt = "SELECT * FROM ADMINISTRATORS WHERE ID = ?";
@@ -35,7 +53,10 @@ public final class AdministratorsManager {
             ResultSet resultSet = pstmt.executeQuery();
 
             if (resultSet.next()) {
-                return new Administrator(resultSet.getString(1), resultSet.getString(2));
+                return new Administrator(resultSet.getString(1),
+                        new HashedPasswordAndSalt(
+                                resultSet.getString(2),
+                                resultSet.getString(3)));
             } else {
                 throw new ModelException("Administrator not found");
             }

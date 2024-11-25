@@ -2,6 +2,8 @@ package service.managers;
 
 import model.ModelException;
 import model.database.Connection;
+import model.entities.Banquet;
+import model.entities.Meal;
 import model.entities.Registration;
 
 import java.sql.PreparedStatement;
@@ -20,9 +22,9 @@ import java.util.NoSuchElementException;
  * @author jimyang
  * @author FrankYang0610
  */
-
 public final class RegistrationManager {
     private final Connection con;
+
     public RegistrationManager(Connection con) {
         this.con = con;
     }
@@ -72,12 +74,11 @@ public final class RegistrationManager {
              }
 
             return registrations;
-         }
-
-         catch(SQLException e) {
+         } catch (SQLException e) {
              throw new ModelException("Database error: " + e.getMessage());
          }
      }
+
     /**
      * Retrieves a {@code Registration} object from the database based on the provided Registration ID.
      *
@@ -92,8 +93,8 @@ public final class RegistrationManager {
              pstmt.setLong(1, ID);
 
             ResultSet resultSet = pstmt.executeQuery();
-            if(resultSet.next()) {
-                return new Registration(resultSet.getInt(1),
+            if (resultSet.next()) {
+                return new Registration(resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getInt(4),
@@ -101,8 +102,7 @@ public final class RegistrationManager {
                         resultSet.getString(6),
                         resultSet.getString(7)
                 );
-            }
-            else {
+            } else {
                 throw new ModelException("Registration with ID" + ID + "Registration not found");
             }
          }
@@ -128,15 +128,13 @@ public final class RegistrationManager {
      * @return a {@code List} containing {@code Registration} objects that match the criteria.
      * @throws ModelException if any errors encountered.
      */
-
      public List<Registration> getRegistrations(String attribute, String value) throws ModelException {
-         String stmt = "SELECT * FROM REGISTRATIONS WHERE ? = ?";
+         String stmt = "SELECT * FROM REGISTRATIONS WHERE " + attribute + " = ?";
 
          List<Registration> registrations = new ArrayList<>();
 
          try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-             pstmt.setString(1, attribute);
-             pstmt.setString(2, value);
+             pstmt.setString(1, value);
 
              ResultSet resultSet = pstmt.executeQuery();
              while(resultSet.next()) {
@@ -150,9 +148,7 @@ public final class RegistrationManager {
                  ));
              }
              return registrations;
-         }
-
-         catch(SQLException e) {
+         } catch (SQLException e) {
              throw new ModelException("Database error: " + e.getMessage());
          }
      }
@@ -168,7 +164,7 @@ public final class RegistrationManager {
      * @param newValue     the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
      */
-    public void updateRegistration(int ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
+    public void updateRegistration(long ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
         String stmt = "UPDATE REGISTRATIONS SET " + attribute + " = ? WHERE ID = ?"; // should this be adopted?
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -184,9 +180,13 @@ public final class RegistrationManager {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
+
     public void addRegistration(Registration registration) throws ModelException {
         String stmt = "INSERT INTO REGISTRATIONS (ID, AttendeeID, GuestName, Bin, MealID, Drink, Seat) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            // check seat first
+
             pstmt.setLong(1, registration.getID());
             pstmt.setString(2, registration.getAttendeeID());
             pstmt.setString(3, registration.getGuestName());
@@ -194,6 +194,7 @@ public final class RegistrationManager {
             pstmt.setLong(5, registration.getMealID());
             pstmt.setString(6, registration.getDrink());
             pstmt.setString(7, registration.getSeat());
+
             pstmt.executeUpdate();
 
             int affectedRows = pstmt.executeUpdate();
@@ -202,8 +203,7 @@ public final class RegistrationManager {
                 throw new ModelException("Cannot add Registration.");
             }
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
@@ -214,7 +214,7 @@ public final class RegistrationManager {
      * @param ID the unique identifier of the registration to delete.
      * @throws ModelException if any errors encountered.
      */
-    public void deleteRegistration(int ID) throws ModelException {
+    public void deleteRegistration(long ID) throws ModelException {
         String stmt = "DELETE FROM REGISTRATIONS WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -228,5 +228,21 @@ public final class RegistrationManager {
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
+    }
+
+    /**
+     * Analyze the popularity of banquets.
+     * @throws ModelException if any errors encountered.
+     */
+    public List<Banquet> analyzeBanquetsPopularity(BanquetsManager banquetsManager) throws ModelException {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Analyze the popularity of meals.
+     * @throws ModelException if any errors encountered.
+     */
+    public List<Meal> analyzeMealsPopularity(BanquetsManager banquetsManager, MealsManager mealsManager) throws ModelException {
+        return new ArrayList<>();
     }
 }

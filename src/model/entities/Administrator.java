@@ -3,30 +3,23 @@ package model.entities;
 /**
  * <h3>The {@code Administrator} Class</h3>
  * @author jimyang
+ * @author FrankYang0610
  */
 public final class Administrator {
     private final String ID;
 
-    private final String Password;
+    private final HashedPasswordAndSalt hashedPasswordAndSalt;
 
-    // private final String Salt;
-
-    public Administrator(String id, String password/*, String salt*/) {
-        this.ID = id;
-        this.Password = password;
-        // this.Salt = salt;
+    public Administrator(String ID, HashedPasswordAndSalt hashedPasswordAndSalt) {
+        this.ID = ID;
+        this.hashedPasswordAndSalt = hashedPasswordAndSalt;
     }
 
     public String getID() {
         return ID;
     }
 
-    public String getPassword() {
-        return Password;
+    public HashedPasswordAndSalt getHashedPassword() {
+        return hashedPasswordAndSalt;
     }
-
-    //Might add back later, not used for now, password stored in plain text.
-    /* public String getSalt() {
-        return Salt;
-    } */
 }

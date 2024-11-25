@@ -25,18 +25,9 @@ public class XPanel extends JPanel {
         this.add(textField);
     }
 
-    public XPanel(PasswordField passwordField) {
-        this();
-        RegularLabel passwordLabel = new RegularLabel("Password");
-        passwordLabel.setPreferredSize(new Dimension(100, 25));
-        passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        this.add(passwordLabel);
-        this.add(passwordField);
-    }
-
     public XPanel(PasswordField passwordField, boolean rePasswordIdentifier) {
         this();
-        RegularLabel passwordLabel = new RegularLabel("Re-Password");
+        RegularLabel passwordLabel = new RegularLabel(rePasswordIdentifier ? "Re-Password" : "Password");
         passwordLabel.setPreferredSize(new Dimension(100, 25));
         passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(passwordLabel);

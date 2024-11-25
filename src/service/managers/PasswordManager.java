@@ -6,76 +6,61 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import model.ModelException;
-import model.entities.HashedPassword;
+import model.entities.HashedPasswordAndSalt;
 
 
 /**
  * <h2> Password Manager Class </h2>
- * This class provides functionality for password cryptography encryption and verification
- * <p>
- * Operations include {@code GetHashedPassword}
+ * This class provides functionality for password cryptography encryption and verification.
  *
  * @author jimyang
+ * @author FrankYang0610
  */
 public final class PasswordManager {
     /**
-     * <h3>Password Hashing function</h3>
-     * @param password (String, in plain text)
-     * @return HashedPassword Object
-     * @throws Exception
+     * <h3>Password Hashing Function</h3>
+     * @param originalPassword the password, in plain string.
+     * @return the {@code HashedPassword} object corresponding to the password string.
+     * @throws ModelException if any errors encountered
      */
-    public static HashedPassword hashPassword(String password) throws ModelException {
+    public HashedPasswordAndSalt generateHashedPassword(char[] originalPassword) throws ModelException {
         try {
+            // generate the salt
             SecureRandom random = new SecureRandom();
             byte[] salt = new byte[16];
             random.nextBytes(salt);
+
+            // hash the password
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes(StandardCharsets.UTF_8));
+            byte[] hashedPassword = md.digest(new String(originalPassword).getBytes(StandardCharsets.UTF_8));
+
+            // encode the results as Base64
             String hashedPasswordBase64 = Base64.getEncoder().encodeToString(hashedPassword);
             String saltBase64 = Base64.getEncoder().encodeToString(salt);
-            return new HashedPassword(hashedPasswordBase64, saltBase64);
+            return new HashedPasswordAndSalt(hashedPasswordBase64, saltBase64);
         } catch (NoSuchAlgorithmException e) {
             throw new ModelException("Error: " + e.getMessage());
         }
     }
 
     /**
-     * <h3>Password verify function</h3>
-     * @param password (String, in plain text)
-     * @param storedHash (String, in base64 coding)
-     * @param storedSalt (String, in base64 coding)
-     * @return boolean (if the password matches)
-     * @throws Exception
+     * <h3>Password Verify Function</h3>
+     * @param userInputPassword the password, in plain string.
+     * @param storedHashedPasswordAndSalt the {@code HashedPassword} object representing the hashed password.
+     * @return if the password matches the hashed password.
+     * @throws ModelException if any errors encountered.
      */
-    public static boolean verifyPassword(String password, String storedHash, String storedSalt) throws ModelException {
+    public boolean verifyPassword(char[] userInputPassword, HashedPasswordAndSalt storedHashedPasswordAndSalt) throws ModelException {
         try {
-            byte[] salt = Base64.getDecoder().decode(storedSalt);
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(salt);
-            byte[] hashedPassword = md.digest(password.getBytes(StandardCharsets.UTF_8));
-            String hashedPasswordBase64 = Base64.getEncoder().encodeToString(hashedPassword);
-            return hashedPasswordBase64.equals(storedHash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new ModelException("Error: " + e.getMessage());
-        }
-    }
+            byte[] salt = Base64.getDecoder().decode(storedHashedPasswordAndSalt.getHashedSalt());
 
-    /**
-     * <h3>Password verify function</h3>
-     * @param password (String, in plain text)
-     * @param hashedPassword (HashedPassword Object)
-     * @return boolean (if the password matches)
-     * @throws Exception
-     */
-    public static boolean verifyPassword(String password, HashedPassword hashedPassword) throws ModelException {
-        try {
-            byte[] salt = Base64.getDecoder().decode(hashedPassword.salt);
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(salt);
-            byte[] passwordCompare = md.digest(password.getBytes(StandardCharsets.UTF_8));
+            byte[] passwordCompare = md.digest(new String(userInputPassword).getBytes(StandardCharsets.UTF_8));
+
             String hashedPasswordBase64 = Base64.getEncoder().encodeToString(passwordCompare);
-            return hashedPasswordBase64.equals(hashedPassword.salt);
+            return hashedPasswordBase64.equals(storedHashedPasswordAndSalt.getHashedPassword());
         } catch (NoSuchAlgorithmException e) {
             throw new ModelException("Error: " + e.getMessage());
         }

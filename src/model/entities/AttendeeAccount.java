@@ -7,11 +7,11 @@ package model.entities;
 public final class AttendeeAccount {
     private final String ID;
 
-    private final String Password;
-
-    private final String Salt;
+    private final HashedPasswordAndSalt hashedPasswordAndSalt;
 
     private final String Name;
+
+    private final String Address;
 
     private final String Type;
 
@@ -19,36 +19,22 @@ public final class AttendeeAccount {
 
     private final String Organization;
 
-    public AttendeeAccount(String ID, String Password, String Salt, String Name, String Type, long MobileNo, String Organization) {
+    public AttendeeAccount(String ID, HashedPasswordAndSalt hashedPasswordAndSalt, String name, String address, String type, long mobileNo, String organization) {
         this.ID = ID;
-        this.Password = Password;
-        this.Salt = Salt;
-        this.Name = Name;
-        this.Type = Type;
-        this.MobileNo = MobileNo;
-        this.Organization = Organization;
-    }
-
-    public AttendeeAccount(String ID, HashedPassword hashedPassword, String Name, String Type, long MobileNo, String Organization) {
-        this.ID = ID;
-        this.Password = hashedPassword.hashedPassword;
-        this.Salt = hashedPassword.salt;
-        this.Name = Name;
-        this.Type = Type;
-        this.MobileNo = MobileNo;
-        this.Organization = Organization;
+        this.hashedPasswordAndSalt = hashedPasswordAndSalt;
+        this.Name = name;
+        this.Address = address;
+        this.Type = type;
+        this.MobileNo = mobileNo;
+        this.Organization = organization;
     }
 
     public String getID() {
         return ID;
     }
 
-    public String getPassword() {
-        return Password;
-    }
-
-    public String getSalt() {
-        return Salt;
+    public HashedPasswordAndSalt getHashedPasswordAndSalt() {
+        return hashedPasswordAndSalt;
     }
 
     public String getName() {
@@ -65,5 +51,9 @@ public final class AttendeeAccount {
 
     public String getOrganization() {
         return Organization;
+    }
+
+    public String getAddress() {
+        return Address;
     }
 }
