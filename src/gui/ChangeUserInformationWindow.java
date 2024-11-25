@@ -14,6 +14,7 @@ import java.util.Arrays;
  * <h3>The Change User Information Window</h3>
  * @author FrankYang0610
  */
+
 public final class ChangeUserInformationWindow extends JDialog {
     private final Controller controller;
 
@@ -35,11 +36,9 @@ public final class ChangeUserInformationWindow extends JDialog {
 
     private final JComboBox organizationComboBox;
 
-    private final AttendeeAccountsManager AAM;
 
-    public ChangeUserInformationWindow(Controller controller, JFrame loginWindow, AttendeeAccount account, AttendeeAccountsManager AttendeeManager){
+    public ChangeUserInformationWindow(Controller controller, JFrame loginWindow, AttendeeAccount account){
         super(loginWindow, "Sign Up", true);
-        this.AAM = AttendeeManager;
         this.controller = controller;
         this.account = account;
         setSize(500, 375);
@@ -111,11 +110,13 @@ public final class ChangeUserInformationWindow extends JDialog {
         ///
 
         //The bottom line does not compile for some reason?
-        Button confirmChange = new Button("Confirm Change", this::confirmChange);
-        buttons.add(confirmChange);
+
+        CheckBox confirm = new CheckBox("Confirm");
+        //Button confirmChange = new Button("Confirm Change", this::confirmChange);
+        buttons.add(confirm);
         ///
-        getRootPane().setDefaultButton(confirmChange);
-        SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
+        //getRootPane().setDefaultButton(confirmChange);
+        //SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
 
         /* Press ESC to dispose */
@@ -142,27 +143,23 @@ public final class ChangeUserInformationWindow extends JDialog {
 
         if (!account.getName().equals(nameField.getText())) {
             // need to fill
-            AAM.updateAttendee(account.getID(),"Name",nameField.getText());
+            controller.updateAttendee(account.getID(),"Name",nameField.getText());
         }
 
         if (!account.getAddress().equals(addressField.getText())) {
-            // need to fill
-            AAM.updateAttendee(account.getID(),"Adr",addressField.getText());
+            controller.updateAttendee(account.getID(),"Adr",addressField.getText());
         }
 
         if (!account.getType().equals(typeComboBox.getSelectedItem().toString())) {
-            // need to fill
-            AAM.updateAttendee(account.getID(),"Type",typeComboBox.getSelectedItem().toString());
+            controller.updateAttendee(account.getID(),"Type",typeComboBox.getSelectedItem().toString());
         }
 
         if (account.getMobileNo() != Long.parseLong(mobileNoField.getText())) {
-            // need to fill
-            AAM.updateAttendee(account.getID(),"MobileNo",mobileNoField.getText());
+            controller.updateAttendee(account.getID(),"MobileNo",mobileNoField.getText());
         }
 
         if (!account.getOrganization().equals(organizationComboBox.getSelectedItem().toString())) {
-            // need to fill
-            AAM.updateAttendee(account.getID(),"Organization",organizationComboBox.getSelectedItem().toString());
+            controller.updateAttendee(account.getID(),"Organization",organizationComboBox.getSelectedItem().toString());
         }
 
         if (success) {
