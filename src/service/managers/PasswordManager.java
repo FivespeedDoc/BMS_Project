@@ -51,13 +51,13 @@ public final class PasswordManager {
      * @return if the password matches the hashed password.
      * @throws ModelException if any errors encountered.
      */
-    public boolean verifyPassword(String userInputPassword, HashedPasswordAndSalt storedHashedPasswordAndSalt) throws ModelException {
+    public boolean verifyPassword(char[] userInputPassword, HashedPasswordAndSalt storedHashedPasswordAndSalt) throws ModelException {
         try {
             byte[] salt = Base64.getDecoder().decode(storedHashedPasswordAndSalt.getHashedSalt());
 
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(salt);
-            byte[] passwordCompare = md.digest(userInputPassword.getBytes(StandardCharsets.UTF_8));
+            byte[] passwordCompare = md.digest(new String(userInputPassword).getBytes(StandardCharsets.UTF_8));
 
             String hashedPasswordBase64 = Base64.getEncoder().encodeToString(passwordCompare);
             return hashedPasswordBase64.equals(storedHashedPasswordAndSalt.getHashedPassword());

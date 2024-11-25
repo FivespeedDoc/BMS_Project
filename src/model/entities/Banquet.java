@@ -23,15 +23,15 @@ public final class Banquet {
 
     private final int Quota;
 
-    public Banquet(long BIN, String Name, Timestamp DateTime, String Address, String Location, String ContactStaffName, char Available, int Quota) {
+    public Banquet(long BIN, String name, Timestamp dateTime, String address, String location, String contactStaffName, char available, int quota) {
         this.BIN = BIN;
-        this.Name = Name;
-        this.DateTime = DateTime;
-        this.Address = Address;
-        this.Location = Location;
-        this.ContactStaffName = ContactStaffName;
-        this.Available = Available;
-        this.Quota = Quota;
+        this.Name = name;
+        this.DateTime = dateTime;
+        this.Address = address;
+        this.Location = location;
+        this.ContactStaffName = contactStaffName;
+        this.Available = available;
+        this.Quota = quota;
     }
 
     public long getBIN() {

@@ -10,8 +10,8 @@ public final class Administrator {
 
     private final HashedPasswordAndSalt hashedPasswordAndSalt;
 
-    public Administrator(String id, HashedPasswordAndSalt hashedPasswordAndSalt) {
-        this.ID = id;
+    public Administrator(String ID, HashedPasswordAndSalt hashedPasswordAndSalt) {
+        this.ID = ID;
         this.hashedPasswordAndSalt = hashedPasswordAndSalt;
     }
 

@@ -4,6 +4,7 @@ import globalexceptions.BMS_Exception;
 import gui.LoginWindow;
 import model.ModelException;
 import model.database.Connection;
+import model.entities.AttendeeAccount;
 import model.entities.Banquet;
 import model.entities.Meal;
 import service.managers.*;
@@ -12,7 +13,6 @@ import service.utilities.DateTimeFormatter;
 import javax.swing.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -198,7 +198,7 @@ public final class Controller {
 
     public boolean isUser(String ID, char[] password) {
         try {
-            return Arrays.equals(password, attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray()); // this is safe enough, because attendeeAccountsManager.getAttendee(ID).getPassword().toCharArray() is a temporary variable.
+            return passwordManager.verifyPassword(password, attendeeAccountsManager.getAttendee(ID).getHashedPasswordAndSalt());
         } catch (ModelException e) { // user not found.
             return false;
         }
@@ -206,8 +206,24 @@ public final class Controller {
 
     public boolean isAdmin(String ID, char[] password) { // no throw
         try {
-            return passwordManager.verifyPassword(new String(password), administratorsManager.getAdministrator(ID).getHashedPassword());
+            return passwordManager.verifyPassword(password, administratorsManager.getAdministrator(ID).getHashedPassword());
         } catch (ModelException e) { // administrator not found.
+            return false;
+        }
+    }
+
+    public boolean userSignUp(String ID, char[] password, String name, String address, String type, String mobileNo, String organization) {
+        try {
+            AttendeeAccount account = new AttendeeAccount(ID,
+                    passwordManager.generateHashedPassword(password),
+                    name,
+                    address,
+                    type,
+                    Long.parseLong(mobileNo),
+                    organization);
+            attendeeAccountsManager.addAttendeeAccount(account);
+            return true;
+        } catch (ModelException | NumberFormatException e) {
             return false;
         }
     }
