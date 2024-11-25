@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+@Deprecated
 public class RemoveRegisrationWindow extends JFrame {
 
     public RemoveRegisrationWindow() {
