@@ -15,10 +15,8 @@ public class UserWindow extends JFrame {
     }
 
     private void initUI() {
-
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 20));
-
 
         JButton banquetRegistrationButton = new JButton("  Banquet Registration");
         JButton banquetWithdrawButton = new JButton("  Banquet Withdraw");
@@ -26,13 +24,11 @@ public class UserWindow extends JFrame {
         JButton editUserInfoButton = new JButton("  Edit User Information");
         JButton exitButton = new JButton("  Deregister");
 
-
         banquetRegistrationButton.addActionListener(e -> showBanquetRegistrationWindow());
         banquetWithdrawButton.addActionListener(e -> showBanquetWithdrawWindow());
         banquetChangeButton.addActionListener(e -> showBanquetChangeWindow());
         editUserInfoButton.addActionListener(e -> showEditUserInfoWindow());
         exitButton.addActionListener(e -> showRemoveRegistrationWindow());
-
 
         panel.add(banquetRegistrationButton);
         panel.add(banquetWithdrawButton);
@@ -40,10 +36,8 @@ public class UserWindow extends JFrame {
         panel.add(editUserInfoButton);
         panel.add(exitButton);
 
-
         add(panel);
     }
-
 
     private void showBanquetRegistrationWindow() {
         JOptionPane.showMessageDialog(this, "Banquet Registration Window", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -53,19 +47,17 @@ public class UserWindow extends JFrame {
         JOptionPane.showMessageDialog(this, "Banquet Withdraw Window", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-
     private void showBanquetChangeWindow() {
         JOptionPane.showMessageDialog(this, "Banquet Change Window", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-
     private void showEditUserInfoWindow() {
-        JOptionPane.showMessageDialog(this, "Edit User Information Window", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+        new ChangeUserInformationWindow();
     }
 
-
     private void showRemoveRegistrationWindow() {
-        new RemoveRegisrationWindow();
+        JOptionPane.showMessageDialog(this, "Remove Registration Window", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {

@@ -1,199 +1,81 @@
 package gui;
 
-import gui.components.*;
-import gui.components.TextField;
-import model.ModelException;
-import model.database.Connection;
-
-import service.managers.AttendeeAccountsManager;
-
-
-
-
 import javax.swing.*;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+public class ChangeUserInformationWindow extends JFrame {
 
-
-public class ChangeUserInformationWindow {
-
-    private AttendeeAccountsManager AAM;
-    private JFrame window;
-
-    public ChangeUserInformationWindow(String toBeChanged){
-        switch (toBeChanged){
-            case "Password":
-                PasswordChange();
-                break;
-            case "Salt":
-                break;
-            case "Name":
-                NameChange();
-                break;
-            case "MobileNo":
-                MobileNoChange();
-                break;
-            case "Organization":
-                OrganizationChange();
-                break;
-            default:
-                break;
-
-        }
-        InitWindow();
-
-    }
-    private void PasswordChange(){
-        RegularLabel firstName = new RegularLabel("First Name:");
-        RegularLabel lastName = new RegularLabel("Last Name:");
-
-        PasswordField PF1 = new PasswordField();
-        PasswordField PF2 = new PasswordField();
-
-
-        CheckBox confirmation = new CheckBox("I confirm the change.");
-        gui.components.Button changeButton = new gui.components.Button("Change", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String PF1STR = new String(PF1.getPassword());
-                String PF2STR = new String(PF2.getPassword());
-
-                if(confirmation.isSelected() && PF1STR.equals(PF2STR)){
-                    String ID = "31"; // Placeholder
-                    try {
-                        AAM.updateAttendee(ID,"Password", PF2STR);
-                    } catch (ModelException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-
-            }
-        });
-        window.setVisible(true);
-
-    }
-    private void SaltChange(){ // ?????
-
-    }
-    private void NameChange(){
-
-        // Should get the ID from the UserWindow in order to modify the current user attributes
-
-        RegularLabel firstName = new RegularLabel("First Name:");
-        RegularLabel lastName = new RegularLabel("Last Name:");
-
-        TextField firstNameField = new TextField();
-        TextField lastNameField = new TextField();
-        CheckBox confirmation = new CheckBox("I confirm the change.");
-        gui.components.Button changeButton = new gui.components.Button("Change", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String newName = firstNameField.getText() + ' ' + lastNameField.getText();
-                if(confirmation.isSelected()){
-                    String ID = "31"; // Placeholder
-                    try {
-                        AAM.updateAttendee(ID,"Organization", newName);
-                    } catch (ModelException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-
-            }
-        });
-        window.setVisible(true);
+    public ChangeUserInformationWindow() {
+        setTitle("Change User Information");
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        initUI();
+        setVisible(true);
     }
 
-    private void MobileNoChange(){
-
-        // Should get the ID from the UserWindow in order to modify the current user attributes
-
-        RegularLabel newMobile = new RegularLabel("First Name:");
-
-        TextField newMobileField = new TextField();
-
-        CheckBox confirmation = new CheckBox("I confirm the change.");
-        gui.components.Button changeButton = new gui.components.Button("Change", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String newNum = newMobile.getText();
-                if(confirmation.isSelected()){
-
-                    if(newNum.length() == 8 && newNum.charAt(0) == '9'){ // only limited to HK for now,
-                        String ID = "31"; // Placeholder
-                        try {
-                            AAM.updateAttendee(ID,"MobileNo", newNum);
-                        } catch (ModelException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                    else{
-                        JFrame popup = new JFrame();
-                        popup.setSize(200,200);
-                        popup.setTitle("Invalid Input");
-                        TitleLabel title = new TitleLabel("Please enter a valid HK mobile number.");
-                        popup.add(title);
-                        popup.setVisible(true);
-                    }
-
-                }
-
-            }
-        });
-
-        window.setVisible(true);
-
-    }
-    private void OrganizationChange(){
-
-        // Should get the ID from the UserWindow in order to modify the current user attributes
-
-        RegularLabel newOrganization = new RegularLabel("New Organization:");
-
-        TextField newOrganizationField = new TextField();
-
-
-        CheckBox confirmation = new CheckBox("I confirm the change.");
-        gui.components.Button changeButton = new gui.components.Button("Change", new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(confirmation.isSelected()){
-                    String ID = "31"; // Placeholder
-                    try {
-                        AAM.updateAttendee(ID,"Organization", newOrganizationField.getText());
-                    } catch (ModelException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-
-            }
-        });
-
-        window.setVisible(true);
-
-    }
-
-
-    public void InitWindow(){
-        try {
-            AAM = new AttendeeAccountsManager(new Connection());
-        } catch (ModelException e) {
-            throw new RuntimeException(e);
-        }
-        window = new JFrame();
-        window.setTitle("Update User Information");
-        window.getDefaultCloseOperation();
-        window.setSize(640,360);
-        window.setLocationRelativeTo(null);
-
+    private void initUI() {
         JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panel.setLayout(new BorderLayout());
+        panel.setLayout(new GridLayout(9, 2, 10, 10)); // 9 rows, 2 columns
 
 
-        window.setVisible(true);
+        JLabel firstNameLabel = new JLabel("First Name:");
+        JTextField firstNameField = new JTextField();
 
+        JLabel lastNameLabel = new JLabel("Last Name:");
+        JTextField lastNameField = new JTextField();
+
+        JLabel addressLabel = new JLabel("Address:");
+        JTextField addressField = new JTextField();
+
+        JLabel attendeeTypeLabel = new JLabel("Attendee Type:");
+        JComboBox<String> attendeeTypeCombo = new JComboBox<>(new String[]{"Staff", "Student", "Alumni", "Guest"});
+
+        JLabel emailLabel = new JLabel("E-mail Address:");
+        JTextField emailField = new JTextField();
+
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField();
+
+        JLabel mobileNumberLabel = new JLabel("Mobile Number:");
+        JTextField mobileNumberField = new JTextField();
+
+        JLabel affiliatedOrgLabel = new JLabel("Affiliated Organization:");
+        JComboBox<String> affiliatedOrgCombo = new JComboBox<>(new String[]{"PolyU", "SPEED", "HKCC", "Others"});
+
+        JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
+
+        saveButton.addActionListener(e -> saveUserInfo());
+        cancelButton.addActionListener(e -> dispose());
+
+
+        panel.add(firstNameLabel);
+        panel.add(firstNameField);
+        panel.add(lastNameLabel);
+        panel.add(lastNameField);
+        panel.add(addressLabel);
+        panel.add(addressField);
+        panel.add(attendeeTypeLabel);
+        panel.add(attendeeTypeCombo);
+        panel.add(emailLabel);
+        panel.add(emailField);
+        panel.add(passwordLabel);
+        panel.add(passwordField);
+        panel.add(mobileNumberLabel);
+        panel.add(mobileNumberField);
+        panel.add(affiliatedOrgLabel);
+        panel.add(affiliatedOrgCombo);
+
+        panel.add(saveButton);
+        panel.add(cancelButton);
+
+        add(panel);
+    }
+
+    private void saveUserInfo() {
+
+        JOptionPane.showMessageDialog(this, "User Information Saved!", "Info", JOptionPane.INFORMATION_MESSAGE);
+        dispose();
     }
 }
