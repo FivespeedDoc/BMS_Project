@@ -86,7 +86,7 @@ Stores administrator accounts.
 - DateTime is stored as TEXT in SQLite
 
 ## DDL for the table creation
-SQL DDL courtesy of @FrankYang and @ZacharyRE
+SQL DDL courtesy of @FrankYang0610 and @ZacharyRE
 
 ```sql
 CREATE TABLE IF NOT EXISTS BANQUETS (
