@@ -1,179 +1,192 @@
 package gui;
 
+import controller.Controller;
 import gui.components.*;
-import gui.components.TextField;
 import model.ModelException;
-import model.database.Connection;
-
 import model.entities.AttendeeAccount;
 import service.managers.AttendeeAccountsManager;
 
-
-
-
 import javax.swing.*;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Arrays;
 
+/**
+ * <h3>The Change User Information Window</h3>
+ * @author FrankYang0610
+ */
+public final class ChangeUserInformationWindow extends JDialog {
+    private final Controller controller;
 
+    private final AttendeeAccount account;
 
-public class ChangeUserInformationWindow {
+    private final TextField userIDField;
 
-    private AttendeeAccountsManager AAM;
-    private JFrame window;
+    private final PasswordField passwordField;
 
-    public ChangeUserInformationWindow(String toBeChanged){
-        InitWindow();
+    private final PasswordField rePasswordField;
 
-    }
+    private final TextField nameField;
 
-    private void ChangeGeneral() throws ModelException {
-        String ID = "31"; // Placeholder
-        
-        AttendeeAccount acc = AAM.getAttendee(ID);
+    private final TextField addressField;
 
+    private final JComboBox typeComboBox;
 
+    private final TextField mobileNoField;
 
-        // We set each textField value to the current value in the database as to prevent accidental changes.
-        // Since if the user dont want a change, they dont have to modify the fields as opposed to having to enter
-        // previously identical information.
-        // e.g. not change the name into empty string etc.
+    private final JComboBox organizationComboBox;
 
-        // Initialize Name fields
-        RegularLabel firstName = new RegularLabel("Enter new first Name:");
-        RegularLabel lastName = new RegularLabel("Enter new last Name:");
+    private final AttendeeAccountsManager AAM;
 
-        TextField firstNameField = new TextField();
-        TextField lastNameField = new TextField();
+    public ChangeUserInformationWindow(Controller controller, JFrame loginWindow, AttendeeAccount account, AttendeeAccountsManager AttendeeManager){
+        super(loginWindow, "Sign Up", true);
+        this.AAM = AttendeeManager;
+        this.controller = controller;
+        this.account = account;
+        setSize(500, 375);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
 
-        String[] name = acc.getName().split(" ");
+        /* The panel */
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        window.add(firstName);
-        window.add(firstNameField);
-        firstNameField.setText(name[0]);
+        /* Text and field panels */
+        userIDField = new TextField(this.account.getID());
+        XPanel userIDPanel = new XPanel("Account ID", userIDField);
+        panel.add(userIDPanel);
+        ///
+        passwordField = new PasswordField();
+        XPanel passwordPanel = new XPanel(passwordField, false);
+        panel.add(passwordPanel);
+        ///
+        rePasswordField = new PasswordField();
+        XPanel rePasswordPanel = new XPanel(rePasswordField, true);
+        panel.add(rePasswordPanel);
+        ///
+        nameField = new TextField(this.account.getName());
+        XPanel namePanel = new XPanel("Name", nameField);
+        panel.add(namePanel);
+        ///
+        addressField = new TextField(this.account.getAddress());
+        XPanel addressPanel = new XPanel("Address", addressField);
+        panel.add(addressPanel);
+        ///
 
-        window.add(lastName);
-        window.add(lastNameField);
-        lastNameField.setText(name[1]);
+        String[] types = {"Student","Alumni","Staff","Guest"};
+        typeComboBox = new JComboBox<String>(types);
+        for(int i = 0; i < types.length; i++){
+            if(account.getOrganization() == types[i].toString()){
+                typeComboBox.setSelectedIndex(i);
+            }
+        }
 
+        XPanel typePanel = new XPanel("Type", typeComboBox);
+        panel.add(typePanel);
+        ///
+        mobileNoField = new TextField(Long.toString(this.account.getMobileNo()));
+        XPanel mobileNoPanel = new XPanel("Phone Number", mobileNoField);
+        panel.add(mobileNoPanel);
+        ///
+        String[] organizations = {"PolyU", "Student", "HKCC", "Others"};
+        organizationComboBox = new JComboBox<String>(organizations);
+        for(int i = 0; i < organizations.length; i++){
+            if(account.getOrganization() == organizations[i].toString()){
+                organizationComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
 
-        // Initialize Mobile No Fields
-        RegularLabel newMobile = new RegularLabel("Enter new Mobile Number:");
-        TextField newMobileField = new TextField();
+        XPanel organizationPanel = new XPanel("Organization", organizationComboBox);
+        panel.add(organizationPanel);
 
-        window.add(newMobile);
-        window.add(newMobileField);
-        newMobileField.setText(String.valueOf(acc.getMobileNo()));
+        /* Buttons */
+        ButtonsPanel buttons = new ButtonsPanel();
+        ///
+        Button cancel = new Button("Cancel", _ -> dispose());
+        buttons.add(cancel);
+        ///
+        buttons.add(Box.createHorizontalGlue());
+        ///
 
-        // Initialize Organization fields
+        //The bottom line does not compile for some reason?
+        Button confirmChange = new Button("Confirm Change", this::confirmChange);
+        buttons.add(confirmChange);
+        ///
+        getRootPane().setDefaultButton(confirmChange);
+        SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
+        panel.add(buttons);
 
-        RegularLabel newOrganization = new RegularLabel("Enter new Organization:");
-        TextField newOrganizationField = new TextField();
-
-        window.add(newOrganization);
-        window.add(newOrganizationField);
-        newOrganizationField.setText(acc.getOrganization());
-
-
-
-
-        //Initialize password fields.
-        RegularLabel passlabel = new RegularLabel("Enter new password:");
-        RegularLabel passLabelConfirm = new RegularLabel("confirm new password:");
-
-        PasswordField PF1 = new PasswordField();
-        PasswordField PF2 = new PasswordField();
-
-
-        // No need to set the text to old password value. Goes against design decision?
-        window.add(passlabel);
-        window.add(PF1);
-        window.add(passLabelConfirm);
-        window.add(PF2);
-
-
-        CheckBox confirmation = new CheckBox("I confirm the change.");
-        window.add(confirmation);
-        gui.components.Button changeButton = new gui.components.Button("Change", new ActionListener() {
+        /* Press ESC to dispose */
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-                String newName = firstNameField.getText() + ' ' + lastNameField.getText();
-
-                String PF1STR = new String(PF1.getPassword());
-                String PF2STR = new String(PF2.getPassword());
-
-                String newNum = newMobile.getText();
-
-                String newOrg = newOrganizationField.getText();
-
-                if(confirmation.isSelected()){
-
-                    // If the passwords match.
-                    if(!PF1STR.equals(acc.getPassword()) && PF1STR.equals(PF2STR)){
-                        try {
-                            AAM.updateAttendee(ID,"Password", PF2STR);
-                        } catch (ModelException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                    // If the newNum is not the same as the number in database and is a valid HK number.
-                    if(!newNum.equals(acc.getMobileNo()) && newNum.length() == 8 && newNum.charAt(0) == '9'){
-                        try {
-                            AAM.updateAttendee(ID,"MobileNo", newNum);
-                        } catch (ModelException ex) {
-                            throw new RuntimeException(ex);
-                        }                    }
-                    // If the new name is not the same as the one in the database.
-                    if(!newName.equals(acc.getName())){
-                        try {
-                            AAM.updateAttendee(ID,"Name", newName);
-                        } catch (ModelException ex) {
-                            throw new RuntimeException(ex);
-                        }                    }
-                    // If the newOrg is not the same as the one in the organization.
-                    if(!newOrg.equals(acc.getOrganization())){
-                        try {
-                            AAM.updateAttendee(ID,"Organization", newOrg);
-                        } catch (ModelException ex) {
-                            throw new RuntimeException(ex);
-                        }                    }
-
-                }
-
+                dispose();
             }
         });
 
-        window.setVisible(true);
-
+        add(panel);
+        setVisible(true);
     }
 
-
-
-
-    public void InitWindow(){
-        try {
-            AAM = new AttendeeAccountsManager(new Connection());
-        } catch (ModelException e) {
-            throw new RuntimeException(e);
+    private void confirmChange(ActionEvent e) throws ModelException {
+        if (!Arrays.equals(passwordField.getPassword(), rePasswordField.getPassword())) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        window = new JFrame();
-        window.setTitle("Update User Information");
-        window.getDefaultCloseOperation();
-        window.setSize(640,360);
-        window.setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panel.setLayout(new BorderLayout());
+        boolean success = false;
 
+        if (!account.getName().equals(nameField.getText())) {
+            // need to fill
+            AAM.updateAttendee(account.getID(),"Name",nameField.getText());
+        }
 
-        window.setVisible(true);
+        if (!account.getAddress().equals(addressField.getText())) {
+            // need to fill
+            AAM.updateAttendee(account.getID(),"Adr",addressField.getText());
+        }
 
+        if (!account.getType().equals(typeComboBox.getSelectedItem().toString())) {
+            // need to fill
+            AAM.updateAttendee(account.getID(),"Type",typeComboBox.getSelectedItem().toString());
+        }
 
+        if (account.getMobileNo() != Long.parseLong(mobileNoField.getText())) {
+            // need to fill
+            AAM.updateAttendee(account.getID(),"MobileNo",mobileNoField.getText());
+        }
 
+        if (!account.getOrganization().equals(organizationComboBox.getSelectedItem().toString())) {
+            // need to fill
+            AAM.updateAttendee(account.getID(),"Organization",organizationComboBox.getSelectedItem().toString());
+        }
+
+        if (success) {
+            changeAppliedDialog();
+            dispose();
+        } else {
+            showErrorDialog();
+        }
+
+        if (controller.userSignUp(userIDField.getText(),
+                passwordField.getPassword(),
+                nameField.getText(),
+                addressField.getText(),
+                typeComboBox.getSelectedItem().toString(),
+                mobileNoField.getText(),
+                organizationComboBox.getSelectedItem().toString())) {
+        }
+    }
+
+    private void changeAppliedDialog() {
+        JOptionPane.showMessageDialog(this, "Your changes have applied!", "Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showErrorDialog() {
+        JOptionPane.showMessageDialog(this, "Cannot change your personal information. Please check if your changes align the requirements and try again.", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }
