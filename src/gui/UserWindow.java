@@ -3,10 +3,22 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
-@Deprecated
+import controller.Controller;
+import service.managers.AttendeeAccountsManager;
+
+//@Deprecated
 public class UserWindow extends JFrame {
 
-    public UserWindow() {
+
+    private final String userID;
+
+    private final Controller controller;
+
+    public UserWindow(Controller controller, String userID) {
+        this.userID = userID;
+        this.controller = controller;
+        //AttendeeAccountsManager AAM = new AttendeeAccountsManager();
+
         setTitle("User Window");
         setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,14 +66,16 @@ public class UserWindow extends JFrame {
 
     private void showEditUserInfoWindow() {
 
-        new ChangeUserInformationWindow();
+        new ChangeUserInformationWindow(controller, this,controller.getAttendee(userID));
     }
 
     private void showRemoveRegistrationWindow() {
         JOptionPane.showMessageDialog(this, "Remove Registration Window", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(UserWindow::new);
-    }
+    
+    // Causes an error
+    //public static void main(String[] args) {
+    //    SwingUtilities.invokeLater(UserWindow::new);
+    //}
 }
