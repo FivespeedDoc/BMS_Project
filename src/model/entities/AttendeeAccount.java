@@ -29,10 +29,10 @@ public final class AttendeeAccount {
         this.Organization = Organization;
     }
 
-    public AttendeeAccount(String ID, HashedPassword hashedPassword, String Name, String Type, long MobileNo, String Organization) {
+    public AttendeeAccount(String ID, HashedPasswordAndSalt hashedPasswordAndSalt, String Name, String Type, long MobileNo, String Organization) {
         this.ID = ID;
-        this.Password = hashedPassword.hashedPassword;
-        this.Salt = hashedPassword.salt;
+        this.Password = hashedPasswordAndSalt.getHashedPassword();
+        this.Salt = hashedPasswordAndSalt.getHashedSalt();
         this.Name = Name;
         this.Type = Type;
         this.MobileNo = MobileNo;

@@ -35,6 +35,8 @@ public final class Controller {
 
     private final RegistrationManager registrationManager;
 
+    private final PasswordManager passwordManager;
+
     public Controller() throws BMS_Exception {
         try {
             /* The Model */
@@ -47,6 +49,7 @@ public final class Controller {
             this.bmjManager = new BanquetsMealsJointManager(connection);
             this.mealsManager = new MealsManager(connection);
             this.registrationManager = new RegistrationManager(connection);
+            this.passwordManager = new PasswordManager();
 
             /* The View */
             SwingUtilities.invokeLater(() -> {
@@ -203,7 +206,7 @@ public final class Controller {
 
     public boolean isAdmin(String ID, char[] password) { // no throw
         try {
-            return Arrays.equals(password, administratorsManager.getAdministrator(ID).getPassword().toCharArray()); // this is safe enough, because administratorsManager.getAdministrator(ID).getPassword() is a temporary variable.
+            return passwordManager.verifyPassword(new String(password), administratorsManager.getAdministrator(ID).getHashedPassword());
         } catch (ModelException e) { // administrator not found.
             return false;
         }
