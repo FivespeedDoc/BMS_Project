@@ -2,6 +2,8 @@ package service.managers;
 
 import model.ModelException;
 import model.database.Connection;
+import model.entities.Banquet;
+import model.entities.Meal;
 import model.entities.Registration;
 
 import java.sql.PreparedStatement;
@@ -226,5 +228,21 @@ public final class RegistrationManager {
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
+    }
+
+    /**
+     * Analyze the popularity of banquets.
+     * @throws ModelException if any errors encountered.
+     */
+    public List<Banquet> analyzeBanquetsPopularity(BanquetsManager banquetsManager) throws ModelException {
+        return new ArrayList<>();
+    }
+
+    /**
+     * Analyze the popularity of meals.
+     * @throws ModelException if any errors encountered.
+     */
+    public List<Meal> analyzeMealsPopularity(BanquetsManager banquetsManager, MealsManager mealsManager) throws ModelException {
+        return new ArrayList<>();
     }
 }
