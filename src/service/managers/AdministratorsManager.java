@@ -33,7 +33,7 @@ public final class AdministratorsManager {
         try {
             PasswordManager passwordManager = new PasswordManager();
             HashedPasswordAndSalt hashedPasswordAndSalt = passwordManager.generateHashedPassword(new char[]{'0', '0', '0', '0', '0', '0'});
-            String stmt = "INSERT INTO ADMINISTRATORS (ID, Password, Salt) VALUES (?, ?, ?)";
+            String stmt = "INSERT INTO ADMINISTRATORS (ID, HashedPassword, HashedSalt) VALUES (?, ?, ?)";
 
             try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
                 pstmt.setString(1, "admin");
