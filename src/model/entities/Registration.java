@@ -19,14 +19,14 @@ public final class Registration {
 
     private final String Seat;
 
-    public Registration(long ID, String AttendeeID, String GuestName, long BIN, long mealID, String Drink, String Seat) {
+    public Registration(long ID, String attendeeID, String guestName, long BIN, long mealID, String drink, String seat) {
         this.ID = ID;
-        this.AttendeeID = AttendeeID;
-        this.GuestName = GuestName;
+        this.AttendeeID = attendeeID;
+        this.GuestName = guestName;
         this.BIN = BIN;
         this.MealID = mealID;
-        this.Drink = Drink;
-        this.Seat = Seat;
+        this.Drink = drink;
+        this.Seat = seat;
     }
 
     public long getID() {

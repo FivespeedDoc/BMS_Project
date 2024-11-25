@@ -5,6 +5,7 @@ import gui.components.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 public final class SignupWindow extends JDialog {
     private final Controller controller;
@@ -79,7 +80,7 @@ public final class SignupWindow extends JDialog {
         ///
         buttons.add(Box.createHorizontalGlue());
         ///
-        Button confirmChange = new Button("Sign Up", null);
+        Button confirmChange = new Button("Sign Up", this::signUp);
         buttons.add(confirmChange);
         ///
         getRootPane().setDefaultButton(confirmChange);
@@ -98,5 +99,33 @@ public final class SignupWindow extends JDialog {
 
         add(panel);
         setVisible(true);
+    }
+
+    private void signUp(ActionEvent e) {
+        if (!Arrays.equals(passwordField.getPassword(), rePasswordField.getPassword())) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (controller.userSignUp(userIDField.getText(),
+                passwordField.getPassword(),
+                nameField.getText(),
+                addressField.getText(),
+                typeField.getText(),
+                mobileNoField.getText(),
+                organizationField.getText())) {
+            signupSuccessfulDialog();
+            dispose();
+        } else {
+            showErrorDialog();
+        }
+    }
+
+    private void signupSuccessfulDialog() {
+        JOptionPane.showMessageDialog(this, "You have signed up successfully! Please log in to manage your banquets!", "Signup Successful", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showErrorDialog() {
+        JOptionPane.showMessageDialog(this, "Signup failed! Some of the provided information may be invalid, or you have already signed up.", "Error", JOptionPane.INFORMATION_MESSAGE);
     }
 }

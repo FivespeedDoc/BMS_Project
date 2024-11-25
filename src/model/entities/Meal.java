@@ -16,14 +16,13 @@ public final class Meal {
 
     private final String SpecialCuisine;
 
-    public Meal(long BIN, long ID, String Name, String Type, double Price, String SpecialCuisine) {
+    public Meal(long BIN, long ID, String name, String type, double price, String specialCuisine) {
         this.BIN = BIN;
         this.ID = ID;
-        this.Name = Name;
-        this.Type = Type;
-        this.Price = Price;
-        this.SpecialCuisine = SpecialCuisine;
-
+        this.Name = name;
+        this.Type = type;
+        this.Price = price;
+        this.SpecialCuisine = specialCuisine;
     }
 
     public long getBIN() {
