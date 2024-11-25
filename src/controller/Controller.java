@@ -37,6 +37,7 @@ public final class Controller {
 
     private final PasswordManager passwordManager;
 
+
     public Controller() throws BMS_Exception {
         try {
             /* The Model */
@@ -227,4 +228,25 @@ public final class Controller {
             return false;
         }
     }
+
+
+    public void  updateAttendee(String ID, String attribute, String newValue){
+        try{
+            attendeeAccountsManager.updateAttendee(ID,attribute,newValue);
+
+        }
+        catch (ModelException e){
+            return;
+        }
+    }
+
+    public AttendeeAccount getAttendee(String ID){
+        try{
+            return attendeeAccountsManager.getAttendee(ID);
+        }
+        catch(ModelException e){
+            return null;
+        }
+    }
 }
+
