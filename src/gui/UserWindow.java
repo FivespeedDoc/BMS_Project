@@ -54,7 +54,7 @@ public class UserWindow extends JFrame {
 
     private void showEditUserInfoWindow() {
 
-        new ChangeUserInformationWindow();
+        //new ChangeUserInformationWindow();
     }
 
     private void showRemoveRegistrationWindow() {

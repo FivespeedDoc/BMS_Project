@@ -25,9 +25,27 @@ public class XPanel extends JPanel {
         this.add(textField);
     }
 
-    public XPanel(PasswordField passwordField, boolean rePasswordIdentifier) {
+    /**
+     * Different kinds of password fields
+     * <p>
+     * <b>Different choices of {@code type}:</b>
+     * <ul>
+     *     <li>{@code REG} - regular password</li>
+     *     <li>{@code RE} - re-password</li>
+     *     <li>{@code OLD} - old password</li>
+     * </ul>
+     */
+    public XPanel(PasswordField passwordField, String type) {
         this();
-        RegularLabel passwordLabel = new RegularLabel(rePasswordIdentifier ? "Re-Password" : "Password");
+        RegularLabel passwordLabel = switch (type) {
+            case "REG" -> new RegularLabel("Password");
+            case "OLD" -> new RegularLabel("Old Password");
+            case "NEW" -> new RegularLabel("New Password");
+            case "RE" -> new RegularLabel("Re-Password");
+            default -> null;
+        };
+
+        assert passwordLabel != null;
         passwordLabel.setPreferredSize(new Dimension(100, 25));
         passwordLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(passwordLabel);

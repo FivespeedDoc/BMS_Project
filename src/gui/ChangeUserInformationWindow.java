@@ -2,15 +2,19 @@ package gui;
 
 import controller.Controller;
 import gui.components.*;
+import gui.components.Button;
+import gui.components.TextField;
 import model.entities.AttendeeAccount;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
 /**
  * <h3>The Change User Information Window</h3>
  * @author FrankYang0610
+ * @author Arda Eren (the original version)
  */
 public final class ChangeUserInformationWindow extends JDialog {
     private final Controller controller;
@@ -19,7 +23,9 @@ public final class ChangeUserInformationWindow extends JDialog {
 
     private final TextField userIDField;
 
-    private final PasswordField passwordField;
+    private final PasswordField oldPasswordField;
+
+    private final PasswordField newPasswordField;
 
     private final PasswordField rePasswordField;
 
@@ -48,17 +54,9 @@ public final class ChangeUserInformationWindow extends JDialog {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         /* Text and field panels */
-        userIDField = new TextField(this.account.getID());
+        userIDField = new TextField(this.account.getID()); userIDField.setEnabled(false);
         XPanel userIDPanel = new XPanel("Account ID", userIDField);
         panel.add(userIDPanel);
-        ///
-        passwordField = new PasswordField();
-        XPanel passwordPanel = new XPanel(passwordField, false);
-        panel.add(passwordPanel);
-        ///
-        rePasswordField = new PasswordField();
-        XPanel rePasswordPanel = new XPanel(rePasswordField, true);
-        panel.add(rePasswordPanel);
         ///
         nameField = new TextField(this.account.getName());
         XPanel namePanel = new XPanel("Name", nameField);
@@ -79,6 +77,24 @@ public final class ChangeUserInformationWindow extends JDialog {
         organizationField = new TextField(this.account.getOrganization());
         XPanel organizationPanel = new XPanel("Organization", organizationField);
         panel.add(organizationPanel);
+        ///
+        panel.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.CENTER);
+        ///
+        RegularLabel changePasswordLabel = new RegularLabel("Change Password");
+        changePasswordLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        panel.add(changePasswordLabel);
+        ///
+        oldPasswordField = new PasswordField();
+        XPanel oldPasswordPanel = new XPanel(oldPasswordField, "OLD");
+        panel.add(oldPasswordPanel);
+        ///
+        newPasswordField = new PasswordField();
+        XPanel newPasswordPanel = new XPanel(newPasswordField, "NEW");
+        panel.add(newPasswordPanel);
+        ///
+        rePasswordField = new PasswordField();
+        XPanel rePasswordPanel = new XPanel(rePasswordField, "RE");
+        panel.add(rePasswordPanel);
 
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
@@ -110,31 +126,35 @@ public final class ChangeUserInformationWindow extends JDialog {
     }
 
     private void confirmChange(ActionEvent e) {
-        if (!Arrays.equals(passwordField.getPassword(), rePasswordField.getPassword())) {
+        if (!Arrays.equals(newPasswordField.getPassword(), rePasswordField.getPassword())) {
             JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         boolean success = false;
 
+        if (oldPasswordField.getPassword().length != 0) { // change password
+            controller.changeUserPassword(account.getID(), oldPasswordField.getPassword(), newPasswordField.getPassword());
+        }
+
         if (!account.getName().equals(nameField.getText())) {
-            // need to fill
+            controller.changeUserInformation(account.getID(), "Name", nameField.getText());
         }
 
         if (!account.getAddress().equals(addressField.getText())) {
-            // need to fill
+            controller.changeUserInformation(account.getID(), "Address", addressField.getText());
         }
 
         if (!account.getType().equals(typeField.getText())) {
-            // need to fill
+            controller.changeUserInformation(account.getID(), "Type", typeField.getText());
         }
 
         if (account.getMobileNo() != Long.parseLong(mobileNoField.getText())) {
-            // need to fill
+            controller.changeUserInformation(account.getID(), "MobileNo", Long.toString(account.getMobileNo()));
         }
 
         if (!account.getOrganization().equals(organizationField.getText())) {
-            // need to fill
+            controller.changeUserInformation(account.getID(), "Organization", organizationField.getText());
         }
 
         if (success) {
@@ -142,15 +162,6 @@ public final class ChangeUserInformationWindow extends JDialog {
             dispose();
         } else {
             showErrorDialog();
-        }
-
-        if (controller.userSignUp(userIDField.getText(),
-                passwordField.getPassword(),
-                nameField.getText(),
-                addressField.getText(),
-                typeField.getText(),
-                mobileNoField.getText(),
-                organizationField.getText())) {
         }
     }
 

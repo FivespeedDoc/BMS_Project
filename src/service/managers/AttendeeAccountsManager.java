@@ -163,8 +163,8 @@ public final class AttendeeAccountsManager {
      * @param newValue     the new value to set for the specified column.
      * @throws ModelException if any errors encountered.
      */
-    public void updateAttendee(String ID, String attribute, String newValue) throws ModelException { // This method should be improved later.
-        String stmt = "UPDATE ATTENDEE_ACCOUNTS SET " + attribute + " = ? WHERE ID = ?"; // should this be adopted?
+    public void updateAttendeeInformation(String ID, String attribute, String newValue) throws ModelException {
+        String stmt = "UPDATE ATTENDEE_ACCOUNTS SET " + attribute + " = ? WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, newValue);
@@ -180,12 +180,52 @@ public final class AttendeeAccountsManager {
         }
     }
 
+    public void updateAttendeePassword(String ID, char[] originalPassword, HashedPasswordAndSalt newHashedPasswordAndSalt) throws ModelException {
+        if (!verifyAttendeePassword(ID, originalPassword)) {
+            throw new ModelException("Attendee password does not match.");
+        }
+
+        String stmt = "UPDATE ATTENDEE_ACCOUNTS SET HashedPassword = ?, HashedSalt = ? WHERE ID = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, newHashedPasswordAndSalt.getHashedPassword());
+            pstmt.setString(2, newHashedPasswordAndSalt.getHashedSalt());
+            pstmt.setString(3, ID);
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new NoSuchElementException("Attendee with ID " + ID + " not found.");
+            }
+        } catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
+    private boolean verifyAttendeePassword(String ID, char[] originalPassword) throws ModelException {
+        String stmt = "SELECT * FROM ATTENDEE_ACCOUNTS WHERE ID = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setString(1, ID);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (resultSet.next()) {
+                HashedPasswordAndSalt hashedPasswordAndSalt = new HashedPasswordAndSalt(resultSet.getString(2), resultSet.getString(3));
+                return new PasswordManager().verifyPassword(originalPassword, hashedPasswordAndSalt);
+            } else {
+                throw new NoSuchElementException("Attendee with ID " + ID + " not found.");
+            }
+        } catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
     /**
      *
      * @param attendeeAccount an attendeeAccount object (All fields in the object must not be null)
      * @throws ModelException
      */
-
     public void addAttendeeAccount(AttendeeAccount attendeeAccount) throws ModelException {
         String stmt = "INSERT INTO ATTENDEE_ACCOUNTS (ID, HashedPassword, HashedSalt, Name, Address, Type, MobileNo, Organization) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {

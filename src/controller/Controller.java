@@ -227,4 +227,32 @@ public final class Controller {
             return false;
         }
     }
+
+    /**
+     * <h4>Allowed {@code attribute} types</h4>
+     * <ul>
+     *     <li>{@code "Name"}</li>
+     *     <li>{@code "Address"}</li>
+     *     <li>{@code "Type"}</li>
+     *     <li>{@code "MobileNo"}</li>
+     *     <li>{@code "Organization"}</li>
+     * </ul>
+     */
+    public boolean changeUserInformation(String ID, String attribute, String newValue) {
+        try {
+            attendeeAccountsManager.updateAttendeeInformation(ID, attribute, newValue);
+            return true;
+        } catch (ModelException e) {
+            return false;
+        }
+    }
+
+    public boolean changeUserPassword(String ID, char[] originalPassword, char[] newPassword) {
+        try {
+            attendeeAccountsManager.updateAttendeePassword(ID, originalPassword, passwordManager.generateHashedPassword(newPassword));
+            return true;
+        } catch (ModelException e) {
+            return false;
+        }
+    }
 }
