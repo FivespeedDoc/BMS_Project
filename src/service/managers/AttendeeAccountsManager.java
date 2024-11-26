@@ -166,7 +166,7 @@ public final class AttendeeAccountsManager {
      */
     public void updateAttendeeInformation(String ID, String attribute, String newValue) throws ModelException {
         if (attribute.equals("Name") && !checkNameValidity(newValue)) {
-            throw new ModelException("Attendee_Account with ID " + ID + " already exists.");
+            throw new ModelException("Invalid name!");
         }
 
         String stmt = "UPDATE ATTENDEE_ACCOUNTS SET " + attribute + " = ? WHERE ID = ?";

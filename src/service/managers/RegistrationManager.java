@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -205,8 +206,8 @@ public final class RegistrationManager {
             pstmt.setLong(4, registration.getMealID());
             pstmt.setString(5, registration.getDrink());
             pstmt.setString(6, registration.getSeat());
-
             int affectedRows = pstmt.executeUpdate();
+
 
             if (affectedRows == 0) {
                 throw new ModelException("Cannot add Registration.");
@@ -235,6 +236,10 @@ public final class RegistrationManager {
     }
 
     private boolean isSeatAvailable(long BIN, String seat) {
+        if (seat.isEmpty()) {
+            return true;
+        }
+
         String stmt = "SELECT * FROM REGISTRATIONS WHERE BIN = ? AND SEAT = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -271,21 +276,63 @@ public final class RegistrationManager {
         }
     }
 
-    /**
-     * Analyze the popularity of banquets.
-     * @throws ModelException if any errors encountered.
-     */
-    public List<Banquet> analyzeBanquetsPopularity(BanquetsManager banquetsManager) throws ModelException {
-        return new ArrayList<>();
+    public List<String[]> getRankedMeals() {
+        String stmt = "SELECT MEALS.Name AS MealName, COUNT(*) AS Count " +
+                "FROM MEALS JOIN REGISTRATIONS ON MEALS.BIN = REGISTRATIONS.BIN AND MEALS.ID = REGISTRATIONS.MealID " +
+                "GROUP BY MEALS.Name " +
+                "ORDER BY Count DESC;";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            List<String[]> rankedMeals = new ArrayList<>();
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                rankedMeals.add(new String[]{resultSet.getString(1), resultSet.getString(2)});
+            }
+
+            return rankedMeals;
+        } catch (SQLException e) {
+            return new ArrayList<>();
+        }
     }
 
-    /**
-     * Analyze the popularity of meals.
-     * @throws ModelException if any errors encountered.
-     */
-    public List<Meal> analyzeMealsPopularity(BanquetsManager banquetsManager, MealsManager mealsManager) throws ModelException {
-        return new ArrayList<>();
+    public List<String[]> getRankedDrinks() {
+        String stmt = "SELECT Drink, COUNT(*) AS Count FROM REGISTRATIONS GROUP BY Drink ORDER BY Count DESC;";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            List<String[]> rankedDrinks = new ArrayList<>();
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                rankedDrinks.add(new String[]{resultSet.getString(1), resultSet.getString(2)});
+            }
+
+            return rankedDrinks;
+        } catch (SQLException e) {
+            return new ArrayList<>();
+        }
     }
+
+    public List<String[]> getRankedSeats() {
+        String stmt = "SELECT Seat, COUNT(*) AS Count FROM REGISTRATIONS GROUP BY Seat ORDER BY Count DESC;";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            List<String[]> rankedSeats = new ArrayList<>();
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                rankedSeats.add(new String[]{resultSet.getString(1), resultSet.getString(2)});
+            }
+
+            return rankedSeats;
+        } catch (SQLException e) {
+            return new ArrayList<>();
+        }
+    }
+
 
     /**
      * <h4>The columns are</h4>

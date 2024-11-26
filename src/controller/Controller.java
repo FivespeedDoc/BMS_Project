@@ -142,6 +142,18 @@ public final class Controller {
         return banquetsManager.banquetListToObjectArray(banquets);
     }
 
+    public String[][] banquetListToSortedObjectArray(List<Banquet> banquets) {
+        return banquetsManager.getSortedBanquetListObjectArray(banquets);
+    }
+
+    public List<Meal> getAllBanquetMeals() {
+        try {
+            return mealsManager.getAllBanquetMeals();
+        } catch (ModelException e) {
+            return new ArrayList<>();
+        }
+    }
+
     public List<Meal> getAllBanquetMeals(long BIN) {
         try {
             return mealsManager.getAllBanquetMeals(BIN);
@@ -206,6 +218,29 @@ public final class Controller {
         }
     }
 
+    public List<String[]> getRankedMeals() {
+        return registrationManager.getRankedMeals();
+    }
+
+    public List<String[]> getRankedDrinks() {
+        return registrationManager.getRankedDrinks();
+    }
+
+    public List<String[]> getRankedSeats() {
+        return registrationManager.getRankedSeats();
+    }
+
+    public String[][] rankedEntityListToObjectArray(List<String[]> sortedList) {
+        String[][] result = new String[sortedList.size()][2];
+
+        for (int i = 0; i < sortedList.size(); i++) {
+            result[i][0] = !sortedList.get(i)[0].isEmpty() ? sortedList.get(i)[0] : "Not specified";
+            result[i][1] = sortedList.get(i)[1];
+        }
+
+        return result;
+    }
+
     public String[][] mealListToObjectArray(List<Meal> meals) {
         return MealsManager.mealListToObjectArray(meals);
     }
@@ -245,6 +280,7 @@ public final class Controller {
     /**
      * <h4>Allowed {@code attribute} types</h4>
      * <ul>
+     *     <li>{@code "ID"} - this is added according to the instruction document.</li>
      *     <li>{@code "Name"}</li>
      *     <li>{@code "Address"}</li>
      *     <li>{@code "Type"}</li>

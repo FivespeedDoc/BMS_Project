@@ -7,9 +7,7 @@ import model.entities.Meal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * <h2> Meals Class </h2>
@@ -53,7 +51,7 @@ public final class MealsManager {
      * @return A {@code List} containing all {@code Meal} objects from the database.
      * @throws ModelException if any errors encountered.
      */
-    public List<Meal> getAllMeals() throws ModelException {
+    public List<Meal> getAllBanquetMeals() throws ModelException {
         String selectAllSQL = "SELECT * FROM MEALS";
 
         List<Meal> meals = new ArrayList<>();
@@ -280,7 +278,6 @@ public final class MealsManager {
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
-
 
     /**
      * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.

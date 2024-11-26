@@ -19,6 +19,8 @@ import java.util.Arrays;
 public final class ChangeAccountInformationWindow extends JDialog {
     private final Controller controller;
 
+    private final JFrame userWindow;
+
     private final AttendeeAccount account;
 
     private final TextField userIDField;
@@ -39,9 +41,10 @@ public final class ChangeAccountInformationWindow extends JDialog {
 
     private final TextField organizationField;
 
-    public ChangeAccountInformationWindow(Controller controller, JFrame loginWindow, AttendeeAccount account) {
-        super(loginWindow, "Sign Up", true);
+    public ChangeAccountInformationWindow(Controller controller, JFrame userWindow, AttendeeAccount account) {
+        super(userWindow, "Sign Up", true);
         this.controller = controller;
+        this.userWindow = userWindow;
         this.account = account;
         setSize(500, 375);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -54,7 +57,7 @@ public final class ChangeAccountInformationWindow extends JDialog {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         /* Text and field panels */
-        userIDField = new TextField(this.account.getID()); userIDField.setEnabled(false);
+        userIDField = new TextField(this.account.getID());
         XPanel userIDPanel = new XPanel("Account ID", userIDField);
         panel.add(userIDPanel);
         ///
@@ -133,8 +136,15 @@ public final class ChangeAccountInformationWindow extends JDialog {
 
         boolean success = true;
 
-        if (oldPasswordField.getPassword().length != 0) { // change password
-            success &= controller.changeUserPassword(account.getID(), oldPasswordField.getPassword(), newPasswordField.getPassword());
+        if (!account.getID().equals(userIDField.getText())) {
+            success &= controller.changeUserInformation(account.getID(), "ID", userIDField.getText());
+
+            if (success) {
+                JOptionPane.showMessageDialog(this, "The User ID has been updated. Now you will be logged out.", "Successful", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+                userWindow.dispose();
+                new LoginWindow(controller);
+            }
         }
 
         if (!account.getName().equals(nameField.getText())) {
@@ -155,6 +165,10 @@ public final class ChangeAccountInformationWindow extends JDialog {
 
         if (!account.getOrganization().equals(organizationField.getText())) {
             success &= controller.changeUserInformation(account.getID(), "Organization", organizationField.getText());
+        }
+
+        if (oldPasswordField.getPassword().length != 0) { // change password
+            success &= controller.changeUserPassword(account.getID(), oldPasswordField.getPassword(), newPasswordField.getPassword());
         }
 
         if (success) {

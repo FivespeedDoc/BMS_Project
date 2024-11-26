@@ -70,7 +70,7 @@ public final class NewRegistrationWindow extends JDialog {
         JPanel tablesPanel = new JPanel();
         tablesPanel.setLayout(new BoxLayout(tablesPanel, BoxLayout.Y_AXIS));
 
-        /* Banquet title */
+        /* Banquet table title */
         TitleLabel banquetTableTitle = new TitleLabel("Available Banquets");
         tablesPanel.add(banquetTableTitle);
 
@@ -82,7 +82,7 @@ public final class NewRegistrationWindow extends JDialog {
         JScrollPane banquetTableScrollPane = new JScrollPane(availableBanquetTable);
         tablesPanel.add(banquetTableScrollPane);
 
-        /* Meal title */
+        /* Meal table title */
         TitleLabel mealTableTitle = new TitleLabel("Meals");
         tablesPanel.add(mealTableTitle);
 
@@ -93,7 +93,7 @@ public final class NewRegistrationWindow extends JDialog {
         mealTableScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
         tablesPanel.add(mealTableScrollPane);
 
-        /* Drink title */
+        /* Drink table title */
         TitleLabel drinkTableTitle = new TitleLabel("Drinks (Fixed Supply)");
         tablesPanel.add(drinkTableTitle);
 

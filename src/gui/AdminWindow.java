@@ -66,7 +66,7 @@ public final class AdminWindow extends JFrame {
         JPanel tablesPanel = new JPanel();
         tablesPanel.setLayout(new BoxLayout(tablesPanel, BoxLayout.Y_AXIS));
 
-        /* Banquet title */
+        /* Banquet table title */
         TitleLabel banquetTableTitle = new TitleLabel("Banquets");
         tablesPanel.add(banquetTableTitle);
 
@@ -78,7 +78,7 @@ public final class AdminWindow extends JFrame {
         JScrollPane banquetTableScrollPane = new JScrollPane(banquetTable);
         tablesPanel.add(banquetTableScrollPane);
 
-        /* Meal title */
+        /* Meal table title */
         TitleLabel mealTableTitle = new TitleLabel("Meals");
         tablesPanel.add(mealTableTitle);
 
@@ -89,7 +89,7 @@ public final class AdminWindow extends JFrame {
         mealTableScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
         tablesPanel.add(mealTableScrollPane);
 
-        /* Drink title */
+        /* Drink table title */
         TitleLabel drinkTableTitle = new TitleLabel("Drinks (Fixed Supply)");
         tablesPanel.add(drinkTableTitle);
 
@@ -160,9 +160,9 @@ public final class AdminWindow extends JFrame {
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button viewRegistrationsButton = new Button("View Registrations", _ -> viewRegistrations());
-            viewRegistrationsButton.setMinimumSize(buttonSize); viewRegistrationsButton.setMaximumSize(buttonSize); viewRegistrationsButton.setPreferredSize(buttonSize);
-        menuPanel.add(viewRegistrationsButton);
+        Button analysis = new Button("Analysis", _ -> new AnalysisWindow(controller));
+            analysis.setMinimumSize(buttonSize); analysis.setMaximumSize(buttonSize); analysis.setPreferredSize(buttonSize);
+        menuPanel.add(analysis);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
@@ -392,10 +392,6 @@ public final class AdminWindow extends JFrame {
         banquetTable.clearSelection();
         selectedBanquetBIN = -1;
         selectedBanquetName = "";
-    }
-
-    private void viewRegistrations() {
-        new ViewRegistrationsWindow(controller);
     }
 
     private void showNoBanquetSelectionDialog() {
