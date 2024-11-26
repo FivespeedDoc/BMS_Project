@@ -9,7 +9,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * <h2> Banquets Class </h2>
@@ -77,6 +76,14 @@ public final class BanquetsManager {
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
+    }
+
+    public List<Banquet> getAllAvailableBanquets(String attendeeID) throws ModelException {
+        List <Banquet> allBanquets = getAllBanquets();
+        allBanquets.removeIf(banquet -> banquet.isAvailable() == 'N');
+        allBanquets.removeIf(banquet -> banquet.getQuota() - new RegistrationManager(con).getRegisteredCount(banquet.getBIN()) <= 0);
+        allBanquets.removeIf(banquet -> !(new RegistrationManager(con).getRegistration("AttendeeID", attendeeID)).isEmpty());
+        return allBanquets;
     }
 
     /**
@@ -272,8 +279,8 @@ public final class BanquetsManager {
     /**
      * This method converts a {@code List<Banquet>} object to a {@code String[][]} object.
      */
-    public static String[][] banquetListToObjectArray(List<Banquet> banquets) {
-        String[][] result = new String[banquets.size()][8];
+    public String[][] banquetListToObjectArray(List<Banquet> banquets) {
+        String[][] result = new String[banquets.size()][9];
 
         for (int i = 0; i < banquets.size(); i++) {
             result[i][0] = String.valueOf(banquets.get(i).getBIN());
@@ -284,6 +291,7 @@ public final class BanquetsManager {
             result[i][5] = String.valueOf(banquets.get(i).getContactStaffName());
             result[i][6] = String.valueOf(banquets.get(i).isAvailable());
             result[i][7] = String.valueOf(banquets.get(i).getQuota());
+            result[i][8] = String.valueOf(new RegistrationManager(con).getRegisteredCount(banquets.get(i).getBIN()));
         }
 
         return result;

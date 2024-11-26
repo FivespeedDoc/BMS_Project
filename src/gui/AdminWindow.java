@@ -30,10 +30,10 @@ public final class AdminWindow extends JFrame {
 
     /* Banquets */
     private final RegularLabel selectedBanquetLabel;
-    private static final String[] banquetTableAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
+    private static final String[] banquetTableAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota", "Registered"};
     private final JTable banquetTable;
     private long selectedBanquetBIN = -1;
-    private String selectedBanquetName; // for convenience
+    private String selectedBanquetName = ""; // for convenience
     private List<Banquet> banquets = new ArrayList<>(); // for safety
 
     /* Meals */
@@ -41,11 +41,11 @@ public final class AdminWindow extends JFrame {
     private static final String[] mealTableAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
     private final JTable mealTable;
     private long selectedMealID = -1;
-    private String selectedMealName; // for convenience
+    private String selectedMealName = ""; // for convenience
     private List<Meal> banquetMeals = new ArrayList<>(); // for safety
 
     /* Drinks */
-    private static final String[] banquetDrinksTitle = {"Drink 1", "Drink 2", "Drink 3", "Drink 4", "Extra Drink!"};
+    private static final String[] banquetDrinkTitles = {"Drink 1", "Drink 2", "Drink 3", "Drink 4", "Extra Drink!"};
     private static final String[][] banquetDrinks = {{"Coke", "Tea", "Coffee", "Lemon Tea", "Dark Drink (Don't try!)"}};
 
     public AdminWindow(Controller controller, String adminID) {
@@ -94,7 +94,7 @@ public final class AdminWindow extends JFrame {
         tablesPanel.add(drinkTableTitle);
 
         /* Drink table */
-        Table drinkTable = new Table(new DefaultTableModel(banquetDrinks, banquetDrinksTitle));
+        Table drinkTable = new Table(new DefaultTableModel(banquetDrinks, banquetDrinkTitles));
         drinkTable.setRowSelectionAllowed(false);
         drinkTable.setColumnSelectionAllowed(false);
         drinkTable.setCellSelectionEnabled(false);
@@ -375,7 +375,7 @@ public final class AdminWindow extends JFrame {
         selectedMealLabel.setText("No meal selected");
         mealTable.clearSelection();
         selectedMealID = -1;
-        selectedBanquetName = "";
+        selectedMealName = "";
     }
 
     /**

@@ -1,6 +1,5 @@
 package service.managers;
 
-import controller.Controller;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.Banquet;
@@ -106,9 +105,7 @@ public final class RegistrationManager {
             } else {
                 throw new ModelException("Registration with ID" + ID + "Registration not found");
             }
-         }
-
-         catch (SQLException e) {
+         } catch (SQLException e) {
              throw new ModelException("Database error: " + e.getMessage());
          }
      }
@@ -130,7 +127,7 @@ public final class RegistrationManager {
      * @return a {@code List} containing {@code Registration} objects that match the criteria.
      * @throws ModelException if any errors encountered.
      */
-     public List<Registration> getRegistration(String attribute, String value) throws ModelException {
+     public List<Registration> getRegistration(String attribute, String value) {
          String stmt = "SELECT * FROM REGISTRATIONS WHERE " + attribute + " = ?";
 
          List<Registration> registrations = new ArrayList<>();
@@ -153,7 +150,7 @@ public final class RegistrationManager {
 
              return registrations;
          } catch (SQLException e) {
-             throw new ModelException("Database error: " + e.getMessage());
+             return new ArrayList<>(); // for CONVENIENCE
          }
      }
 
@@ -186,29 +183,68 @@ public final class RegistrationManager {
     }
 
     public void addRegistration(Registration registration) throws ModelException {
-        String stmt = "INSERT INTO REGISTRATIONS (ID, AttendeeID, GuestName, Bin, MealID, Drink, Seat) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String stmt = "INSERT INTO REGISTRATIONS (AttendeeID, GuestName, BIN, MealID, Drink, Seat) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            // check quota
+            int quota = new BanquetsManager(con).getBanquet(registration.getBIN()).getQuota();
+            int registeredCount = getRegisteredCount(registration.getBIN());
+            if (quota - registeredCount <= 0) {
+                throw new ModelException("No more quota for this banquet.");
+            }
+
             // check seat first
+            if (!isSeatAvailable(registration.getBIN(), registration.getSeat())) {
+                throw new ModelException("Seat already unavailable for this banquet.");
+            }
 
-            pstmt.setLong(1, registration.getID());
-            pstmt.setString(2, registration.getAttendeeID());
-            pstmt.setString(3, registration.getGuestName());
-            pstmt.setLong(4, registration.getBIN());
-            pstmt.setLong(5, registration.getMealID());
-            pstmt.setString(6, registration.getDrink());
-            pstmt.setString(7, registration.getSeat());
-
-            pstmt.executeUpdate();
+            pstmt.setString(1, registration.getAttendeeID());
+            pstmt.setString(2, registration.getGuestName());
+            pstmt.setLong(3, registration.getBIN());
+            pstmt.setLong(4, registration.getMealID());
+            pstmt.setString(5, registration.getDrink());
+            pstmt.setString(6, registration.getSeat());
 
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {
                 throw new ModelException("Cannot add Registration.");
             }
-
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
+    public int getRegisteredCount(long BIN) {
+        String stmt = "SELECT COUNT(*) FROM REGISTRATIONS WHERE BIN = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, BIN);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                return 0;
+            }
+        } catch (SQLException e) {
+            return Integer.MAX_VALUE; // for safety reasons
+        }
+    }
+
+    private boolean isSeatAvailable(long BIN, String seat) {
+        String stmt = "SELECT * FROM REGISTRATIONS WHERE BIN = ? AND SEAT = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, BIN);
+            pstmt.setString(2, seat);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            return !resultSet.next();
+        } catch (SQLException e) {
+            return false;
         }
     }
 
@@ -273,7 +309,7 @@ public final class RegistrationManager {
                 result[i][1] = String.valueOf(registration.getBIN());
                 result[i][2] = new BanquetsManager(con).getBanquet(registration.getBIN()).getName();
                 result[i][3] = String.valueOf(registration.getMealID());
-                result[i][4] = String.valueOf(new MealsManager(con).getBanquetMeal(registration.getBIN(), registration.getMealID()));
+                result[i][4] = String.valueOf(new MealsManager(con).getBanquetMeal(registration.getBIN(), registration.getMealID()).getName());
                 result[i][5] = String.valueOf(registration.getDrink());
                 result[i][6] = String.valueOf(registration.getSeat());
             }
