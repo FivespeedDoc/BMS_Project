@@ -49,11 +49,11 @@ public final class SignupWindow extends JDialog {
         panel.add(userIDPanel);
         ///
         passwordField = new PasswordField();
-        XPanel passwordPanel = new XPanel(passwordField, false);
+        XPanel passwordPanel = new XPanel(passwordField, "REG");
         panel.add(passwordPanel);
         ///
         rePasswordField = new PasswordField();
-        XPanel rePasswordPanel = new XPanel(rePasswordField, true);
+        XPanel rePasswordPanel = new XPanel(rePasswordField, "RE");
         panel.add(rePasswordPanel);
         ///
         nameField = new TextField("Your name");

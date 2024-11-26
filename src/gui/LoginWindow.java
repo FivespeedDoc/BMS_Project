@@ -51,7 +51,7 @@ public final class LoginWindow extends JFrame {
         IDField = new TextField();
         passwordField = new PasswordField();
         panel.add(new XPanel("Account ID", IDField));
-        panel.add(new XPanel(passwordField, false));
+        panel.add(new XPanel(passwordField, "REG"));
 
         // panel.add(Box.createVerticalStrut(10));
 
