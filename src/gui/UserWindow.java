@@ -26,7 +26,7 @@ import static javax.swing.JOptionPane.showConfirmDialog;
  * @author FrankYang0610
  * @author ZacharyRE (the original version)
  */
-public class UserWindow extends JFrame {
+public final class UserWindow extends JFrame {
     private final Controller controller;
 
     private final String userID;
@@ -68,11 +68,11 @@ public class UserWindow extends JFrame {
         JPanel tablesPanel = new JPanel();
         tablesPanel.setLayout(new BoxLayout(tablesPanel, BoxLayout.Y_AXIS));
 
-        /* Banquet title */
+        /* Registration table title */
         TitleLabel registrationTableTitle = new TitleLabel("My Registrations");
         tablesPanel.add(registrationTableTitle);
 
-        /* Banquet table */
+        /* Registration table */
         registrations = controller.getRegistrations(userID);
         registrationTable = new Table(new DefaultTableModel(
                 controller.registrationListToObjectArray(registrations),
@@ -180,7 +180,7 @@ public class UserWindow extends JFrame {
             );
 
             if (confirm == JOptionPane.YES_OPTION) {
-                UserWindow.this.dispose();
+                dispose();
                 new LoginWindow(controller);
             }
         });
@@ -281,7 +281,11 @@ public class UserWindow extends JFrame {
     private void refreshAccountInformation() {
         AttendeeAccount account = controller.getAccount(userID);
 
-        assert account != null;
+        if (account == null) {
+            dispose();
+            return;
+        }
+
         nameLabel.setText(account.getName());
         addressLabel.setText(account.getAddress());
         typeLabel.setText(account.getType());

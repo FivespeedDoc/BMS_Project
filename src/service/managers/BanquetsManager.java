@@ -8,6 +8,7 @@ import service.utilities.DateTimeFormatter;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -295,5 +296,13 @@ public final class BanquetsManager {
         }
 
         return result;
+    }
+
+    public String[][] getSortedBanquetListObjectArray(List<Banquet> banquets) {
+        banquets.sort((o1, o2) -> {
+            RegistrationManager registrationManager = new RegistrationManager(con);
+            return (registrationManager.getRegisteredCount(o1.getBIN()) < registrationManager.getRegisteredCount(o2.getBIN())) ? -1 : 1;
+        });
+        return banquetListToObjectArray(banquets);
     }
 }
