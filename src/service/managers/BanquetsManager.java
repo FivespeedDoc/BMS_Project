@@ -207,7 +207,7 @@ public final class BanquetsManager {
      * @throws ModelException if any errors encountered.
      * @implNote This seems not compatible with the MVC design pattern, but since we have the Stage I report and this is a small system, this is acceptable. Related regulations will also be presented in {@code Controller}.
      */
-    public void updateBanquet(long BIN, String attribute, String newValue, BanquetsMealsJointManager bmjManager) throws ModelException {
+    public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException {
         System.out.println("("+attribute+")");
         String stmt = "UPDATE BANQUETS SET " + attribute + " = ? WHERE BIN = ?";
 
@@ -219,7 +219,7 @@ public final class BanquetsManager {
                     break;
                 }
                 case "Available": {
-                    if (newValue.equals("Y") && bmjManager.getBanquetMealCount(BIN) != 4) {
+                    if (newValue.equals("Y") && new BanquetsMealsJointManager(con).getBanquetMealCount(BIN) != 4) {
                         throw new ModelException("Cannot change the available state. Meals is not 4.");
                     }
                     pstmt.setString(1, newValue);

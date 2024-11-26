@@ -7,6 +7,7 @@ import model.database.Connection;
 import model.entities.AttendeeAccount;
 import model.entities.Banquet;
 import model.entities.Meal;
+import model.entities.Registration;
 import service.managers.*;
 import service.utilities.DateTimeFormatter;
 
@@ -116,7 +117,7 @@ public final class Controller {
      */
     public boolean updateBanquet(long BIN, String attribute, String newValue) {
         try {
-            banquetsManager.updateBanquet(BIN, attribute, newValue, bmjManager);
+            banquetsManager.updateBanquet(BIN, attribute, newValue);
             return true;
         } catch (ModelException e) {
             return false;
@@ -130,6 +131,10 @@ public final class Controller {
         } catch (ModelException e) {
             return false;
         }
+    }
+
+    public String[][] banquetListToObjectArray(List<Banquet> banquets) {
+        return BanquetsManager.banquetListToObjectArray(banquets);
     }
 
     public List<Meal> getAllBanquetMeals(long BIN) {
@@ -189,11 +194,15 @@ public final class Controller {
 
     public boolean deleteMeal(long BIN, long ID) {
         try {
-            mealsManager.deleteMeal(BIN, ID, banquetsManager, bmjManager);
+            mealsManager.deleteMeal(BIN, ID);
             return true;
         } catch (ModelException e) {
             return false;
         }
+    }
+
+    public String[][] mealListToObjectArray(List<Meal> meals) {
+        return MealsManager.mealListToObjectArray(meals);
     }
 
     public boolean isUser(String ID, char[] password) {
@@ -253,6 +262,26 @@ public final class Controller {
             return true;
         } catch (ModelException e) {
             return false;
+        }
+    }
+
+    public List<Registration> getRegistrations(String attendeeID) {
+        try {
+            return registrationManager.getRegistration("AttendeeID", attendeeID);
+        } catch (ModelException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public String[][] registrationListToObjectArray(List<Registration> registrations) {
+        return RegistrationManager.registrationListToObjectArray(registrations, connection);
+    }
+
+    public AttendeeAccount getAccount(String userID) {
+        try {
+            return attendeeAccountsManager.getAttendee(userID);
+        } catch (ModelException e) {
+            return null;
         }
     }
 }
