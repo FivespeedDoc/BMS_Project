@@ -208,6 +208,7 @@ public final class NewRegistrationWindow extends JDialog {
         panel.add(tablesPanel);
         panel.add(menuPanel);
         add(panel);
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
