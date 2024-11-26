@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 /**
  * <h2> Attemdee_Accounts Class </h2>
@@ -164,6 +165,10 @@ public final class AttendeeAccountsManager {
      * @throws ModelException if any errors encountered.
      */
     public void updateAttendeeInformation(String ID, String attribute, String newValue) throws ModelException {
+        if (attribute.equals("Name") && !checkNameValidity(newValue)) {
+            throw new ModelException("Attendee_Account with ID " + ID + " already exists.");
+        }
+
         String stmt = "UPDATE ATTENDEE_ACCOUNTS SET " + attribute + " = ? WHERE ID = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -181,8 +186,8 @@ public final class AttendeeAccountsManager {
     }
 
     public void updateAttendeePassword(String ID, char[] originalPassword, HashedPasswordAndSalt newHashedPasswordAndSalt) throws ModelException {
-        if (!verifyAttendeePassword(ID, originalPassword)) {
-            throw new ModelException("Attendee password does not match.");
+        if (!verifyAttendeePassword(ID, originalPassword)) { // alters REGEXP in SQL
+            throw new ModelException("Attendee name is not valid.");
         }
 
         String stmt = "UPDATE ATTENDEE_ACCOUNTS SET HashedPassword = ?, HashedSalt = ? WHERE ID = ?";
@@ -227,7 +232,12 @@ public final class AttendeeAccountsManager {
      * @throws ModelException
      */
     public void addAttendeeAccount(AttendeeAccount attendeeAccount) throws ModelException {
+        if (!checkNameValidity(attendeeAccount.getName())) { // alters REGEXP in SQL
+            throw new ModelException("Attendee name is not valid.");
+        }
+
         String stmt = "INSERT INTO ATTENDEE_ACCOUNTS (ID, HashedPassword, HashedSalt, Name, Address, Type, MobileNo, Organization) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
             pstmt.setString(1, attendeeAccount.getID());
             pstmt.setString(2, attendeeAccount.getHashedPasswordAndSalt().getHashedPassword());
@@ -245,6 +255,7 @@ public final class AttendeeAccountsManager {
             }
         }
         catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new ModelException("Database error: " + e.getMessage());
         }
     }
@@ -269,5 +280,9 @@ public final class AttendeeAccountsManager {
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }
+    }
+
+    private boolean checkNameValidity(String name) {
+        return Pattern.matches("^[A-Za-z -]+$", name);
     }
 }

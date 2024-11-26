@@ -83,17 +83,22 @@ public final class LoginWindow extends JFrame {
         setVisible(true);
     }
 
-    private void userLogin(ActionEvent e) { // this need to be rewritten
+    private void userLogin(ActionEvent e) {
         String userID = IDField.getText();
-        String password = Arrays.toString(this.passwordField.getPassword());
+        char[] password = passwordField.getPassword();
 
-        // JOptionPane.showMessageDialog(this, "Account ID: " + userIDstr + "\nPassword: " + passwordstr, "Login Info", JOptionPane.INFORMATION_MESSAGE); // for test only
-        showWrongLoginInfoDialog();
+        if (controller.isUser(userID, password)) {
+            userLoginSuccessfulDialog(userID);
+            new UserWindow(controller, userID);
+            dispose();
+        } else {
+            showWrongLoginInfoDialog();
+        }
     }
 
     private void adminLogin(ActionEvent e) {
         String adminID = IDField.getText();
-        char[] password = passwordField.getPassword(); // use char for safety
+        char[] password = passwordField.getPassword();
 
         if (controller.isAdmin(adminID, password)) {
             adminLoginSuccessfulDialog(adminID);

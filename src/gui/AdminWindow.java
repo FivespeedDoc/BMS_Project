@@ -7,8 +7,6 @@ import gui.components.Table;
 import gui.components.TitleLabel;
 import model.entities.Banquet;
 import model.entities.Meal;
-import service.managers.BanquetsManager;
-import service.managers.MealsManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,7 +30,7 @@ public final class AdminWindow extends JFrame {
 
     /* Banquets */
     private final RegularLabel selectedBanquetLabel;
-    private static final String[] banquetAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
+    private static final String[] banquetTableAttributes = {"BIN", "Name", "Date & Time", "Address", "Location", "Contact Staff", "Available? (Y/N)", "Quota"};
     private final JTable banquetTable;
     private long selectedBanquetBIN = -1;
     private String selectedBanquetName; // for convenience
@@ -40,7 +38,7 @@ public final class AdminWindow extends JFrame {
 
     /* Meals */
     private final RegularLabel selectedMealLabel;
-    private static final String[] mealsAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
+    private static final String[] mealTableAttributes = {"ID", "Name", "Type", "Price", "Special Cuisine"};
     private final JTable mealTable;
     private long selectedMealID = -1;
     private String selectedMealName; // for convenience
@@ -64,7 +62,7 @@ public final class AdminWindow extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
 
-        /* Banquet table panel */
+        /* Tables panel */
         JPanel tablesPanel = new JPanel();
         tablesPanel.setLayout(new BoxLayout(tablesPanel, BoxLayout.Y_AXIS));
 
@@ -75,8 +73,8 @@ public final class AdminWindow extends JFrame {
         /* Banquet table */
         banquets = controller.getAllBanquets();
         banquetTable = new Table(new DefaultTableModel(
-                BanquetsManager.banquetListToObjectArray(banquets),
-                banquetAttributes));
+                controller.banquetListToObjectArray(banquets),
+                banquetTableAttributes));
         JScrollPane banquetTableScrollPane = new JScrollPane(banquetTable);
         tablesPanel.add(banquetTableScrollPane);
 
@@ -85,7 +83,7 @@ public final class AdminWindow extends JFrame {
         tablesPanel.add(mealTableTitle);
 
         /* Meal table */
-        mealTable = new Table(new DefaultTableModel(new Object[][]{}, mealsAttributes));
+        mealTable = new Table(new DefaultTableModel(new Object[][]{}, mealTableAttributes));
         JScrollPane mealTableScrollPane = new JScrollPane(mealTable);
         mealTableScrollPane.setPreferredSize(new Dimension(mealTableScrollPane.getPreferredSize().width, 200));
         mealTableScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
@@ -181,9 +179,9 @@ public final class AdminWindow extends JFrame {
                 new LoginWindow(controller);
             }
         });
-            logoutButton.setForeground(Color.RED);
-            logoutButton.setMinimumSize(buttonSize); logoutButton.setMaximumSize(buttonSize); logoutButton.setPreferredSize(buttonSize);
-            menuPanel.add(logoutButton);
+        logoutButton.setForeground(Color.RED);
+        logoutButton.setMinimumSize(buttonSize); logoutButton.setMaximumSize(buttonSize); logoutButton.setPreferredSize(buttonSize);
+        menuPanel.add(logoutButton);
 
 
         /* Banquet table selection */
@@ -354,8 +352,8 @@ public final class AdminWindow extends JFrame {
         clearMealTableSelection();
         banquetMeals = controller.getAllBanquetMeals(selectedBanquetBIN);
         mealTable.setModel(new DefaultTableModel(
-                MealsManager.mealListToObjectArray(banquetMeals),
-                mealsAttributes));
+                controller.mealListToObjectArray(banquetMeals),
+                mealTableAttributes));
     }
 
     /**
@@ -365,8 +363,8 @@ public final class AdminWindow extends JFrame {
         clearAllTableSelections();
         banquets = controller.getAllBanquets();
         banquetTable.setModel(new DefaultTableModel(
-                BanquetsManager.banquetListToObjectArray(banquets),
-                banquetAttributes
+                controller.banquetListToObjectArray(banquets),
+                banquetTableAttributes
         ));
     }
 
@@ -387,8 +385,8 @@ public final class AdminWindow extends JFrame {
         clearMealTableSelection();
         banquetMeals.clear();
         mealTable.setModel(new DefaultTableModel(
-                MealsManager.mealListToObjectArray(banquetMeals),
-                mealsAttributes
+                controller.mealListToObjectArray(banquetMeals),
+                mealTableAttributes
         ));
         selectedBanquetLabel.setText("No banquet selected");
         banquetTable.clearSelection();

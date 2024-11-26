@@ -1,5 +1,6 @@
 package service.managers;
 
+import controller.Controller;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.Banquet;
@@ -110,8 +111,9 @@ public final class RegistrationManager {
          catch (SQLException e) {
              throw new ModelException("Database error: " + e.getMessage());
          }
-
      }
+
+
     /**
      * Retrieves a list of {@code Registration} objects from the database based on a specified column and value.
      * <p>
@@ -128,7 +130,7 @@ public final class RegistrationManager {
      * @return a {@code List} containing {@code Registration} objects that match the criteria.
      * @throws ModelException if any errors encountered.
      */
-     public List<Registration> getRegistrations(String attribute, String value) throws ModelException {
+     public List<Registration> getRegistration(String attribute, String value) throws ModelException {
          String stmt = "SELECT * FROM REGISTRATIONS WHERE " + attribute + " = ?";
 
          List<Registration> registrations = new ArrayList<>();
@@ -137,7 +139,8 @@ public final class RegistrationManager {
              pstmt.setString(1, value);
 
              ResultSet resultSet = pstmt.executeQuery();
-             while(resultSet.next()) {
+
+             while (resultSet.next()) {
                  registrations.add(new Registration(resultSet.getInt(1),
                          resultSet.getString(2),
                          resultSet.getString(3),
@@ -147,6 +150,7 @@ public final class RegistrationManager {
                          resultSet.getString(7)
                  ));
              }
+
              return registrations;
          } catch (SQLException e) {
              throw new ModelException("Database error: " + e.getMessage());
@@ -244,5 +248,37 @@ public final class RegistrationManager {
      */
     public List<Meal> analyzeMealsPopularity(BanquetsManager banquetsManager, MealsManager mealsManager) throws ModelException {
         return new ArrayList<>();
+    }
+
+    /**
+     * <h4>The columns are</h4>
+     * <ul>
+     *     <li>{@code "ID"}</li>
+     *     <li>{@code "Banquet BIN"}</li>
+     *     <li>{@code "Banquet Name"}</li>
+     *     <li>{@code "Meal ID"}</li>
+     *     <li>{@code "Meal Name"}</li>
+     *     <li>{@code "Drink"}</li>
+     *     <li>{@code "Seat"}</li>
+     * </ul>
+     */
+    public static String[][] registrationListToObjectArray(List<Registration> registrations, Connection con) {
+        String[][] result = new String[registrations.size()][7];
+
+        try {
+            for (int i = 0; i < registrations.size(); i++) {
+                Registration registration = registrations.get(i);
+
+                result[i][0] = String.valueOf(registration.getID());
+                result[i][1] = String.valueOf(registration.getBIN());
+                result[i][2] = new BanquetsManager(con).getBanquet(registration.getBIN()).getName();
+                result[i][3] = String.valueOf(registration.getMealID());
+                result[i][4] = String.valueOf(new MealsManager(con).getBanquetMeal(registration.getBIN(), registration.getMealID()));
+                result[i][5] = String.valueOf(registration.getDrink());
+                result[i][6] = String.valueOf(registration.getSeat());
+            }
+        } catch (ModelException ignored) {}
+
+        return result;
     }
 }
