@@ -30,8 +30,6 @@ public final class Controller {
 
     private final BanquetsManager banquetsManager;
 
-    private final BanquetsMealsJointManager bmjManager;
-
     private final MealsManager mealsManager;
 
     private final RegistrationManager registrationManager;
@@ -47,7 +45,6 @@ public final class Controller {
             this.administratorsManager = new AdministratorsManager(connection);
             this.attendeeAccountsManager = new AttendeeAccountsManager(connection);
             this.banquetsManager = new BanquetsManager(connection);
-            this.bmjManager = new BanquetsMealsJointManager(connection);
             this.mealsManager = new MealsManager(connection);
             this.registrationManager = new RegistrationManager(connection);
             this.passwordManager = new PasswordManager();
@@ -65,6 +62,14 @@ public final class Controller {
     public List<Banquet> getAllBanquets() {
         try {
             return banquetsManager.getAllBanquets();
+        } catch (ModelException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Banquet> getAvailableBanquets(String attendeeID) {
+        try {
+            return banquetsManager.getAllAvailableBanquets(attendeeID);
         } catch (ModelException e) {
             return new ArrayList<>();
         }
@@ -134,7 +139,7 @@ public final class Controller {
     }
 
     public String[][] banquetListToObjectArray(List<Banquet> banquets) {
-        return BanquetsManager.banquetListToObjectArray(banquets);
+        return banquetsManager.banquetListToObjectArray(banquets);
     }
 
     public List<Meal> getAllBanquetMeals(long BIN) {
@@ -155,7 +160,7 @@ public final class Controller {
 
     public boolean addMeal(long BIN, String ID, String name, String type, String price, String specialCuisine) {
         try {
-            if (ID.isEmpty() || name.isEmpty() || type.isEmpty() || price.isEmpty() || specialCuisine.isEmpty()) {
+            if (ID.isEmpty() || name.isEmpty() || type.isEmpty() || price.isEmpty()) {
                 return false;
             }
 
@@ -266,11 +271,7 @@ public final class Controller {
     }
 
     public List<Registration> getRegistrations(String attendeeID) {
-        try {
-            return registrationManager.getRegistration("AttendeeID", attendeeID);
-        } catch (ModelException e) {
-            return new ArrayList<>();
-        }
+        return registrationManager.getRegistration("AttendeeID", attendeeID);
     }
 
     public String[][] registrationListToObjectArray(List<Registration> registrations) {
@@ -282,6 +283,31 @@ public final class Controller {
             return attendeeAccountsManager.getAttendee(userID);
         } catch (ModelException e) {
             return null;
+        }
+    }
+
+    public boolean registerBanquet(String attendeeID, long BIN, long mealID, String drink, String seat) {
+        try {
+            Registration registration = new Registration(-1,
+                    attendeeID,
+                    "",
+                    BIN,
+                    mealID,
+                    drink,
+                    (!seat.equals("Optional") ? seat : ""));
+            registrationManager.addRegistration(registration);
+            return true;
+        } catch (ModelException e) {
+            return false;
+        }
+    }
+
+    public boolean deleteRegistration(long ID) {
+        try {
+            registrationManager.deleteRegistration(ID);
+            return true;
+        } catch (ModelException e) {
+            return false;
         }
     }
 }
