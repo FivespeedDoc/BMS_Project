@@ -5,6 +5,7 @@ import model.database.Connection;
 import model.entities.Banquet;
 import model.entities.Meal;
 import model.entities.Registration;
+import service.utilities.DateTimeFormatter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -292,29 +293,56 @@ public final class RegistrationManager {
      *     <li>{@code "ID"}</li>
      *     <li>{@code "Banquet BIN"}</li>
      *     <li>{@code "Banquet Name"}</li>
-     *     <li>{@code "Meal ID"}</li>
+     *     <li>{@code "Banquet Date"}</li>
+     *     <li>{@code "Banquet Address"}</li>
      *     <li>{@code "Meal Name"}</li>
      *     <li>{@code "Drink"}</li>
      *     <li>{@code "Seat"}</li>
      * </ul>
      */
     public static String[][] registrationListToObjectArray(List<Registration> registrations, Connection con) {
-        String[][] result = new String[registrations.size()][7];
+        String[][] result = new String[registrations.size()][8];
 
         try {
             for (int i = 0; i < registrations.size(); i++) {
+                BanquetsManager banquetsManager = new BanquetsManager(con);
                 Registration registration = registrations.get(i);
 
                 result[i][0] = String.valueOf(registration.getID());
                 result[i][1] = String.valueOf(registration.getBIN());
-                result[i][2] = new BanquetsManager(con).getBanquet(registration.getBIN()).getName();
-                result[i][3] = String.valueOf(registration.getMealID());
-                result[i][4] = String.valueOf(new MealsManager(con).getBanquetMeal(registration.getBIN(), registration.getMealID()).getName());
-                result[i][5] = String.valueOf(registration.getDrink());
-                result[i][6] = String.valueOf(registration.getSeat());
+                result[i][2] = banquetsManager.getBanquet(registration.getBIN()).getName();
+                result[i][3] = DateTimeFormatter.format(banquetsManager.getBanquet(registration.getBIN()).getDateTime());
+                result[i][4] = banquetsManager.getBanquet(registration.getBIN()).getAddress();
+                result[i][5] = String.valueOf(new MealsManager(con).getBanquetMeal(registration.getBIN(), registration.getMealID()).getName());
+                result[i][6] = String.valueOf(registration.getDrink());
+                result[i][7] = String.valueOf(registration.getSeat());
             }
         } catch (ModelException ignored) {}
 
         return result;
+    }
+
+    public List<Registration> filterRegistrations(List<Registration> registrations, String nameFilter, String dateTimeFilter, String addressFilter, String mealFilter, String drinkFilter, String seatFilter) {
+        try {
+            BanquetsManager banquetsManager = new BanquetsManager(con);
+
+            MealsManager mealsManager = new MealsManager(con);
+
+            List<Registration> filteredRegistrations = new ArrayList<>();
+
+            for (Registration registration : registrations) {
+                Banquet banquet = banquetsManager.getBanquet(registration.getBIN());
+
+                if (banquet.getName().contains(nameFilter) &&
+                        DateTimeFormatter.format(banquet.getDateTime()).contains(dateTimeFilter) &&
+                        banquet.getAddress().contains(addressFilter) && mealsManager.getBanquetMeal(registration.getBIN(), registration.getMealID()).getName().contains(mealFilter) && registration.getDrink().contains(drinkFilter) && registration.getSeat().contains(seatFilter)) {
+                    filteredRegistrations.add(registration);
+                }
+            }
+
+            return filteredRegistrations;
+        } catch (ModelException e) {
+            return new ArrayList<>();
+        }
     }
 }

@@ -1,10 +1,9 @@
 package gui;
 
 import controller.Controller;
+import gui.components.*;
 import gui.components.Button;
-import gui.components.RegularLabel;
-import gui.components.Table;
-import gui.components.TitleLabel;
+import gui.components.TextField;
 import model.entities.AttendeeAccount;
 import model.entities.Registration;
 
@@ -40,10 +39,18 @@ public class UserWindow extends JFrame {
 
     /* Registrations */
     private final RegularLabel selectedRegistrationLabel;
-    private static final String[] registrationTableAttributes = {"ID", "Banquet BIN", "Banquet Name", "Meal ID", "Meal Name", "Drink", "Seat"};
+    private static final String[] registrationTableAttributes = {"ID", "Banquet BIN", "Banquet Name", "Banquet Date", "Banquet Address", "Meal Name", "Drink", "Seat"};
     private final JTable registrationTable;
     private long selectedRegistrationID = -1;
     private List<Registration> registrations = new ArrayList<>(); // for safety
+
+    /* Filters */
+    private final TextField nameFilterTextField;
+    private final TextField dateTimeFilterTextField;
+    private final TextField addressFilterTextField;
+    private final TextField mealFilterTextField; // meal name
+    private final TextField drinkFilterTextField; // drink name
+    private final TextField seatFilterTextField;
 
     public UserWindow(Controller controller, String userID) {
         super("Attendee User: " + userID);
@@ -96,14 +103,14 @@ public class UserWindow extends JFrame {
         menuPanel.add(mobileNoLabel);
         menuPanel.add(organizationLabel);
 
-        menuPanel.add(Box.createVerticalStrut(20));
+        menuPanel.add(Box.createVerticalStrut(40));
 
         /* Registration selection */
         selectedRegistrationLabel = new RegularLabel("No registration selected");
         selectedRegistrationLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         menuPanel.add(selectedRegistrationLabel);
 
-        menuPanel.add(Box.createVerticalStrut(10));
+        menuPanel.add(Box.createVerticalStrut(40));
 
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
@@ -115,10 +122,6 @@ public class UserWindow extends JFrame {
         newRegistrationButton.setMinimumSize(buttonSize); newRegistrationButton.setMaximumSize(buttonSize); newRegistrationButton.setPreferredSize(buttonSize);
         menuPanel.add(newRegistrationButton);
         ///
-        Button filterRegistrationButton = new Button("Filter Registration", null);
-        filterRegistrationButton.setMinimumSize(buttonSize); filterRegistrationButton.setMaximumSize(buttonSize); filterRegistrationButton.setPreferredSize(buttonSize);
-        menuPanel.add(filterRegistrationButton);
-        ///
         Button cancelRegistrationButton = new Button("Cancel Registration", _ -> cancelRegistration());
         cancelRegistrationButton.setMinimumSize(buttonSize); cancelRegistrationButton.setMaximumSize(buttonSize); cancelRegistrationButton.setPreferredSize(buttonSize);
         menuPanel.add(cancelRegistrationButton);
@@ -129,16 +132,44 @@ public class UserWindow extends JFrame {
         refreshRegistrationTableButton.setMinimumSize(buttonSize); refreshRegistrationTableButton.setMaximumSize(buttonSize); refreshRegistrationTableButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshRegistrationTableButton);
         ///
-        menuPanel.add(Box.createVerticalStrut(20));
+        menuPanel.add(Box.createVerticalStrut(40));
         ///
-        Button changeAccountInformation = new Button("Change Account Info", _ -> {
+        menuPanel.add(new TitleLabel("Filter"));
+        menuPanel.add(new RegularLabel("Refresh the table to cancel filtering"));
+        ///
+        nameFilterTextField = new TextField();
+        menuPanel.add(new XPanel("Name", nameFilterTextField));
+        ///
+        dateTimeFilterTextField = new TextField();
+        menuPanel.add(new XPanel("Date", dateTimeFilterTextField));
+        ///
+        addressFilterTextField = new TextField();
+        menuPanel.add(new XPanel("Address", addressFilterTextField));
+        ///
+        mealFilterTextField = new TextField();
+        menuPanel.add(new XPanel("Meal", mealFilterTextField));
+        ///
+        drinkFilterTextField = new TextField();
+        menuPanel.add(new XPanel("Drink", drinkFilterTextField));
+        ///
+        seatFilterTextField = new TextField();
+        menuPanel.add(new XPanel("Seat", seatFilterTextField));
+        ///
+        menuPanel.add(Box.createVerticalStrut(10));
+        ///
+        Dimension smallButtonSize = new Dimension(200, 25);
+        Button applyFilterButton = new Button("Apply the Filter", _ -> applyFilter());
+        applyFilterButton.setMinimumSize(smallButtonSize); applyFilterButton.setMaximumSize(smallButtonSize); applyFilterButton.setPreferredSize(smallButtonSize);
+        menuPanel.add(applyFilterButton);
+        ///
+        menuPanel.add(Box.createVerticalGlue());
+        ///
+        Button changeAccountInformationButton = new Button("Change Account Info", _ -> {
             new ChangeAccountInformationWindow(controller, this, controller.getAccount(userID));
             refreshAccountInformation();
         });
-        changeAccountInformation.setMinimumSize(buttonSize); changeAccountInformation.setMaximumSize(buttonSize); changeAccountInformation.setPreferredSize(buttonSize);
-        menuPanel.add(changeAccountInformation);
-        ///
-        menuPanel.add(Box.createVerticalGlue());
+        changeAccountInformationButton.setMinimumSize(buttonSize); changeAccountInformationButton.setMaximumSize(buttonSize); changeAccountInformationButton.setPreferredSize(buttonSize);
+        menuPanel.add(changeAccountInformationButton);
         ///
         Button logoutButton = new Button("Logout", _ -> {
             int confirm = showConfirmDialog(
@@ -164,12 +195,7 @@ public class UserWindow extends JFrame {
                 int selectedBanquetRow = registrationTable.rowAtPoint(e.getPoint());
                 if (selectedBanquetRow != -1) {
                     selectedRegistrationID = Long.parseLong(registrationTable.getValueAt(selectedBanquetRow, 0).toString());
-                    selectedRegistrationLabel.setText("Registration ID: " + selectedRegistrationID);
-
-                    // double-click a registration
-                    if (e.getClickCount() == 2) {
-                        //
-                    }
+                    selectedRegistrationLabel.setText("Selected registration: " + selectedRegistrationID);
                 } else {
                     clearRegistrationTableSelection();
                 }
@@ -227,6 +253,14 @@ public class UserWindow extends JFrame {
             }
             refreshRegistrations();
         }
+    }
+
+    private void applyFilter() {
+        clearRegistrationTableSelection();
+        registrationTable.setModel(
+                new DefaultTableModel(
+                        controller.registrationListToObjectArray(controller.applyFilter(controller.getRegistrations(userID), nameFilterTextField.getText(), dateTimeFilterTextField.getText(), addressFilterTextField.getText(), mealFilterTextField.getText(), drinkFilterTextField.getText(), seatFilterTextField.getText())),
+                registrationTableAttributes));
     }
 
     private void clearRegistrationTableSelection() {

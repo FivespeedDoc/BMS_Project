@@ -310,4 +310,8 @@ public final class Controller {
             return false;
         }
     }
+
+    public List<Registration> applyFilter(List<Registration> registrations, String nameFilter, String dateTimeFilter, String addressFilter, String mealFilter, String drinkFilter, String seatFilter) {
+        return registrationManager.filterRegistrations(registrations, nameFilter, dateTimeFilter, addressFilter, mealFilter, drinkFilter, seatFilter);
+    }
 }
