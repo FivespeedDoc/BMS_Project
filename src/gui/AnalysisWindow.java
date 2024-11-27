@@ -122,9 +122,9 @@ public final class AnalysisWindow extends JFrame {
         refreshAllTablesButton.setMinimumSize(buttonSize); refreshAllTablesButton.setMaximumSize(buttonSize); refreshAllTablesButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshAllTablesButton);
         ///
-        Button exportToPDFButton = new Button("Export to PDF", null); exportToPDFButton.setEnabled(false);
-        exportToPDFButton.setMinimumSize(buttonSize); exportToPDFButton.setMaximumSize(buttonSize); exportToPDFButton.setPreferredSize(buttonSize);
-        menuPanel.add(exportToPDFButton);
+        Button exportToHTMLButton = new Button("Export to HTML", _ -> exportToHTML());
+        exportToHTMLButton.setMinimumSize(buttonSize); exportToHTMLButton.setMaximumSize(buttonSize); exportToHTMLButton.setPreferredSize(buttonSize);
+        menuPanel.add(exportToHTMLButton);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
@@ -141,7 +141,7 @@ public final class AnalysisWindow extends JFrame {
         setVisible(true);
     }
 
-    void refreshAllTables() {
+    private void refreshAllTables() {
         banquets = controller.getAllBanquets();
         rankedMeals = controller.getRankedMeals();
         rankedDrinks = controller.getRankedDrinks();
@@ -153,5 +153,11 @@ public final class AnalysisWindow extends JFrame {
         mealTable.setModel(new DefaultTableModel(controller.rankedEntityListToObjectArray(rankedMeals), mealTableAttributes));
         drinkTable.setModel(new DefaultTableModel(controller.rankedEntityListToObjectArray(rankedDrinks), drinkTableAttributes));
         seatsTable.setModel(new DefaultTableModel(controller.rankedEntityListToObjectArray(rankedSeats), seatTableAttributes));
+    }
+
+    private void exportToHTML() {
+        if (!controller.exportHTML(new String[]{"Banquets (ranked by number of registered attendees)", "Meals", "Drinks", "Seats"}, new JTable[]{banquetTable, mealTable, drinkTable, seatsTable})) {
+            JOptionPane.showMessageDialog(this, "Cannot save the analysis table!", "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

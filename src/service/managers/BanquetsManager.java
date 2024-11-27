@@ -216,7 +216,6 @@ public final class BanquetsManager {
      * @implNote This seems not compatible with the MVC design pattern, but since we have the Stage I report and this is a small system, this is acceptable. Related regulations will also be presented in {@code Controller}.
      */
     public void updateBanquet(long BIN, String attribute, String newValue) throws ModelException {
-        System.out.println("("+attribute+")");
         String stmt = "UPDATE BANQUETS SET " + attribute + " = ? WHERE BIN = ?";
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
@@ -301,7 +300,7 @@ public final class BanquetsManager {
     public String[][] getSortedBanquetListObjectArray(List<Banquet> banquets) {
         banquets.sort((o1, o2) -> {
             RegistrationManager registrationManager = new RegistrationManager(con);
-            return (registrationManager.getRegisteredCount(o1.getBIN()) < registrationManager.getRegisteredCount(o2.getBIN())) ? -1 : 1;
+            return (registrationManager.getRegisteredCount(o1.getBIN()) < registrationManager.getRegisteredCount(o2.getBIN())) ? 1 : -1;
         });
         return banquetListToObjectArray(banquets);
     }
