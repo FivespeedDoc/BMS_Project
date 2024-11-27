@@ -2,6 +2,7 @@ package controller;
 
 import globalexceptions.BMS_Exception;
 import gui.LoginWindow;
+import gui.components.Table;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.AttendeeAccount;
@@ -12,8 +13,15 @@ import service.managers.*;
 import service.utilities.DateTimeFormatter;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -349,5 +357,72 @@ public final class Controller {
 
     public List<Registration> applyFilter(List<Registration> registrations, String nameFilter, String dateTimeFilter, String addressFilter, String mealFilter, String drinkFilter, String seatFilter) {
         return registrationManager.filterRegistrations(registrations, nameFilter, dateTimeFilter, addressFilter, mealFilter, drinkFilter, seatFilter);
+    }
+
+    public boolean exportHTML(String[] tableTitles, JTable[] tables) {
+        if (tableTitles.length != tables.length) {
+            return false;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save HTML File");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        fileChooser.setSelectedFile(new File("analysis_report.html"));
+
+        int userSelection = fileChooser.showSaveDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String filePath = fileToSave.getAbsolutePath();
+
+            if (!filePath.toLowerCase().endsWith(".html")) {
+                filePath += ".html";
+            }
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+                // HTML header
+                writer.write("<html><head><title>Multiple Tables Export</title></head><body>\n");
+
+                writer.write("<h2>" + "BMS Analysis Report" + " " + "(" + "export time: " + currentTime + ")" + "</h2>\n");
+
+                for (int tableIndex = 0; tableIndex < tables.length; tableIndex++) {
+                    String tableTitle = tableTitles[tableIndex];
+
+                    JTable table = tables[tableIndex];
+
+                    writer.write("<h2>" + tableTitle + "</h2>\n");
+
+                    writer.write("<table border='1'>\n");
+
+                    TableModel model = table.getModel();
+                    writer.write("<tr>");
+                    for (int col = 0; col < model.getColumnCount(); col++) {
+                        writer.write("<th>" + model.getColumnName(col) + "</th>");
+                    }
+                    writer.write("</tr>\n");
+
+                    for (int row = 0; row < model.getRowCount(); row++) {
+                        writer.write("<tr>");
+                        for (int col = 0; col < model.getColumnCount(); col++) {
+                            writer.write("<td>" + model.getValueAt(row, col) + "</td>");
+                        }
+                        writer.write("</tr>\n");
+                    }
+
+                    writer.write("</table>\n<br>\n");
+                }
+
+                writer.write("</body></html>");
+                writer.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 }
