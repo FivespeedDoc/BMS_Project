@@ -164,6 +164,10 @@ public final class AdminWindow extends JFrame {
             analysis.setMinimumSize(buttonSize); analysis.setMaximumSize(buttonSize); analysis.setPreferredSize(buttonSize);
         menuPanel.add(analysis);
         ///
+        Button contact = new Button("Send Emails", _ -> new ContactWindow(controller, this));
+        analysis.setMinimumSize(buttonSize); analysis.setMaximumSize(buttonSize); analysis.setPreferredSize(buttonSize);
+        menuPanel.add(contact);
+        
         menuPanel.add(Box.createVerticalGlue());
         ///
         Button logoutButton = new Button("Logout", _ -> {
