@@ -235,6 +235,10 @@ public final class AttendeeAccountsManager {
         if (!checkNameValidity(attendeeAccount.getName())) { // alters REGEXP in SQL
             throw new ModelException("Attendee name is not valid.");
         }
+        
+        if(!checkIDvalidity(attendeeAccount.getID())){
+            throw new ModelException("Attendee ID is not valid.");
+        }
 
         String stmt = "INSERT INTO ATTENDEE_ACCOUNTS (ID, HashedPassword, HashedSalt, Name, Address, Type, MobileNo, Organization) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -284,5 +288,9 @@ public final class AttendeeAccountsManager {
 
     private boolean checkNameValidity(String name) {
         return Pattern.matches("^[A-Za-z -]+$", name);
+    }
+
+    private boolean checkIDvalidity(String ID){
+        return Pattern.matches("^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+)\\.([a-zA-Z0-9-]+\\.[a-zA-Z]{2,})$",ID);
     }
 }
