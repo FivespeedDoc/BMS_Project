@@ -24,11 +24,11 @@ public final class SignupWindow extends JDialog {
 
     private final TextField addressField;
 
-    private final TextField typeField;
+    private final JComboBox typeComboBox;
 
     private final TextField mobileNoField;
 
-    private final TextField organizationField;
+    private final JComboBox organizationComboBox;
 
     public SignupWindow(Controller controller, JFrame loginWindow) {
         super(loginWindow, "Sign Up", true);
@@ -64,16 +64,18 @@ public final class SignupWindow extends JDialog {
         XPanel addressPanel = new XPanel("Address", addressField);
         panel.add(addressPanel);
         ///
-        typeField = new TextField("One of 'Staff', 'Student', 'Alumni' and 'Guest'"); // this should be changed later
-        XPanel typePanel = new XPanel("Type", typeField);
+        String[] types = {"Student","Alumni","Staff","Guest"};
+        typeComboBox = new JComboBox<String>(types);
+        XPanel typePanel = new XPanel("Type", typeComboBox);
         panel.add(typePanel);
         ///
         mobileNoField = new TextField("Your phone number");
         XPanel mobileNoPanel = new XPanel("Phone Number", mobileNoField);
         panel.add(mobileNoPanel);
         ///
-        organizationField = new TextField("Your affiliated organization");
-        XPanel organizationPanel = new XPanel("Organization", organizationField);
+        String[] organizations = {"PolyU", "Student", "HKCC", "Others"};
+        organizationComboBox = new JComboBox<String>(organizations);
+        XPanel organizationPanel = new XPanel("Organization", organizationComboBox);
         panel.add(organizationPanel);
 
         /* Buttons */
@@ -115,9 +117,9 @@ public final class SignupWindow extends JDialog {
                 passwordField.getPassword(),
                 nameField.getText(),
                 addressField.getText(),
-                typeField.getText(),
+                typeComboBox.getSelectedItem().toString(),
                 mobileNoField.getText(),
-                organizationField.getText())) {
+                organizationComboBox.getSelectedItem().toString())) {
             signupSuccessfulDialog();
             dispose();
         } else {
