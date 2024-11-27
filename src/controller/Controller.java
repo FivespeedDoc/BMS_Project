@@ -321,6 +321,16 @@ public final class Controller {
             return null;
         }
     }
+    
+    public List<AttendeeAccount> getAllAttendees(){
+        try{
+            return attendeeAccountsManager.getAllAttendees();
+        }
+        catch (ModelException e) {
+            return null;
+        }
+    }
+
 
     public boolean registerBanquet(String attendeeID, long BIN, long mealID, String drink, String seat) {
         try {
@@ -349,5 +359,56 @@ public final class Controller {
 
     public List<Registration> applyFilter(List<Registration> registrations, String nameFilter, String dateTimeFilter, String addressFilter, String mealFilter, String drinkFilter, String seatFilter) {
         return registrationManager.filterRegistrations(registrations, nameFilter, dateTimeFilter, addressFilter, mealFilter, drinkFilter, seatFilter);
+    }
+
+      ///// Functions regarding contact
+    public boolean sendMassEmail(List<AttendeeAccount> attendees, String from,String subject, String message){
+
+        for(AttendeeAccount attendee: attendees){
+            String Targetemail = attendee.getID();
+            boolean emailCheck = sendEmail(Targetemail,from ,subject,message);
+            if(!emailCheck){
+                System.out.println("An error has occured when sending email to " + Targetemail);
+                return false;
+            }
+        }
+        return true;
+
+    }
+    // The database needs to be updated to contain contact info of Staff
+    public boolean sendEmailToStaff(String contactStaffEmail, String From,String subject, String message){
+        return sendEmail(contactStaffEmail, From, subject,message);
+    }
+
+    private boolean sendEmail(String targetEmail,String fromEmail, String subject, String message){
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); //Standard for host
+        props.put("mail.smtp.port", "465"); // Standard SMTP Port for Gmail
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true");
+
+        String myPassword = "12345"; //Placeholder
+        Session session = Session.getInstance(props, null); //Should be an authenticator instead of null, will change.
+
+        Message msg = new MimeMessage(session);
+
+        try{
+            //Forms the email
+            msg.setFrom(new InternetAddress(fromEmail));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(targetEmail));
+            msg.setSubject(subject);
+            msg.setText(message);
+
+            //Sends the email.
+            Transport.send(msg);
+            return true;
+        }
+         catch (AddressException e) {
+            throw new RuntimeException(e);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
