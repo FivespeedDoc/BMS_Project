@@ -9,15 +9,31 @@ import java.awt.*;
  * @author FrankYang0610
  */
 public class TextField extends JTextField {
-    public TextField() {
-        super();
-        setAlignmentX(Component.CENTER_ALIGNMENT);
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+    private final String placeholder;
+
+    public TextField(String placeholder) {
+        this.placeholder = placeholder;
+        setPreferredSize(new Dimension(200, 30)); //
     }
 
-    public TextField(String str) {
-        super(str);
-        setAlignmentX(Component.CENTER_ALIGNMENT);
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+    public TextField() {
+        this("");
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (getText().isEmpty()) {
+            g.setColor(Color.GRAY);
+            FontMetrics fm = g.getFontMetrics();
+            int x = 5;
+            int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+            g.drawString(placeholder, x, y);
+        }
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(200, 30); //
     }
 }
