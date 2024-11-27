@@ -8,6 +8,8 @@ import gui.components.TextField;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 
 /**
@@ -20,6 +22,8 @@ public final class LoginWindow extends JFrame {
     private final TextField IDField; // account ID for admin and users
 
     private final PasswordField passwordField;
+
+    private Point initialClick;
 
     public LoginWindow(Controller controller) {
         super("Login");
@@ -81,6 +85,28 @@ public final class LoginWindow extends JFrame {
         add(panel);
         setUndecorated(true);
         setVisible(true);
+
+        addMouseListener(new MouseAdapter() {
+                             @Override
+                             public void mousePressed(MouseEvent e) {
+                                 initialClick = e.getPoint();
+                             }
+                         }
+        );
+
+        addMouseMotionListener(new MouseAdapter() {
+                                   @Override
+                                   public void mouseDragged(MouseEvent e) {
+
+                                       int thisX = getLocation().x;
+                                       int thisY = getLocation().y;
+                                       int xMoved = e.getX() - initialClick.x;
+                                       int yMoved = e.getY() - initialClick.y;//Get the new location
+
+                                       setLocation(thisX + xMoved, thisY + yMoved);
+                                   }
+                               }
+        );
     }
 
     private void userLogin(ActionEvent e) {
