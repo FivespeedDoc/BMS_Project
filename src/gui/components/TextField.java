@@ -13,7 +13,7 @@ public class TextField extends JTextField {
 
     public TextField(String placeholder) {
         this.placeholder = placeholder;
-        setPreferredSize(new Dimension(200, 30)); //
+        setPreferredSize(new Dimension(200, 30));
     }
 
     public TextField() {
@@ -34,6 +34,6 @@ public class TextField extends JTextField {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(200, 30); //
+        return new Dimension(200, 30);
     }
 }
