@@ -35,11 +35,11 @@ public final class ChangeAccountInformationWindow extends JDialog {
 
     private final TextField addressField;
 
-    private final TextField typeField;
+    private final JComboBox typeComboBox;
 
     private final TextField mobileNoField;
 
-    private final TextField organizationField;
+    private final JComboBox organizationComboBox;
 
     public ChangeAccountInformationWindow(Controller controller, JFrame userWindow, AttendeeAccount account) {
         super(userWindow, "Sign Up", true);
@@ -69,16 +69,29 @@ public final class ChangeAccountInformationWindow extends JDialog {
         XPanel addressPanel = new XPanel("Address", addressField);
         panel.add(addressPanel);
         ///
-        typeField = new TextField(this.account.getType()); // this should be changed later
-        XPanel typePanel = new XPanel("Type", typeField);
+        String[] types = {"Student","Alumni","Staff","Guest"};
+        typeComboBox = new JComboBox<String>(types);
+        for(int i = 0; i < types.length; i++){
+            if(account.getOrganization() == types[i].toString()){
+                typeComboBox.setSelectedIndex(i);
+            }
+        }
+        XPanel typePanel = new XPanel("Type", typeComboBox);
         panel.add(typePanel);
         ///
         mobileNoField = new TextField(Long.toString(this.account.getMobileNo()));
         XPanel mobileNoPanel = new XPanel("Phone Number", mobileNoField);
         panel.add(mobileNoPanel);
         ///
-        organizationField = new TextField(this.account.getOrganization());
-        XPanel organizationPanel = new XPanel("Organization", organizationField);
+        String[] organizations = {"PolyU", "Student", "HKCC", "Others"};
+        organizationComboBox = new JComboBox<String>(organizations);
+        for(int i = 0; i < organizations.length; i++){
+            if(account.getOrganization() == organizations[i].toString()){
+                organizationComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
+        XPanel organizationPanel = new XPanel("Organization", organizationComboBox);
         panel.add(organizationPanel);
         ///
         panel.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.CENTER);
@@ -155,16 +168,16 @@ public final class ChangeAccountInformationWindow extends JDialog {
             success &= controller.changeUserInformation(account.getID(), "Address", addressField.getText());
         }
 
-        if (!account.getType().equals(typeField.getText())) {
-            success &= controller.changeUserInformation(account.getID(), "Type", typeField.getText());
+        if (!account.getType().equals(typeComboBox.getSelectedItem().toString())) {
+            success &= controller.changeUserInformation(account.getID(), "Type", typeComboBox.getSelectedItem().toString());
         }
 
         if (account.getMobileNo() != Long.parseLong(mobileNoField.getText())) {
             success &= controller.changeUserInformation(account.getID(), "MobileNo", Long.toString(account.getMobileNo()));
         }
 
-        if (!account.getOrganization().equals(organizationField.getText())) {
-            success &= controller.changeUserInformation(account.getID(), "Organization", organizationField.getText());
+        if (!account.getOrganization().equals(organizationComboBox.getSelectedItem().toString())) {
+            success &= controller.changeUserInformation(account.getID(), "Organization", organizationComboBox.getSelectedItem().toString());
         }
 
         if (oldPasswordField.getPassword().length != 0) { // change password
