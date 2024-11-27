@@ -60,10 +60,18 @@ public class XPanel extends JPanel {
         textLabel.setMaximumSize(new Dimension(100, 25));
         textLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.add(textLabel);
-
         for (JRadioButton button : buttons) {
             buttonGroup.add(button);
             this.add(button);
         }
+    }
+
+    public XPanel(String text, JComboBox cb){
+        this();
+        RegularLabel comboLabel = new RegularLabel(text);
+        comboLabel.setPreferredSize(new Dimension(100, 25));
+        comboLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        this.add(comboLabel);
+        this.add(cb);
     }
 }
