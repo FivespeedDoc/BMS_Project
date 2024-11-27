@@ -13,11 +13,14 @@ public class TextField extends JTextField {
 
     public TextField(String placeholder) {
         this.placeholder = placeholder;
-        setPreferredSize(new Dimension(200, 30));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
     }
 
     public TextField() {
         this("");
+        setAlignmentX(Component.CENTER_ALIGNMENT);
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
     }
 
     @Override
@@ -30,10 +33,5 @@ public class TextField extends JTextField {
             int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
             g.drawString(placeholder, x, y);
         }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(200, 30);
     }
 }
