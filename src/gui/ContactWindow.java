@@ -24,12 +24,14 @@ public class ContactWindow extends JDialog{
     private final JButton sendButton;
     private final JButton cancelButton;
 
+    private final String fromEmail;
 
     public ContactWindow(Controller controller, JFrame currentWindow) {
         super(currentWindow, "Contact Staff", true);
         this.controller = controller;
         this.currentWindow = currentWindow;
 
+        this.fromEmail = "admin@gmail.com";
         // Setup window
         setSize(500, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -76,11 +78,11 @@ public class ContactWindow extends JDialog{
         setVisible(true);
     }
 
-  
-  public ContactWindow(Controller controller, JFrame currentWindow, boolean isUser) {
+    public ContactWindow(Controller controller, JFrame currentWindow, String userEmail) {
         super(currentWindow, "Contact Staff", true);
         this.controller = controller;
         this.currentWindow = currentWindow;
+        this.fromEmail = userEmail;
 
         // Setup window
         setSize(500, 350);
@@ -114,7 +116,6 @@ public class ContactWindow extends JDialog{
         SwingUtilities.invokeLater(sendButton::requestFocusInWindow);
         panel.add(buttons);
 
-        // ESC key to close window
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
         getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
@@ -132,14 +133,14 @@ public class ContactWindow extends JDialog{
         String subject = subjectField.getText();
         String message = messageField.getText();
 
-        // Check if the mail is empty
         if (subject.isEmpty() || message.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Subject and Message cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         List<AttendeeAccount> attendees = controller.getAllAttendees();
-        boolean success = controller.sendMassEmail(attendees, subject, message);
+
+        boolean success = controller.sendMassEmail(attendees, fromEmail,subject, message);
 
         if (success) {
             JOptionPane.showMessageDialog(this, "Mass email sent successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -160,7 +161,7 @@ public class ContactWindow extends JDialog{
 
         //String contactStaffEmail = controller.getContactStaffEmail(); to be added
         String contactStaffEmail = "test@test.com";
-        boolean success = controller.sendEmailToStaff(contactStaffEmail, subject, message);
+        boolean success = controller.sendEmailToStaff(contactStaffEmail, fromEmail,subject, message);
 
         if (success) {
             JOptionPane.showMessageDialog(this, "Email sent to contact staff successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
