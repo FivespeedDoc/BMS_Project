@@ -33,7 +33,7 @@ public final class EditMealWindow extends JDialog {
     private final TextField specialCuisineField;
 
     public EditMealWindow(Controller controller, JFrame adminWindow, long BIN, long ID) { // it is guaranteed the BIN, ID always exists in the db
-        super(adminWindow, "Edit Banquet", true);
+        super(adminWindow, "Edit Meal", true);
         this.controller = controller;
         this.BIN = BIN;
         this.ID = ID;

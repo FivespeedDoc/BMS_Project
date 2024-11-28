@@ -233,6 +233,10 @@ public final class BanquetsManager {
                     break;
                 }
                 case "Quota": {
+                    if (new RegistrationManager(con).getRegisteredCount(BIN) > Integer.parseInt(newValue)) {
+                        throw new ModelException("Cannot change the quota. New quota is smaller than the number of registered attendees.");
+                    }
+
                     pstmt.setInt(1, Integer.parseInt(newValue));
                     break;
                 }

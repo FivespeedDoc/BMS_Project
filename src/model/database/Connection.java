@@ -12,9 +12,9 @@ import java.util.Objects;
 public final class Connection {
     private final java.sql.Connection con;
 
-    //currently using SQLite, might need to switch to oracle SQLPlus
+    // currently using SQLite, might need to switch to oracle SQLPlus
 
-    //Uncomment the following line and comment(replace) the current one if were using JAR to pack, package configuration already set per IDEA
+    // Uncomment the following line and comment(replace) the current one if were using JAR to pack, package configuration already set per IDEA
     // private final String URL = "jdbc:sqlite::resource:";
 
     private final String URL = "jdbc:sqlite:identifier.sqlite";
@@ -26,7 +26,7 @@ public final class Connection {
         try {
             Class.forName("org.sqlite.JDBC");
 
-            /**
+            /*
              * Access database from within JAR
              * Uncomment the following line and comment(replace) the current line if were using JAR to pack, package configuration already set per IDEA
              * Note that there will need to add a catch exception
@@ -34,8 +34,8 @@ public final class Connection {
              *             throw new RuntimeException("SQL Lite Error"+e);
              *         }
              */
-            //String dbPath = Objects.requireNonNull(getClass().getResource("/identifier.sqlite")).toURI().toString();
-            //con = DriverManager.getConnection("jdbc:sqlite::resource:" + dbPath);
+            // String dbPath = Objects.requireNonNull(getClass().getResource("/identifier.sqlite")).toURI().toString();
+            // con = DriverManager.getConnection("jdbc:sqlite::resource:" + dbPath);
 
             con = DriverManager.getConnection(URL);
         } catch (ClassNotFoundException | SQLException e) {

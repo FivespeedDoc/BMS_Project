@@ -276,6 +276,23 @@ public final class RegistrationManager {
         }
     }
 
+    public void deleteRegistration(long BIN, long MealID) throws ModelException {
+        String stmt = "DELETE FROM REGISTRATIONS WHERE BIN = ? AND MealID = ?";
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, BIN);
+            pstmt.setLong(2, MealID);
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new ModelException("Registration not found.");
+            }
+        } catch (SQLException e) {
+            throw new ModelException("Database error: " + e.getMessage());
+        }
+    }
+
     public List<String[]> getRankedMeals() {
         String stmt = "SELECT MEALS.Name AS MealName, COUNT(*) AS Count " +
                 "FROM MEALS JOIN REGISTRATIONS ON MEALS.BIN = REGISTRATIONS.BIN AND MEALS.ID = REGISTRATIONS.MealID " +

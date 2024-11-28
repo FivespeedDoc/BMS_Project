@@ -28,7 +28,7 @@ public final class NewMealWindow extends JDialog {
     private final TextField specialCuisineField;
 
     public NewMealWindow(Controller controller, JFrame adminWindow, long BIN) { // it is guaranteed the BIN always exists
-        super(adminWindow, "Add Banquet", true);
+        super(adminWindow, "Add Meal", true);
         this.controller = controller;
         this.BIN = BIN;
         setSize(500, 300);
