@@ -2,7 +2,7 @@
 
 #### YANG Xikun, YANG Jinkun, REN Yixiao, Arda EREN, MIAO Xutao
 ### Designer of the application: YANG Xikun, YANG Jinkun
-### Author of the Model: YANG Jinkun
+### Maintainer of the repo: YANG Jinkun
 ### Designer of the database schemas: REN Yixiao
 
 ## Overview
@@ -29,7 +29,7 @@ Contains meal options for each banquet.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| `BIN` | `INTEGER` | `NOT NULL, FK` | Reference to BANQUETS |
+| `BIN` | `INTEGER` | `NOT NULL, FK` | Reference to `BANQUETS` |
 | `ID` | `INTEGER` | `NOT NULL` | Meal identifier |
 | `Name` | `VARCHAR(255)` | `NOT NULL` | Name of the meal |
 | `Type` | `VARCHAR(255)` | `NOT NULL` | Type of meal |
@@ -57,12 +57,12 @@ Tracks banquet registrations.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
-| ID | `INTEGER` | PRIMARY KEY, AUTOINCREMENT | Registration identifier |
-| AttendeeID | `VARCHAR(255)` | NOT NULL, FK | Reference to ATTENDEE_ACCOUNTS |
-| GuestName | `VARCHAR(255)` | NOT NULL | Name of guest |
-| BIN | `INTEGER` | NOT NULL, FK | Reference to BANQUETS |
-| MealID | `INTEGER` | NOT NULL, FK | Reference to MEALS |
-| Drink | `VARCHAR(255)` | NOT NULL | Drink preference |
+| ID | `INTEGER` | `PRIMARY KEY, AUTOINCREMENT` | Registration identifier |
+| AttendeeID | `VARCHAR(255)` | `NOT NULL, FK` | Reference to `ATTENDEE_ACCOUNTS` |
+| GuestName | `VARCHAR(255)` | `NOT NULL` | Name of guest |
+| BIN | `INTEGER` | `NOT NULL, FK` | Reference to `BANQUETS` |
+| MealID | `INTEGER` | `NOT NULL, FK` | Reference to `MEALS` |
+| Drink | `VARCHAR(255)` | `NOT NULL` | Drink preference |
 | Seat | `VARCHAR(255)` |  | Seat assignment |
 
 Foreign Keys:

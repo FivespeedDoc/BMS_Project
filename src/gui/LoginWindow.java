@@ -47,17 +47,81 @@ public final class LoginWindow extends JFrame {
 
         panel.add(Box.createVerticalStrut(5));
 
-        Button viewContributionDistribution = new Button("How the contribution is distributed???", _ -> JOptionPane.showMessageDialog(this, "YANG Xikun designed and coded the application;\n" +
-                        "YANG Jinkun designed the Model part and maintained the repo;\n" +
-                        "REN Yixiao designed the database schema and configured the database.\n\n" +
-                        "Github commit records (master branch, ~ Nov 26):\n" +
-                        "YANG Xikun (@FrankYang0610): Added lines: 4679, Removed lines: 2017, Total lines changed: 2662\n" +
-                        "YANG Jinkun (@jimyang, @FivespeedDoc): Added lines: 1881, Removed lines: 82, Total lines changed: 1799\n" +
-                        "REN Yixiao (@ZacharyRE): Added lines: 603, Removed lines: 452, Total lines changed: 151\n" +
-                        "Arda EREN (@LesPoar): Added lines: 241, Removed lines: 30, Total lines changed: 211\n" +
-                        "MIAO Xutao (@WenceXT): Added lines: 0, Removed lines: 0, Total lines changed: 0",
-                "How the contribution is distributed???",
-                JOptionPane.INFORMATION_MESSAGE));
+        Button viewContributionDistribution = new Button("How the contribution is distributed???", _ -> {
+            JOptionPane.showMessageDialog(this,
+                            "YANG Xikun designed and coded the application.\n" +
+                            "YANG Jinkun designed the Model part and maintained the repo.\n" +
+                            "REN Yixiao designed the database schema and configured the database.\n\n" +
+
+                            "The following are all objective statistical data:\n\n" +
+
+                            "Github commit records (YANG Jinkun's master branch, ~ Nov 26):\n" +
+                            "YANG Xikun (@FrankYang0610): Added lines: 4679, Removed lines: 2017, Total lines changed: 2662\n" +
+                            "YANG Jinkun (@jimyang, @FivespeedDoc): Added lines: 1881, Removed lines: 82, Total lines changed: 1799\n" +
+                            "REN Yixiao (@ZacharyRE): Added lines: 603, Removed lines: 452, Total lines changed: 151\n" +
+                            "Arda EREN (@LesPoar): Added lines: 241, Removed lines: 30, Total lines changed: 211\n" +
+                            "MIAO Xutao (@WenceXT): Added lines: 0, Removed lines: 0, Total lines changed: 0\n\n" +
+
+                            "The first stage started on Nov 23.\n" +
+                            "On Oct 23, YANG Xikun reminded the deadline was Nov 2, and encouraged to started working.\n" +
+                            "By Oct 27, no one said anything.\n" +
+                            "By Nov 2, REN Yixiao, YANG Xikun, YANG Jinkun, and Arda EREN proposed the finalized report.\n\n" +
+
+                            "The second stage started on Nov 2.\n" +
+                            "By Nov 7, no one said anything.\n" +
+                            "On Nov 7, REN Yixiao created a repo for collaborative coding.\n" +
+                            "On Nov 11, YANG Xikun proposed using javax.swing to develop the frontend.\n" +
+                            "By Nov 16, No one coded anything.\n" +
+                            "On Nov 16, YANG Xikun started encouraging the group to contribute to this project.\n" +
+                            "By Nov 19, Only YANG Jinkun and YANG Xikun pushed code to REN Yixiao's repo.\n" +
+                            "On Nov 19, YANG Jinkun created the final repo for this project.\n" +
+                            "By Nov 26, all group members could to push their code to the master branch without any restrictions.\n\n" +
+
+                            "From Nov 26, the master branch was protected for assignment submission. While others could still pull requests.\n\n" +
+
+                            "YANG Xikun explicitly encouraged collaborative work on Oct 23, Oct 27, Nov 11, Nov 16, Nov 18, Nov 19, Nov 20.\n" +
+                            "While, he is not the 'leader' of the group.\n" +
+                            "During the span of a month, anyone could start the project, and made contributions at any time.",
+                    "How the contribution is distributed???",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(this,
+                            "YANG Xikun designed and coded the application.\n" +
+                            "YANG Jinkun designed the Model part and maintained the repo.\n" +
+                            "REN Yixiao designed the database schema and configured the database.\n\n" +
+
+                            "The following are all objective statistical data:\n\n" +
+
+                            "Github commit records (YANG Jinkun's master branch, ~ Nov 26):\n" +
+                            "YANG Xikun (@FrankYang0610): Added lines: 4679, Removed lines: 2017, Total lines changed: 2662\n" +
+                            "YANG Jinkun (@jimyang, @FivespeedDoc): Added lines: 1881, Removed lines: 82, Total lines changed: 1799\n" +
+                            "REN Yixiao (@ZacharyRE): Added lines: 603, Removed lines: 452, Total lines changed: 151\n" +
+                            "Arda EREN (@LesPoar): Added lines: 241, Removed lines: 30, Total lines changed: 211\n" +
+                            "MIAO Xutao (@WenceXT): Added lines: 0, Removed lines: 0, Total lines changed: 0\n\n" +
+
+                            "The first stage started on Nov 23.\n" +
+                            "On Oct 23, YANG Xikun reminded the deadline was Nov 2, and encouraged to started working.\n" +
+                            "By Oct 27, no one said anything.\n" +
+                            "By Nov 2, REN Yixiao, YANG Xikun, YANG Jinkun, and Arda EREN proposed the finalized report.\n\n" +
+
+                            "The second stage started on Nov 2.\n" +
+                            "By Nov 7, no one said anything.\n" +
+                            "On Nov 7, REN Yixiao created a repo for collaborative coding.\n" +
+                            "On Nov 11, YANG Xikun proposed using javax.swing to develop the frontend.\n" +
+                            "By Nov 16, No one coded anything.\n" +
+                            "On Nov 16, YANG Xikun started encouraging the group to contribute to this project.\n" +
+                            "By Nov 19, Only YANG Jinkun and YANG Xikun pushed code to REN Yixiao's repo.\n" +
+                            "On Nov 19, YANG Jinkun created the final repo for this project.\n" +
+                            "By Nov 26, all group members could to push their code to the master branch without any restrictions.\n\n" +
+
+                            "From Nov 26, the master branch was protected for assignment submission. While others could still pull requests.\n\n" +
+
+                            "YANG Xikun explicitly encouraged collaborative work on Oct 23, Oct 27, Nov 11, Nov 16, Nov 18, Nov 19, Nov 20.\n" +
+                            "While, he is not the 'leader' of the group.\n" +
+                            "During the span of a month, anyone could start the project, and made contributions at any time.",
+                    "How the contribution is distributed???",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
         panel.add(viewContributionDistribution);
 
         panel.add(Box.createVerticalStrut(20));
