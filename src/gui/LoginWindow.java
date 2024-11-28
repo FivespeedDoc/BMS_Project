@@ -8,7 +8,6 @@ import gui.components.TextField;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 /**
  * <h3>The Login Window</h3>
@@ -24,7 +23,7 @@ public final class LoginWindow extends JFrame {
     public LoginWindow(Controller controller) {
         super("Login");
         this.controller = controller;
-        setSize(500, 200);
+        setSize(500, 300);
         setLocationRelativeTo(null);
         setResizable(false);
 
@@ -40,12 +39,28 @@ public final class LoginWindow extends JFrame {
             projectName.setFont(new Font("Arial", Font.BOLD, 14));
         panel.add(projectName, BorderLayout.CENTER);
 
+        panel.add(Box.createVerticalStrut(20));
 
         /* Authors */
-        // RegularLabel authors = new RegularLabel("Authors:");
-        // add(authors, BorderLayout.CENTER);
+        panel.add(new RegularLabel("YANG Xikun, YANG Jinkun, REN Yixiao"));
+        panel.add(new RegularLabel("Arda EREN, MIAO Xutao"));
 
-        //panel.add(Box.createVerticalStrut(10));
+        panel.add(Box.createVerticalStrut(5));
+
+        Button viewContributionDistribution = new Button("How the contribution is distributed???", _ -> JOptionPane.showMessageDialog(this, "YANG Xikun designed and coded the application;\n" +
+                        "YANG Jinkun designed the Model part and maintained the repo;\n" +
+                        "REN Yixiao designed the database schema and configured the database.\n\n" +
+                        "Github commit records (master branch, ~ Nov 26):\n" +
+                        "YANG Xikun (@FrankYang0610): Added lines: 4679, Removed lines: 2017, Total lines changed: 2662\n" +
+                        "YANG Jinkun (@jimyang, @FivespeedDoc): Added lines: 1881, Removed lines: 82, Total lines changed: 1799\n" +
+                        "REN Yixiao (@ZacharyRE): Added lines: 603, Removed lines: 452, Total lines changed: 151\n" +
+                        "Arda EREN (@LesPoar): Added lines: 241, Removed lines: 30, Total lines changed: 211\n" +
+                        "MIAO Xutao (@WenceXT): Added lines: 0, Removed lines: 0, Total lines changed: 0",
+                "How the contribution is distributed???",
+                JOptionPane.INFORMATION_MESSAGE));
+        panel.add(viewContributionDistribution);
+
+        panel.add(Box.createVerticalStrut(20));
 
         /* Input boxes */
         IDField = new TextField();
@@ -53,7 +68,7 @@ public final class LoginWindow extends JFrame {
         panel.add(new XPanel("Account ID", IDField));
         panel.add(new XPanel(passwordField, "REG"));
 
-        // panel.add(Box.createVerticalStrut(10));
+        panel.add(Box.createVerticalStrut(20));
 
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();

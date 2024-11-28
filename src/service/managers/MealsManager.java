@@ -200,7 +200,7 @@ public final class MealsManager {
             int affectedRows = pstmt.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new NoSuchElementException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
+                throw new ModelException("Meal with BIN " + BIN + " and ID " + ID +" not found.");
             }
         } catch (SQLException | NumberFormatException e) {
             throw new ModelException("Database error: " + e.getMessage());
@@ -274,6 +274,7 @@ public final class MealsManager {
             }
 
             new BanquetsManager(con).updateBanquet(BIN, "Available", "N");
+            new RegistrationManager(con).deleteRegistration(BIN, ID); // to solve the invalid ON DELETE CASCADE issue
         } catch (SQLException e) {
             throw new ModelException("Database error: " + e.getMessage());
         }

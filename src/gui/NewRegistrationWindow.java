@@ -203,6 +203,15 @@ public final class NewRegistrationWindow extends JDialog {
             }
         });
 
+        /* Press ESC to dispose */
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke("ESCAPE"), "closeDialog");
+        getRootPane().getActionMap().put("closeDialog", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
 
         /* Finally */
         panel.add(tablesPanel);
