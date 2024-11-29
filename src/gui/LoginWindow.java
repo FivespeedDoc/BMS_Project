@@ -47,7 +47,7 @@ public final class LoginWindow extends JFrame {
 
         panel.add(Box.createVerticalStrut(5));
 
-        Button viewContributionDistribution = new Button("How the contribution is distributed???", _ -> {
+        Button viewContributionDistribution = new Button("How the contribution is distributed???", e -> {
             JOptionPane.showMessageDialog(this,
                             "YANG Xikun designed and coded the application.\n" +
                             "YANG Jinkun designed the Model part and maintained the repo.\n" +
@@ -137,9 +137,9 @@ public final class LoginWindow extends JFrame {
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
         ///
-        Button exitButton = new Button("Exit", _ -> System.exit(0));
-            exitButton.setForeground(Color.RED);
-            buttons.add(exitButton);
+        Button quitButton = new Button("Quit", e -> System.exit(0));
+            quitButton.setForeground(Color.RED);
+            buttons.add(quitButton);
         ///
         Button adminLoginButton = new Button("Admin Login", this::adminLogin);
             buttons.add(adminLoginButton);
@@ -149,7 +149,7 @@ public final class LoginWindow extends JFrame {
         ///
         buttons.add(Box.createHorizontalGlue());
         ///
-        Button userSignupButton = new Button("Signup", _ -> new SignupWindow(controller, this));
+        Button userSignupButton = new Button("Signup", e -> new SignupWindow(controller, this));
             buttons.add(userSignupButton);
         ///
         getRootPane().setDefaultButton(userLoginButton);

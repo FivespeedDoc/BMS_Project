@@ -126,47 +126,47 @@ public final class AdminWindow extends JFrame {
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
         ///
-        Button newBanquetButton = new Button("New Banquet", _ -> newBanquet());
+        Button newBanquetButton = new Button("New Banquet", e -> newBanquet());
             newBanquetButton.setMinimumSize(buttonSize); newBanquetButton.setMaximumSize(buttonSize); newBanquetButton.setPreferredSize(buttonSize);
             menuPanel.add(newBanquetButton);
         ///
-        Button editBanquetButton = new Button("Edit Banquet", _ -> editBanquet());
+        Button editBanquetButton = new Button("Edit Banquet", e -> editBanquet());
             editBanquetButton.setMinimumSize(buttonSize); editBanquetButton.setMaximumSize(buttonSize); editBanquetButton.setPreferredSize(buttonSize);
             menuPanel.add(editBanquetButton);
         ///
-        Button deleteBanquetButton = new Button("Delete Banquet", _ -> deleteBanquet());
+        Button deleteBanquetButton = new Button("Delete Banquet", e -> deleteBanquet());
             deleteBanquetButton.setMinimumSize(buttonSize); deleteBanquetButton.setMaximumSize(buttonSize); deleteBanquetButton.setPreferredSize(buttonSize);
             menuPanel.add(deleteBanquetButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button newMealButton = new Button("New Meal", _ -> newMeal());
+        Button newMealButton = new Button("New Meal", e -> newMeal());
             newMealButton.setMinimumSize(buttonSize); newMealButton.setMaximumSize(buttonSize); newMealButton.setPreferredSize(buttonSize);
             menuPanel.add(newMealButton);
         ///
-        Button editMealButton = new Button("Edit Meal", _ -> editMeal());
+        Button editMealButton = new Button("Edit Meal", e -> editMeal());
             editMealButton.setMinimumSize(buttonSize); editMealButton.setMaximumSize(buttonSize); editMealButton.setPreferredSize(buttonSize);
             menuPanel.add(editMealButton);
         ///
-        Button deleteMealButton = new Button("Delete Meal", _ -> deleteMeal());
+        Button deleteMealButton = new Button("Delete Meal", e -> deleteMeal());
             deleteMealButton.setMinimumSize(buttonSize); deleteMealButton.setMaximumSize(buttonSize); deleteMealButton.setPreferredSize(buttonSize);
             menuPanel.add(deleteMealButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button refreshTablesButton = new Button("Refresh All Tables", _ -> refreshAllTables());
+        Button refreshTablesButton = new Button("Refresh All Tables", e -> refreshAllTables());
             refreshTablesButton.setMinimumSize(buttonSize); refreshTablesButton.setMaximumSize(buttonSize); refreshTablesButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshTablesButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button analysis = new Button("Analysis", _ -> new AnalysisWindow(controller));
+        Button analysis = new Button("Analysis", e -> new AnalysisWindow(controller));
             analysis.setMinimumSize(buttonSize); analysis.setMaximumSize(buttonSize); analysis.setPreferredSize(buttonSize);
         menuPanel.add(analysis);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
-        Button logoutButton = new Button("Logout", _ -> {
+        Button logoutButton = new Button("Logout", e -> {
             int confirm = showConfirmDialog(
                     AdminWindow.this,
                     "This operation will log you out.",

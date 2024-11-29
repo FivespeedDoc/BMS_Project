@@ -118,17 +118,17 @@ public final class AnalysisWindow extends JFrame {
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
         ///
-        Button refreshAllTablesButton = new Button("Refresh All Tables", _ -> refreshAllTables());
+        Button refreshAllTablesButton = new Button("Refresh All Tables", e -> refreshAllTables());
         refreshAllTablesButton.setMinimumSize(buttonSize); refreshAllTablesButton.setMaximumSize(buttonSize); refreshAllTablesButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshAllTablesButton);
         ///
-        Button exportToHTMLButton = new Button("Export to HTML", _ -> exportToHTML());
+        Button exportToHTMLButton = new Button("Export to HTML", e -> exportToHTML());
         exportToHTMLButton.setMinimumSize(buttonSize); exportToHTMLButton.setMaximumSize(buttonSize); exportToHTMLButton.setPreferredSize(buttonSize);
         menuPanel.add(exportToHTMLButton);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
-        Button leaveButton = new Button("Leave", _ -> dispose());
+        Button leaveButton = new Button("Leave", e -> dispose());
         leaveButton.setMinimumSize(buttonSize); leaveButton.setMaximumSize(buttonSize); leaveButton.setPreferredSize(buttonSize);
         menuPanel.add(leaveButton);
 
