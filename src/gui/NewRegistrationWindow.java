@@ -140,17 +140,17 @@ public final class NewRegistrationWindow extends JDialog {
         ///
         Dimension buttonSize = new Dimension(200, 50);
         ///
-        Button confirmRegisterButton = new Button("Confirm Register", _ -> confirmRegister());
+        Button confirmRegisterButton = new Button("Confirm Register", e -> confirmRegister());
         confirmRegisterButton.setMinimumSize(buttonSize); confirmRegisterButton.setMaximumSize(buttonSize); confirmRegisterButton.setPreferredSize(buttonSize);
         menuPanel.add(confirmRegisterButton);
         ///
-        Button refreshTablesButton = new Button("Refresh Tables", _ ->refreshAllTables());
+        Button refreshTablesButton = new Button("Refresh Tables", e ->refreshAllTables());
         refreshTablesButton.setMinimumSize(buttonSize); refreshTablesButton.setMaximumSize(buttonSize); refreshTablesButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshTablesButton);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
-        Button cancelButton = new Button("Cancel", _ -> dispose());
+        Button cancelButton = new Button("Cancel", e -> dispose());
         cancelButton.setForeground(Color.RED);
         cancelButton.setMinimumSize(buttonSize); cancelButton.setMaximumSize(buttonSize); cancelButton.setPreferredSize(buttonSize);
         menuPanel.add(cancelButton);

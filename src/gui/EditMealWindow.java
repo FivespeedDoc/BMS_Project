@@ -76,7 +76,7 @@ public final class EditMealWindow extends JDialog {
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
         ///
-        Button cancel = new Button("Cancel", _ -> dispose());
+        Button cancel = new Button("Cancel", e -> dispose());
         buttons.add(cancel);
         ///
         buttons.add(Box.createHorizontalGlue());
