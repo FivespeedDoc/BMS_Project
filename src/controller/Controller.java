@@ -2,7 +2,6 @@ package controller;
 
 import globalexceptions.BMS_Exception;
 import gui.LoginWindow;
-import gui.components.Table;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.AttendeeAccount;
@@ -315,7 +314,7 @@ public final class Controller {
     }
 
     public List<Registration> getRegistrations(String attendeeID) {
-        return registrationManager.getRegistration("AttendeeID", attendeeID);
+        return registrationManager.getRegistrations("AttendeeID", attendeeID);
     }
 
     public String[][] registrationListToObjectArray(List<Registration> registrations) {
