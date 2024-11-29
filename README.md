@@ -1,4 +1,8 @@
-# Banquet Management System
+# Banquet Management System (`.jar` packaged branch)
+
+> **Please use `java -jar <jar_file_path>` to start the application. The `.jar` file is located at `/packaged/BMS_Project.jar`.**
+> 
+> The corresponding database file for `BMS_Project.jar` is located at `/packaged/identifier.sqlite`.
 
 #### YANG Xikun, YANG Jinkun, REN Yixiao, Arda EREN, MIAO Xutao
 ### Designer of the application: YANG Xikun, YANG Jinkun
