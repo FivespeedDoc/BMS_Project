@@ -115,20 +115,20 @@ public final class UserWindow extends JFrame {
         /* Menu */
         Dimension buttonSize = new Dimension(200, 50);
         ///
-        Button newRegistrationButton = new Button("New Registration", _ -> {
+        Button newRegistrationButton = new Button("New Registration", e -> {
             new NewRegistrationWindow(controller, this, userID);
             refreshRegistrations();
         });
         newRegistrationButton.setMinimumSize(buttonSize); newRegistrationButton.setMaximumSize(buttonSize); newRegistrationButton.setPreferredSize(buttonSize);
         menuPanel.add(newRegistrationButton);
         ///
-        Button cancelRegistrationButton = new Button("Cancel Registration", _ -> cancelRegistration());
+        Button cancelRegistrationButton = new Button("Cancel Registration", e -> cancelRegistration());
         cancelRegistrationButton.setMinimumSize(buttonSize); cancelRegistrationButton.setMaximumSize(buttonSize); cancelRegistrationButton.setPreferredSize(buttonSize);
         menuPanel.add(cancelRegistrationButton);
         ///
         menuPanel.add(Box.createVerticalStrut(20));
         ///
-        Button refreshRegistrationTableButton = new Button("Refresh Registration Table", _ -> refreshRegistrations());
+        Button refreshRegistrationTableButton = new Button("Refresh Registration Table", e -> refreshRegistrations());
         refreshRegistrationTableButton.setMinimumSize(buttonSize); refreshRegistrationTableButton.setMaximumSize(buttonSize); refreshRegistrationTableButton.setPreferredSize(buttonSize);
         menuPanel.add(refreshRegistrationTableButton);
         ///
@@ -158,20 +158,20 @@ public final class UserWindow extends JFrame {
         menuPanel.add(Box.createVerticalStrut(10));
         ///
         Dimension smallButtonSize = new Dimension(200, 25);
-        Button applyFilterButton = new Button("Apply the Filter", _ -> applyFilter());
+        Button applyFilterButton = new Button("Apply the Filter", e -> applyFilter());
         applyFilterButton.setMinimumSize(smallButtonSize); applyFilterButton.setMaximumSize(smallButtonSize); applyFilterButton.setPreferredSize(smallButtonSize);
         menuPanel.add(applyFilterButton);
         ///
         menuPanel.add(Box.createVerticalGlue());
         ///
-        Button changeAccountInformationButton = new Button("Change Account Info", _ -> {
+        Button changeAccountInformationButton = new Button("Change Account Info", e -> {
             new ChangeAccountInformationWindow(controller, this, controller.getAccount(userID));
             refreshAccountInformation();
         });
         changeAccountInformationButton.setMinimumSize(buttonSize); changeAccountInformationButton.setMaximumSize(buttonSize); changeAccountInformationButton.setPreferredSize(buttonSize);
         menuPanel.add(changeAccountInformationButton);
         ///
-        Button logoutButton = new Button("Logout", _ -> {
+        Button logoutButton = new Button("Logout", e -> {
             int confirm = showConfirmDialog(
                     UserWindow.this,
                     "This operation will log you out.",

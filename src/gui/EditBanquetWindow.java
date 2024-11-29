@@ -90,7 +90,7 @@ public final class EditBanquetWindow extends JDialog {
         /* Buttons */
         ButtonsPanel buttons = new ButtonsPanel();
         ///
-        Button cancel = new Button("Cancel", _ -> dispose());
+        Button cancel = new Button("Cancel", e -> dispose());
         buttons.add(cancel);
         ///
         buttons.add(Box.createHorizontalGlue());
@@ -102,8 +102,8 @@ public final class EditBanquetWindow extends JDialog {
         SwingUtilities.invokeLater(confirmChange::requestFocusInWindow);
         panel.add(buttons);
 
-        YButton.addActionListener(_ -> selectedAvailableState = 'Y');
-        NButton.addActionListener(_ -> selectedAvailableState = 'N');
+        YButton.addActionListener(e -> selectedAvailableState = 'Y');
+        NButton.addActionListener(e -> selectedAvailableState = 'N');
 
         /* Press ESC to dispose */
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
