@@ -3,7 +3,6 @@ package service.managers;
 import model.ModelException;
 import model.database.Connection;
 import model.entities.Banquet;
-import model.entities.Meal;
 import model.entities.Registration;
 import service.utilities.DateTimeFormatter;
 
@@ -12,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -88,7 +86,7 @@ public final class RegistrationManager {
      * @return the {@code Registration} object corresponding to the provided ID.
      * @throws ModelException if any errors encountered.
      */
-     public Registration getRegistration(long ID) throws ModelException {
+     public Registration getRegistrations(long ID) throws ModelException {
          String selectSQL = "SELECT * FROM REGISTRATIONS WHERE ID = ?";
 
          try (PreparedStatement pstmt = con.getConnection().prepareStatement(selectSQL)) {
@@ -99,7 +97,7 @@ public final class RegistrationManager {
                 return new Registration(resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getString(3),
-                        resultSet.getInt(4),
+                        resultSet.getLong(4),
                         resultSet.getLong(5),
                         resultSet.getString(6),
                         resultSet.getString(7)
@@ -111,6 +109,34 @@ public final class RegistrationManager {
              throw new ModelException("Database error: " + e.getMessage());
          }
      }
+
+    public List<Registration> getRegistrations(long BIN, String attendeeID) {
+        String stmt = "SELECT * FROM REGISTRATIONS WHERE BIN = ? AND AttendeeID = ?";
+
+        List<Registration> registrations = new ArrayList<>();
+
+        try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
+            pstmt.setLong(1, BIN);
+            pstmt.setString(2, attendeeID);
+
+            ResultSet resultSet = pstmt.executeQuery();
+
+            while (resultSet.next()) {
+                registrations.add(new Registration(resultSet.getLong(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getLong(4),
+                        resultSet.getLong(5),
+                        resultSet.getString(6),
+                        resultSet.getString(7)
+                ));
+            }
+
+            return registrations;
+        } catch (NumberFormatException | SQLException e) {
+            return new ArrayList<>(); // for CONVENIENCE
+        }
+    }
 
 
     /**
@@ -129,21 +155,25 @@ public final class RegistrationManager {
      * @return a {@code List} containing {@code Registration} objects that match the criteria.
      * @throws ModelException if any errors encountered.
      */
-     public List<Registration> getRegistration(String attribute, String value) {
+     public List<Registration> getRegistrations(String attribute, String value) {
          String stmt = "SELECT * FROM REGISTRATIONS WHERE " + attribute + " = ?";
 
          List<Registration> registrations = new ArrayList<>();
 
          try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-             pstmt.setString(1, value);
+             if (attribute.equals("BIN") || attribute.equals("MealID")) {
+                 pstmt.setLong(1, Long.parseLong(value));
+             } else {
+                 pstmt.setString(1, value);
+             }
 
              ResultSet resultSet = pstmt.executeQuery();
 
              while (resultSet.next()) {
-                 registrations.add(new Registration(resultSet.getInt(1),
+                 registrations.add(new Registration(resultSet.getLong(1),
                          resultSet.getString(2),
                          resultSet.getString(3),
-                         resultSet.getInt(4),
+                         resultSet.getLong(4),
                          resultSet.getLong(5),
                          resultSet.getString(6),
                          resultSet.getString(7)
@@ -151,7 +181,7 @@ public final class RegistrationManager {
              }
 
              return registrations;
-         } catch (SQLException e) {
+         } catch (NumberFormatException | SQLException e) {
              return new ArrayList<>(); // for CONVENIENCE
          }
      }

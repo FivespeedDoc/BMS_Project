@@ -8,7 +8,6 @@ import service.utilities.DateTimeFormatter;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -80,17 +79,18 @@ public final class BanquetsManager {
     }
 
     public List<Banquet> getAllAvailableBanquets(String attendeeID) throws ModelException {
+        RegistrationManager registrationManager = new RegistrationManager(con);
         List <Banquet> allBanquets = getAllBanquets();
         allBanquets.removeIf(banquet -> banquet.isAvailable() == 'N');
-        allBanquets.removeIf(banquet -> banquet.getQuota() - new RegistrationManager(con).getRegisteredCount(banquet.getBIN()) <= 0);
-        allBanquets.removeIf(banquet -> !(new RegistrationManager(con).getRegistration("AttendeeID", attendeeID)).isEmpty());
+        allBanquets.removeIf(banquet -> banquet.getQuota() - registrationManager.getRegisteredCount(banquet.getBIN()) <= 0);
+        allBanquets.removeIf(banquet -> !registrationManager.getRegistrations(banquet.getBIN(), attendeeID).isEmpty());
         return allBanquets;
     }
 
     /**
      * Add a new banquet into the db
      * @param banquet the {@code Banquet} object (Any of fields of the banquet object must not be null, except BIN, which will not be taken into consideration)
-     * @throws ModelException
+     * @throws ModelException if any errors encountered.
      */
     public void addBanquet(Banquet banquet) throws ModelException {
         String insertSQL = "INSERT INTO BANQUETS (Name, DateTime, Address, Location, ContactStaffName, Available, Quota) " +
@@ -164,14 +164,14 @@ public final class BanquetsManager {
      * @return a {@code List} containing {@code Banquet} objects that match the criteria.
      * @throws ModelException if any errors encountered.
      */
+    @Deprecated
     public List<Banquet> getBanquet(String attribute, String value) throws ModelException {
-        String stmt = "SELECT * FROM BANQUETS WHERE ? = ?";
+        String stmt = "SELECT * FROM BANQUETS WHERE " + attribute + " = ?";
 
         List<Banquet> banquets = new ArrayList<>();
 
         try (PreparedStatement pstmt = con.getConnection().prepareStatement(stmt)) {
-            pstmt.setString(1, attribute);
-            pstmt.setString(2, value);
+            pstmt.setString(1, value);
 
             ResultSet resultSet = pstmt.executeQuery();
 
@@ -236,7 +236,6 @@ public final class BanquetsManager {
                     if (new RegistrationManager(con).getRegisteredCount(BIN) > Integer.parseInt(newValue)) {
                         throw new ModelException("Cannot change the quota. New quota is smaller than the number of registered attendees.");
                     }
-
                     pstmt.setInt(1, Integer.parseInt(newValue));
                     break;
                 }
@@ -302,10 +301,8 @@ public final class BanquetsManager {
     }
 
     public String[][] getSortedBanquetListObjectArray(List<Banquet> banquets) {
-        banquets.sort((o1, o2) -> {
-            RegistrationManager registrationManager = new RegistrationManager(con);
-            return (registrationManager.getRegisteredCount(o1.getBIN()) < registrationManager.getRegisteredCount(o2.getBIN())) ? 1 : -1;
-        });
+        RegistrationManager registrationManager = new RegistrationManager(con);
+        banquets.sort((o1, o2) -> (registrationManager.getRegisteredCount(o1.getBIN()) < registrationManager.getRegisteredCount(o2.getBIN())) ? 1 : -1);
         return banquetListToObjectArray(banquets);
     }
 }
