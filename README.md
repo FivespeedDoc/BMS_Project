@@ -1,5 +1,7 @@
 # Banquet Management System
 
+> Please check out the `package` branch for the packaged version of this application.
+
 #### YANG Xikun, YANG Jinkun, REN Yixiao, Arda EREN, MIAO Xutao
 ### Designer of the application: YANG Xikun, YANG Jinkun
 ### Maintainer of the repo: YANG Jinkun
